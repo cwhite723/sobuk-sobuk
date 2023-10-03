@@ -1,4 +1,4 @@
-package reading.project.exception;
+package reading.project.global.exception;
 
 public record ErrorResponse(
     String errorCode,

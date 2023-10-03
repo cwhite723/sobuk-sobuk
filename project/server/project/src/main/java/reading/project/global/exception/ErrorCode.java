@@ -1,4 +1,4 @@
-package reading.project.exception;
+package reading.project.global.exception;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

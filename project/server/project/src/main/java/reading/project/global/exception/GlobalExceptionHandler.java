@@ -1,4 +1,4 @@
-package reading.project.exception;
+package reading.project.global.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.hibernate.exception.ConstraintViolationException;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
-import static reading.project.exception.ErrorCode.REQUEST_VALIDATION_FAIL;
+import static reading.project.global.exception.ErrorCode.REQUEST_VALIDATION_FAIL;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
