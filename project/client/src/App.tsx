@@ -1,12 +1,12 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import MainPage from "pages/MainPage";
 import LoginPage from "pages/Loginpage";
 import JoinPage from "pages/JoinPage";
 import FeedPage from "pages/FeedPage";
-import DetailPage from "pages/DefailPage";
+import PostPage from "pages/PostPage";
 import WritePage from "pages/WritePage";
-import MyPagePage from "pages/MyPagePage";
+import UserPage from "pages/UserPage";
 import SettingPage from "pages/SettingPage";
 import GroupPage from "pages/GroupPage";
 import ErrorPage from "pages/ErrorPage";
@@ -15,16 +15,16 @@ function App() {
   return (
     <div>
       <Routes>
-        <Route index path="/" element={<MainPage />} />
-
+        <Route path="/" element={<Navigate replace to="main" />} />
+        <Route path="main" element={<MainPage />} />
         <Route path="login" element={<LoginPage />} />
         <Route path="join" element={<JoinPage />} />
 
         <Route path="feed" element={<FeedPage />} />
-        <Route path="detail/:postid" element={<DetailPage />} />
+        <Route path="post/:postid" element={<PostPage />} />
         <Route path="write" element={<WritePage />} />
 
-        <Route path="mypage/:userid" element={<MyPagePage />} />
+        <Route path="user/:userid" element={<UserPage />} />
         <Route path="setting" element={<SettingPage />} />
 
         <Route path="group" element={<GroupPage />} />
