@@ -21,10 +21,10 @@ function App() {
         <Route path="join" element={<JoinPage />} />
 
         <Route path="feed" element={<FeedPage />} />
-        <Route path="detail:id" element={<DetailPage />} />
+        <Route path="detail/:postid" element={<DetailPage />} />
         <Route path="write" element={<WritePage />} />
 
-        <Route path="mypage:id" element={<MyPagePage />} />
+        <Route path="mypage/:userid" element={<MyPagePage />} />
         <Route path="setting" element={<SettingPage />} />
 
         <Route path="group" element={<GroupPage />} />
