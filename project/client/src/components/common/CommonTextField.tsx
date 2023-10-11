@@ -7,7 +7,7 @@ interface PropsType {
   id?: string;
   label?: string;
   defaultValue?: string;
-  type?: "password";
+  type?: "password" | "required";
 }
 
 const CommonTextField: React.FC<PropsType> = (props) => {
@@ -28,7 +28,7 @@ const CommonTextField: React.FC<PropsType> = (props) => {
 
   return (
     <StyledTextField
-      type={props.type ?? "password"}
+      type={props.type}
       id={props.id}
       label={props.label}
       defaultValue={props.defaultValue}

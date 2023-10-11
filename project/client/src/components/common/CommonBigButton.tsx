@@ -10,7 +10,9 @@ interface PropsType {
 const CommonBigButton: React.FC<PropsType> = (props) => {
   const StyledButton = styled(Button)`
     display: block;
-    max-width: "500px";
+    margin-top: 25px;
+    padding: 10px 0 10px 0;
+    max-width: 500px;
     background-color: ${theme.palette.text.primary};
     color: ${theme.palette.text.secondary};
   `;
