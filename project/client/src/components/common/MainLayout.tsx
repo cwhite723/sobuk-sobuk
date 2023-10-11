@@ -1,6 +1,7 @@
 import { Box, Grid } from "@mui/material";
 import { Outlet } from "react-router-dom";
 import HeaderBar from "./HeaderBar";
+import Footer from "./Footer";
 
 const MainLayout = () => {
   return (
@@ -13,6 +14,7 @@ const MainLayout = () => {
         </Grid>
         <Grid item xs={1}></Grid>
       </Grid>
+      <Footer />
     </Box>
   );
 };
