@@ -16,11 +16,13 @@ const CommonButton: React.FC<PropsType> = (props) => {
               border: "1px solid",
               borderColor: "text.primary",
               display: "block",
+              borderRadius: "20px",
             }
           : {
               color: "text.secondary",
               backgroundColor: "text.primary",
               display: "block",
+              borderRadius: "20px",
             }
       }
       variant={props.outline ? "outlined" : "contained"}
