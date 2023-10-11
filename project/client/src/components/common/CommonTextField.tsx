@@ -2,11 +2,15 @@ import styled from "@emotion/styled";
 import { TextField } from "@mui/material";
 import theme from "styles/theme";
 
-const CommonTextField: React.FC<{
-  id: string;
-  label: string;
-  defaultValue: string;
-}> = (props) => {
+interface PropsType {
+  children?: React.ReactNode;
+  id?: string;
+  label?: string;
+  defaultValue?: string;
+  type?: "password";
+}
+
+const CommonTextField: React.FC<PropsType> = (props) => {
   const StyledTextField = styled(TextField)`
     margin-top: 25px;
     & label {
@@ -24,7 +28,7 @@ const CommonTextField: React.FC<{
 
   return (
     <StyledTextField
-      required
+      type={props.type ?? "password"}
       id={props.id}
       label={props.label}
       defaultValue={props.defaultValue}
