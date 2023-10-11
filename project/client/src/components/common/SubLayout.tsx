@@ -1,14 +1,14 @@
-import { Grid } from "@mui/material";
+import Grid from "@mui/material/Unstable_Grid2";
 import { Outlet } from "react-router-dom";
 
 const SubLayout = () => {
   return (
     <Grid container spacing={2}>
-      <Grid item xs></Grid>
-      <Grid item xs={6}>
+      <Grid xs></Grid>
+      <Grid xs={6} disableEqualOverflow>
         <Outlet />
       </Grid>
-      <Grid item xs></Grid>
+      <Grid xs></Grid>
     </Grid>
   );
 };
