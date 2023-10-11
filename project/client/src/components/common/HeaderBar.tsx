@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import React from "react";
+import CommonButton from "./CommonButton";
 
 const HeaderBar = () => {
   const pages = ["홈", "피드", "독서모임", "내서재"];
@@ -82,12 +83,7 @@ const HeaderBar = () => {
           </Box>
 
           <Box sx={{ flexGrow: 0, display: "flex" }}>
-            <Button
-              onClick={handleCloseNavMenu}
-              sx={{ my: 2, color: "white", display: "block" }}
-            >
-              LOGIN
-            </Button>
+            <CommonButton value="LOGIN" outline={true} />
           </Box>
         </Toolbar>
       </Container>
