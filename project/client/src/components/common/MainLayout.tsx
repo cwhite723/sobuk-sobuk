@@ -1,15 +1,19 @@
-import { Grid } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import { Outlet } from "react-router-dom";
+import HeaderBar from "./HeaderBar";
 
 const MainLayout = () => {
   return (
-    <Grid container spacing={2}>
-      <Grid item xs></Grid>
-      <Grid item xs={10}>
-        <Outlet />
+    <Box sx={{ flexGrow: 1 }}>
+      <HeaderBar />
+      <Grid container spacing={2}>
+        <Grid item xs={1}></Grid>
+        <Grid item xs={10}>
+          <Outlet />
+        </Grid>
+        <Grid item xs={1}></Grid>
       </Grid>
-      <Grid item xs></Grid>
-    </Grid>
+    </Box>
   );
 };
 

@@ -15,7 +15,7 @@ import SubLayout from "components/common/SubLayout";
 
 function App() {
   return (
-    <div>
+    <>
       <Routes>
         <Route element={<MainLayout />}>
           <Route path="/" element={<Navigate replace to="main" />} />
@@ -37,7 +37,7 @@ function App() {
 
         <Route path="*" element={<ErrorPage />} />
       </Routes>
-    </div>
+    </>
   );
 }
 
