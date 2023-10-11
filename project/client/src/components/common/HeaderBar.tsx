@@ -75,7 +75,12 @@ const HeaderBar = () => {
               <Button
                 key={page}
                 onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "white", display: "block" }}
+                sx={{
+                  my: 2,
+                  color: "text.primary",
+                  display: "block",
+                  "&:hover": { color: "text.secondary" },
+                }}
               >
                 {page}
               </Button>
