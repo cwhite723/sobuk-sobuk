@@ -2,7 +2,7 @@ import { Box, Typography } from "@mui/material";
 
 const Footer = () => {
   return (
-    <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+    <Box sx={{ display: "flex", justifyContent: "space-between", m: 3 }}>
       <Box
         component="img"
         sx={{
