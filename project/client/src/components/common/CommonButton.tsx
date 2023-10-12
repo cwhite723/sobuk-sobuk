@@ -10,7 +10,7 @@ interface PropsType {
 const CommonButton: React.FC<PropsType> = (props) => {
   const StyledButton = styled(Button)`
     display: block;
-    border-radius: "20px";
+    border-radius: 20px;
   `;
   return (
     <StyledButton
