@@ -2,6 +2,7 @@ import { Box, Typography } from "@mui/material";
 import CommonBookImage from "components/common/CommonBookImage";
 import CommonButton from "components/common/CommonButton";
 import MainSection from "components/main/MainSection";
+import CommonTypography from "components/common/CommonTypography";
 
 const MainPage = () => {
   return (
@@ -16,11 +17,14 @@ const MainPage = () => {
             mb: 2,
           }}
         >
-          <Typography sx={{ fontWeight: "bold" }} variant="h5">
-            📚 완독까지 이만큼 남았어요
-          </Typography>
+          <CommonTypography
+            value="📚 완독까지 이만큼 남았어요"
+            bold={true}
+            variant="h5"
+          />
           <CommonButton value="책 추가하기" />
         </Box>
+
         <Box
           sx={{
             display: "flex",
@@ -54,10 +58,8 @@ const MainPage = () => {
                   borderBottom: "1px solid",
                 }}
               >
-                <Typography sx={{ fontWeight: "bold", mr: 2 }} variant="h6">
-                  책 제목
-                </Typography>
-                <Typography variant="body2">지은이</Typography>
+                <CommonTypography value="책 제목" variant="h6" bold={true} />
+                <CommonTypography value="지은이" variant="body2" bold={false} />
                 <Box
                   sx={{
                     position: "absolute",
@@ -72,14 +74,20 @@ const MainPage = () => {
                   읽는 중
                 </Box>
               </Box>
-              <Typography variant="body2">2023.06.03 ~ 2023.10.03</Typography>
+              <CommonTypography
+                value="2023.06.03 ~ 2023.10.03"
+                variant="body2"
+                bold={false}
+              />
               <Box
                 sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}
               >
-                <Typography variant="body2">
-                  오늘은 368쪽까지 읽어야 해요
-                </Typography>
-                <Typography variant="body2">93/100</Typography>
+                <CommonTypography
+                  value="오늘은 368쪽까지 읽어야 해요"
+                  variant="body2"
+                  bold={true}
+                />
+                <CommonTypography value="93/100" variant="body2" bold={true} />
               </Box>
               <Box
                 sx={{
@@ -115,9 +123,11 @@ const MainPage = () => {
             mb: 2,
           }}
         >
-          <Typography sx={{ fontWeight: "bold" }} variant="h5">
-            📚 인기도서 TOP10
-          </Typography>
+          <CommonTypography
+            value="📚 인기도서 TOP10"
+            bold={true}
+            variant="h5"
+          />
         </Box>
 
         {/* 도서container */}
@@ -143,11 +153,10 @@ const MainPage = () => {
             }}
           >
             <CommonBookImage width={100} height={150} />
-            <Typography sx={{ fontWeight: "bold" }} variant="h6">
-              책 제목
-            </Typography>
-            <Typography variant="body2">지은이</Typography>
-            <Typography variant="body2">한줄소개</Typography>
+
+            <CommonTypography value="책 제목" variant="h6" bold={true} />
+            <CommonTypography value="지은이" variant="body2" bold={false} />
+            <CommonTypography value="한줄소개" variant="body2" bold={false} />
           </Box>
         </Box>
       </MainSection>
