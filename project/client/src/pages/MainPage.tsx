@@ -1,22 +1,13 @@
 import { Box, Typography } from "@mui/material";
 import CommonBookImage from "components/common/CommonBookImage";
 import CommonButton from "components/common/CommonButton";
+import MainSection from "components/main/MainSection";
 
 const MainPage = () => {
   return (
     <Box>
       {/* 독서진행률 */}
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          backgroundColor: "primary.main",
-          borderRadius: 5,
-          m: { xs: 2, md: 4 },
-          p: 2,
-        }}
-      >
+      <MainSection>
         <Box
           sx={{
             display: "flex",
@@ -113,20 +104,10 @@ const MainPage = () => {
             </Box>
           </Box>
         </Box>
-      </Box>
+      </MainSection>
 
       {/* 인기도서 */}
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          backgroundColor: "primary.main",
-          borderRadius: 5,
-          m: { xs: 2, md: 4 },
-          p: 2,
-        }}
-      >
+      <MainSection>
         <Box
           sx={{
             display: "flex",
@@ -169,7 +150,7 @@ const MainPage = () => {
             <Typography variant="body2">한줄소개</Typography>
           </Box>
         </Box>
-      </Box>
+      </MainSection>
     </Box>
   );
 };
