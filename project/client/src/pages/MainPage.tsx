@@ -5,10 +5,24 @@ import MainSection from "components/main/MainSection";
 import CommonTypography from "components/common/CommonTypography";
 import MainBookProgressCard from "components/main/MainBookProgressCard";
 import MainBookRankCard from "components/main/MainBookRankCard";
+import CommonSearchBar from "components/common/CommonSearchBar";
 
 const MainPage = () => {
   return (
     <Box>
+      {/* 도서검색 */}
+      <MainSection>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "end",
+          }}
+        >
+          <CommonTypography value="📚 도서 검색" bold={true} variant="h5" />
+        </Box>
+        <CommonSearchBar />
+      </MainSection>
+
       {/* 독서진행률 */}
       <MainSection>
         <Box
