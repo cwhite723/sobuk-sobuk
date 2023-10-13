@@ -4,7 +4,7 @@ import { Outlet } from "react-router-dom";
 
 const SubLayout = () => {
   return (
-    <Grid container spacing={2}>
+    <Grid container spacing={2} sx={{ width: "100%" }}>
       <Grid xs></Grid>
       <Grid xs={6}>
         <Box
