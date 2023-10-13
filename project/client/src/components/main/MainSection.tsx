@@ -10,9 +10,15 @@ const MainSection: React.FC<PropsType> = (props) => {
   const StyledSectionBox = styled(Box)`
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: start;
+    max-height: 700px;
+    overflow-y: auto;
+    ::-webkit-scrollbar {
+      display: none;
+    }
     background-color: ${theme.palette.primary.main};
     border-radius: 20px;
+    border: 1px solid;
   `;
 
   return (
