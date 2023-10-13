@@ -4,15 +4,18 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
+import static org.springframework.http.HttpStatus.*;
+
 @Getter
 @RequiredArgsConstructor
 public enum ErrorCode {
     // 400
-    REQUEST_VALIDATION_FAIL(HttpStatus.BAD_REQUEST, "잘못된 요청 값입니다."),
+    REQUEST_VALIDATION_FAIL(BAD_REQUEST, "잘못된 요청 값입니다."),
 
     // 401
 
     // 404
+    NOT_FOUND_BOOK(NOT_FOUND, "도서 정보가 존재하지 않습니다."),
 
     // 409
 
