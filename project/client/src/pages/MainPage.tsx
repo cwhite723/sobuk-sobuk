@@ -1,5 +1,11 @@
+import CommonSearchBar from "components/common/CommonSearchBar";
+
 const MainPage = () => {
-  return <>Main</>;
+  return (
+    <>
+      <CommonSearchBar />
+    </>
+  );
 };
 
 export default MainPage;
