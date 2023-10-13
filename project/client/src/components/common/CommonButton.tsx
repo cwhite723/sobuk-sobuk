@@ -20,6 +20,10 @@ const CommonButton: React.FC<PropsType> = (props) => {
               color: "text.primary",
               border: "1px solid",
               borderColor: "text.primary",
+              backgroundColor: "primary.main",
+              "&:hover": {
+                backgroundColor: "background.default",
+              },
             }
           : {
               color: "text.secondary",

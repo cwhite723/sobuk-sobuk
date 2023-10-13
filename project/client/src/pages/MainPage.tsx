@@ -26,11 +26,11 @@ const MainPage = () => {
           />
           <CommonButton value="책 추가하기" />
         </Box>
-        <MainBookProgressCard />
-        <MainBookProgressCard />
-        <MainBookProgressCard />
-        <MainBookProgressCard />
-        <MainBookProgressCard />
+        <MainBookProgressCard isNonMember={true} />
+        <MainBookProgressCard isComplete={true} />
+        <MainBookProgressCard isNonMember={false} />
+        <MainBookProgressCard isNonMember={false} />
+        <MainBookProgressCard isNonMember={false} />
       </MainSection>
 
       {/* 인기도서 */}

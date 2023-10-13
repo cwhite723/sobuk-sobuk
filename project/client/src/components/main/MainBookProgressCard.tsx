@@ -1,11 +1,18 @@
 import { Box } from "@mui/material";
 import CommonBookImage from "components/common/CommonBookImage";
 import CommonTypography from "components/common/CommonTypography";
+import MainBookProgressCover from "./MainBookProgressCover";
 
-const MainBookProgressCard = () => {
+interface PropsType {
+  isNonMember?: boolean;
+  isComplete?: boolean;
+}
+
+const MainBookProgressCard: React.FC<PropsType> = (props) => {
   return (
     <Box
       sx={{
+        position: "relative",
         display: "flex",
         flexDirection: { xs: "column", md: "row" },
         justifyContent: "left",
@@ -16,6 +23,18 @@ const MainBookProgressCard = () => {
         mb: 2,
       }}
     >
+      {(props.isNonMember || props.isComplete) && (
+        <MainBookProgressCover
+          status={
+            props.isNonMember
+              ? "nonMember"
+              : props.isComplete
+              ? "complete"
+              : "error"
+          }
+        />
+      )}
+
       <CommonBookImage width={100} height={150} />
       <Box
         sx={{

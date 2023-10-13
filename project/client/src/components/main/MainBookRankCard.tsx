@@ -16,7 +16,6 @@ const MainBookRankCard = () => {
           backgroundColor: "background.default",
           borderRadius: 5,
           p: 2,
-          m: 2,
         }}
       >
         <CommonBookImage width={100} height={150} />
