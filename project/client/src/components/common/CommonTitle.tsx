@@ -7,6 +7,7 @@ interface PropsType {
 
 const CommonTitle: React.FC<PropsType> = (props) => {
   return (
+    // Section Title로 사용되는 Typo를 담은 컴포넌트
     <Box
       sx={{
         display: "flex",

@@ -1,26 +1,27 @@
-import styled from "@emotion/styled";
 import { Box } from "@mui/material";
-import theme from "styles/theme";
 
 interface PropsType {
-  children?: React.ReactNode;
   src?: string;
-  width?: number;
-  height?: number;
+  width: number;
+  height: number;
 }
 
 const CommonBookImage: React.FC<PropsType> = (props) => {
-  const StyledImageBox = styled(Box)`
-    width: ${props.width}px;
-    height: ${props.height}px;
-    margin: 5px;
-    background-image: url(${props.src});
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-color: ${theme.palette.text.primary};
-  `;
-
-  return <StyledImageBox component="img" />;
+  return (
+    // 이미지 컴포넌트
+    <Box
+      component="img"
+      sx={{
+        width: props.width,
+        height: props.height,
+        m: 2,
+        backgroundImage: `url(${props.src})`,
+        backgroundSize: "contain",
+        backgroundRepeat: "no-repeat",
+        backgroundColor: "text.primary",
+      }}
+    />
+  );
 };
 
 export default CommonBookImage;

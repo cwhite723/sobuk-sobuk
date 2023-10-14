@@ -3,12 +3,16 @@ import { Outlet } from "react-router-dom";
 
 const SubLayout = () => {
   return (
-    <Grid container spacing={2}>
-      <Grid xs></Grid>
+    // login, join 페이지에 적용되는 레이아웃
+    <Grid container spacing={2} width="100%">
+      {/* 사이드 영역 */}
+      <Grid xs />
+      {/* 컨텐츠 영역 */}
       <Grid xs={6} disableEqualOverflow>
         <Outlet />
       </Grid>
-      <Grid xs></Grid>
+      {/* 사이드 영역 */}
+      <Grid xs />
     </Grid>
   );
 };

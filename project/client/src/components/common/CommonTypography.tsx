@@ -1,4 +1,3 @@
-import styled from "@emotion/styled";
 import { Typography } from "@mui/material";
 
 interface PropsType {
@@ -8,13 +7,13 @@ interface PropsType {
 }
 
 const CommonTypography: React.FC<PropsType> = (props) => {
-  const StyledTitleTypography = styled(Typography)`
-    font-weight: ${props.bold ? "800" : "400"};
-  `;
   return (
-    <StyledTitleTypography variant={props.variant}>
+    <Typography
+      variant={props.variant}
+      sx={{ fontWeight: props.bold ? 800 : 400 }}
+    >
       {props.value}
-    </StyledTitleTypography>
+    </Typography>
   );
 };
 export default CommonTypography;

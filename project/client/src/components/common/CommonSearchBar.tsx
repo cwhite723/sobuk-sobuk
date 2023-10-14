@@ -5,10 +5,10 @@ import CommonButton from "./CommonButton";
 const CommonSearchBar = () => {
   return (
     <Box sx={{ display: "flex", alignItems: "center", m: 2 }}>
+      {/* 검색 아이콘 */}
       <Box
         sx={{
           p: 1,
-          height: "100%",
           pointerEvents: "none",
           display: "flex",
           alignItems: "center",
@@ -17,6 +17,8 @@ const CommonSearchBar = () => {
       >
         <SearchIcon />
       </Box>
+
+      {/* 검색창 테두리 */}
       <Box
         sx={{
           position: "flex",
@@ -29,9 +31,9 @@ const CommonSearchBar = () => {
           mr: 2,
         }}
       >
+        {/* 검색창 */}
         <InputBase
           sx={{
-            color: "inherit",
             width: "100%",
             ml: 2,
             "&:focus": {
@@ -41,7 +43,9 @@ const CommonSearchBar = () => {
           placeholder="검색어를 입력하세요"
         />
       </Box>
-      <CommonButton value="검색" />
+
+      {/* 검색버튼 */}
+      <CommonButton value="검색" outline={false} />
     </Box>
   );
 };
