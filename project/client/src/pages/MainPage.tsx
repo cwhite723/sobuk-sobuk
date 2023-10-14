@@ -6,6 +6,7 @@ import CommonTypography from "components/common/CommonTypography";
 import MainBookProgressCard from "components/main/MainBookProgressCard";
 import MainBookRankCard from "components/main/MainBookRankCard";
 import CommonSearchBar from "components/common/CommonSearchBar";
+import CommonTitle from "components/common/CommonTitle";
 
 const MainPage = () => {
   return (
