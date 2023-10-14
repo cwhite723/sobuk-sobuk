@@ -1,6 +1,8 @@
-import { Box, Link, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
+import { Link } from "react-router-dom";
 import CommonBigButton from "components/common/CommonBigButton";
 import CommonTextField from "components/common/CommonTextField";
+import theme from "styles/theme";
 
 const LoginPage = () => {
   return (
@@ -13,6 +15,17 @@ const LoginPage = () => {
         maxWidth: 500,
       }}
     >
+      <Box sx={{ position: "fixed", top: "30px", right: "30px" }}>
+        <Link
+          to="../main"
+          style={{
+            textDecoration: "none",
+            color: `${theme.palette.text.primary}`,
+          }}
+        >
+          🏠HOME
+        </Link>
+      </Box>
       <CommonTextField
         type="required"
         id="user-id"
@@ -34,11 +47,23 @@ const LoginPage = () => {
           paddingBottom: "25px",
         }}
       >
-        <Link href="#" color="text.primary" sx={{ textDecoration: "none" }}>
+        <Link
+          to="../join"
+          style={{
+            textDecoration: "none",
+            color: `${theme.palette.text.primary}`,
+          }}
+        >
           회원가입
         </Link>
         {" | "}
-        <Link href="#" color="text.primary" sx={{ textDecoration: "none" }}>
+        <Link
+          to="#"
+          style={{
+            textDecoration: "none",
+            color: `${theme.palette.text.primary}`,
+          }}
+        >
           아이디/비밀번호찾기
         </Link>
       </Typography>

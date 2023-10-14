@@ -1,7 +1,7 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import MainPage from "pages/MainPage";
-import LoginPage from "pages/Loginpage";
+import LoginPage from "pages/LoginPage";
 import JoinPage from "pages/JoinPage";
 import FeedPage from "pages/FeedPage";
 import PostPage from "pages/PostPage";
