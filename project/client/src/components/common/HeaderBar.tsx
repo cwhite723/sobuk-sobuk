@@ -12,25 +12,38 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 import React from "react";
 import CommonButton from "./CommonButton";
+import CommonLink from "./CommonLink";
 
 const HeaderBar = () => {
-  const pages = ["홈", "피드", "독서모임", "내서재"];
+  const pages = [
+    { name: "홈", link: "../main" },
+    { name: "피드", link: "../feed" },
+    { name: "독서모임", link: "../group" },
+    { name: "내 서재", link: "../user/1" },
+  ];
+
+  // 네비게이션 메뉴 엘리먼트 셋팅
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null,
   );
+  const [isLoggedIn, setIsLoggedIn] = React.useState<boolean>(false);
 
+  // 네비게이션 메뉴 열기
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
 
+  // 네비게이션 메뉴 닫기
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
 
   return (
+    // 상단에 고정된 AppBar
     <AppBar position="sticky">
       <Container maxWidth="xl">
-        <Toolbar disableGutters>
+        <Toolbar>
+          {/* 네비게이션 메뉴 버튼 */}
           <Box sx={{ display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
@@ -40,6 +53,8 @@ const HeaderBar = () => {
             >
               <MenuIcon />
             </IconButton>
+
+            {/* 네비게이션 메뉴 버튼 클릭시 출력 */}
             <Menu
               id="menu-appbar"
               anchorEl={anchorElNav}
@@ -51,44 +66,58 @@ const HeaderBar = () => {
               sx={{ display: { xs: "block", md: "none" } }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
+                <MenuItem key={page.name} onClick={handleCloseNavMenu}>
+                  <Typography textAlign="center">{page.name}</Typography>
                 </MenuItem>
               ))}
             </Menu>
           </Box>
 
+          {/* 로고 */}
           <Box sx={{ flexGrow: { xs: "1", md: "0" } }}>
-            <Box
-              component="img"
-              sx={{
-                height: 30,
-                display: "flex",
-                mr: 2,
-              }}
-              src={process.env.PUBLIC_URL + "img/logo.png"}
-            />
+            <CommonLink to="../main">
+              <Box
+                component="img"
+                sx={{
+                  height: 30,
+                  display: "flex",
+                  mr: 2,
+                }}
+                src={process.env.PUBLIC_URL + "img/logo.png"}
+              />
+            </CommonLink>
           </Box>
 
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+          {/* 메뉴 버튼 */}
+          <Box
+            sx={{
+              flexGrow: 1,
+              display: { xs: "none", md: "flex" },
+            }}
+          >
             {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{
-                  my: 2,
-                  color: "text.primary",
-                  display: "block",
-                  "&:hover": { color: "text.secondary" },
-                }}
-              >
-                {page}
-              </Button>
+              <CommonLink key={page.name} to={page.link}>
+                <Button
+                  key={page.name}
+                  onClick={handleCloseNavMenu}
+                  sx={{
+                    my: 2,
+                    color: "text.primary",
+                    display: "block",
+                    "&:hover": { color: "text.secondary" },
+                  }}
+                >
+                  {page.name}
+                </Button>
+              </CommonLink>
             ))}
           </Box>
 
+          {/* 로그인, 로그아웃 버튼 */}
           <Box sx={{ flexGrow: 0, display: "flex" }}>
-            <CommonButton value="LOGIN" outline={true} />
+            <CommonLink to={isLoggedIn ? "#" : "../login"}>
+              <CommonButton value="LOGIN" outline={true} />
+            </CommonLink>
           </Box>
         </Toolbar>
       </Container>
