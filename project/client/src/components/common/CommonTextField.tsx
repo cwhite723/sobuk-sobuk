@@ -1,37 +1,41 @@
-import styled from "@emotion/styled";
 import { TextField } from "@mui/material";
-import theme from "styles/theme";
 
 interface PropsType {
-  children?: React.ReactNode;
-  id?: string;
-  label?: string;
+  id: string;
+  label: string;
   defaultValue?: string;
+<<<<<<< HEAD
   type?: "password" | "required";
+=======
+  type?: boolean;
+>>>>>>> fe/common
 }
 
 const CommonTextField: React.FC<PropsType> = (props) => {
-  const StyledTextField = styled(TextField)`
-    margin-top: 25px;
-    & label {
-      color: ${theme.palette.text.primary};
-    }
-    & label.Mui-focused {
-      color: ${theme.palette.text.primary};
-    }
-    & .MuiOutlinedInput-root {
-      & .Mui-focused fieldset {
-        border-color: ${theme.palette.text.secondary};
-      }
-    }
-  `;
-
   return (
+<<<<<<< HEAD
     <StyledTextField
       type={props.type}
+=======
+    <TextField
+      type={props.type ? "password" : "text"}
+>>>>>>> fe/common
       id={props.id}
       label={props.label}
       defaultValue={props.defaultValue}
+      // MUI TextField 커스터마이징
+      sx={{
+        mt: "25px",
+        "& label": { color: "text.primary" },
+        "& label.Mui-focused": {
+          color: "text.primary",
+        },
+        "& .MuiOutlinedInput-root": {
+          "& .Mui-focused fieldset": {
+            borderColor: "text.secondary",
+          },
+        },
+      }}
     />
   );
 };

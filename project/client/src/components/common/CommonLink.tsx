@@ -8,6 +8,7 @@ interface PropsType {
 
 const CommonLink: React.FC<PropsType> = (props) => {
   return (
+    // react router dom에서 제공하는 Link
     <Link
       to={props.to}
       style={{

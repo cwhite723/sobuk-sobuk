@@ -1,13 +1,11 @@
 import { Button } from "@mui/material";
-import styled from "@emotion/styled";
-import theme from "styles/theme";
 
 interface PropsType {
-  children?: React.ReactNode;
-  value?: string;
+  value: string;
 }
 
 const CommonBigButton: React.FC<PropsType> = (props) => {
+<<<<<<< HEAD
   const StyledButton = styled(Button)`
     display: block;
     margin-top: 25px;
@@ -16,10 +14,22 @@ const CommonBigButton: React.FC<PropsType> = (props) => {
     background-color: ${theme.palette.text.primary};
     color: ${theme.palette.text.secondary};
   `;
+=======
+>>>>>>> fe/common
   return (
-    <StyledButton fullWidth variant="contained">
+    // 기본 버튼보다 큰 버전
+    <Button
+      fullWidth
+      variant="contained"
+      sx={{
+        display: "block",
+        maxWidth: 500,
+        backgroundColor: "text.primary",
+        color: "text.secondary",
+      }}
+    >
       {props.value}
-    </StyledButton>
+    </Button>
   );
 };
 export default CommonBigButton;

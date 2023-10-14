@@ -1,22 +1,18 @@
 import { Button } from "@mui/material";
-import styled from "@emotion/styled";
 
 interface PropsType {
-  children?: React.ReactNode;
-  value?: string;
-  outline?: boolean;
+  value: string;
+  outline: boolean;
 }
 
 const CommonButton: React.FC<PropsType> = (props) => {
-  const StyledButton = styled(Button)`
-    display: block;
-    border-radius: 20px;
-  `;
   return (
-    <StyledButton
+    <Button
+      // outline prop에 따라 버튼 스타일 변경
       sx={
         props.outline
           ? {
+              borderRadius: 20,
               color: "text.primary",
               border: "1px solid",
               borderColor: "text.primary",
@@ -26,6 +22,7 @@ const CommonButton: React.FC<PropsType> = (props) => {
               },
             }
           : {
+              borderRadius: 20,
               color: "text.secondary",
               backgroundColor: "text.primary",
             }
@@ -33,7 +30,7 @@ const CommonButton: React.FC<PropsType> = (props) => {
       variant={props.outline ? "outlined" : "contained"}
     >
       {props.value}
-    </StyledButton>
+    </Button>
   );
 };
 export default CommonButton;

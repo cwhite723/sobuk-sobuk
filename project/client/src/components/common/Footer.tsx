@@ -1,8 +1,17 @@
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
+import CommonTypography from "./CommonTypography";
 
 const Footer = () => {
   return (
-    <Box sx={{ display: "flex", justifyContent: "space-between", m: 3 }}>
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "baseline",
+        m: 3,
+      }}
+    >
+      {/* 로고 */}
       <Box
         component="img"
         sx={{
@@ -12,7 +21,12 @@ const Footer = () => {
         }}
         src={process.env.PUBLIC_URL + "img/logo.png"}
       />
-      <Typography>Copyright ⓒ 2023 소북소북 All Rights Reserved.</Typography>
+      {/* copyright */}
+      <CommonTypography
+        value="Copyright ⓒ 2023 소북소북 All Rights Reserved."
+        variant="body2"
+        bold={true}
+      />
     </Box>
   );
 };
