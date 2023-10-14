@@ -1,8 +1,21 @@
-import { Box } from "@mui/material";
+import { Box, Input } from "@mui/material";
+import CommonAvaratImage from "components/common/CommonAvatarImage";
 import CommonBigButton from "components/common/CommonBigButton";
+import CommonLink from "components/common/CommonLink";
 import CommonTextField from "components/common/CommonTextField";
+import CommonTypography from "components/common/CommonTypography";
+import React from "react";
 
 const JoinPage = () => {
+  // 프로필 이미지
+  const [profileImg, setProfileImg] = React.useState<string>("");
+
+  const handleChangeImg = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      setProfileImg(URL.createObjectURL(event.target.files[0]));
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -13,55 +26,62 @@ const JoinPage = () => {
         maxWidth: 500,
       }}
     >
+      {/* HOME 버튼 */}
+      <Box sx={{ position: "fixed", top: "30px", right: "30px" }}>
+        <CommonLink to="../main">
+          <CommonTypography value="🏠HOME" variant="body1" bold={true} />
+        </CommonLink>
+      </Box>
+
       <CommonTextField
         type="required"
         id="user-id"
         label="아이디"
-        defaultValue="아이디를 입력하세요."
+        placeholder="아이디를 입력하세요."
       />
       <CommonTextField
         type="password"
         id="user-password"
         label="비밀번호"
-        defaultValue="비밀번호를 입력하세요"
+        placeholder="비밀번호를 입력하세요"
       />
       <CommonTextField
         type="password"
         id="user-password-check"
         label="비밀번호 확인"
-        defaultValue="비밀번호를 입력하세요"
+        placeholder="비밀번호를 입력하세요"
       />
       <CommonTextField
         type="required"
         id="user-name"
         label="닉네임"
-        defaultValue="닉네임을 입력하세요."
+        placeholder="닉네임을 입력하세요."
       />
       <CommonTextField
         type="required"
         id="user-email"
         label="이메일"
-        defaultValue="이메일을 입력하세요."
+        placeholder="이메일을 입력하세요."
       />
       <CommonTextField
         type="required"
         id="user-introduce"
         label="자기소개"
-        defaultValue="소개글을 입력하세요."
+        placeholder="소개글을 입력하세요."
       />
+
+      {/* 프로필 사진 업로드 */}
       <Box
         sx={{
-          border: "1px solid",
-          borderRadius: "50px",
-          marginTop: "25px",
-          maxWidth: "100px",
-          height: "100px",
-          alignSelf: "center",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          mt: 2,
         }}
       >
-        사진 미리보기
+        <CommonAvaratImage size={100} src={profileImg} />
+        <Input type="file" onChange={handleChangeImg} />
       </Box>
-      <CommonBigButton value="프로필 사진 업로드" />
       <CommonBigButton value="회원가입" />
     </Box>
   );

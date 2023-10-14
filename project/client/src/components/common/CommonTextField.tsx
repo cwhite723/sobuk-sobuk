@@ -3,7 +3,7 @@ import { TextField } from "@mui/material";
 interface PropsType {
   id: string;
   label: string;
-  defaultValue?: string;
+  placeholder?: string;
   type: "password" | "required";
 }
 
@@ -13,7 +13,7 @@ const CommonTextField: React.FC<PropsType> = (props) => {
       type={props.type}
       id={props.id}
       label={props.label}
-      defaultValue={props.defaultValue}
+      placeholder={props.placeholder}
       // MUI TextField 커스터마이징
       sx={{
         mt: "25px",
