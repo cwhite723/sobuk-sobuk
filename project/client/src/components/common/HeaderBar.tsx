@@ -66,9 +66,11 @@ const HeaderBar = () => {
               sx={{ display: { xs: "block", md: "none" } }}
             >
               {pages.map((page) => (
-                <MenuItem key={page.name} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page.name}</Typography>
-                </MenuItem>
+                <CommonLink key={page.name} to={page.link}>
+                  <MenuItem onClick={handleCloseNavMenu}>
+                    <Typography textAlign="center">{page.name}</Typography>
+                  </MenuItem>
+                </CommonLink>
               ))}
             </Menu>
           </Box>

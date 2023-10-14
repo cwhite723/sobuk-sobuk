@@ -15,6 +15,7 @@ const CommonBigButton: React.FC<PropsType> = (props) => {
         maxWidth: 500,
         backgroundColor: "text.primary",
         color: "text.secondary",
+        mt: 2,
       }}
     >
       {props.value}
