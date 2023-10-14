@@ -5,17 +5,6 @@ interface PropsType {
 }
 
 const CommonBigButton: React.FC<PropsType> = (props) => {
-<<<<<<< HEAD
-  const StyledButton = styled(Button)`
-    display: block;
-    margin-top: 25px;
-    padding: 10px 0 10px 0;
-    max-width: 500px;
-    background-color: ${theme.palette.text.primary};
-    color: ${theme.palette.text.secondary};
-  `;
-=======
->>>>>>> fe/common
   return (
     // 기본 버튼보다 큰 버전
     <Button
