@@ -17,7 +17,7 @@ const MainSerarchReasult = () => {
   ];
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
-      <MainBookEditDialog isOpen={true} type="read" />
+      <MainBookEditDialog isOpen={false} type="read" />
 
       {bookList.map((item) => (
         <Box
@@ -56,7 +56,7 @@ const MainSerarchReasult = () => {
             />
           </Box>
           {item.bookId === "no-result" ? (
-            <CommonButton value="📕직접 추가하기" />
+            <CommonButton value="📕직접 추가하기" outline={false} />
           ) : (
             <Box
               sx={{
@@ -65,8 +65,8 @@ const MainSerarchReasult = () => {
                 alignItems: { xs: "end", md: "center" },
               }}
             >
-              <CommonButton value="📖읽기" />
-              <CommonButton value="📌찜하기" />
+              <CommonButton value="📖읽기" outline={false} />
+              <CommonButton value="📌찜하기" outline={false} />
             </Box>
           )}
         </Box>
