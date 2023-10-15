@@ -15,7 +15,16 @@ const MainLayout = () => {
         <Grid xs />
         {/* 컨텐츠 영역 */}
         <Grid xs={10}>
-          <Outlet />
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Outlet />
+          </Box>
         </Grid>
         {/* 사이드 영역 */}
         <Grid xs />
