@@ -1,6 +1,7 @@
 import { Box } from "@mui/material";
 import CommonButton from "components/common/CommonButton";
 import CommonTypography from "components/common/CommonTypography";
+import MainBookEditDialog from "./MainBookEditDialog";
 
 const MainSerarchReasult = () => {
   const bookList = [
@@ -16,6 +17,8 @@ const MainSerarchReasult = () => {
   ];
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
+      <MainBookEditDialog isOpen={true} type="edit" />
+
       {bookList.map((item) => (
         <Box
           key={item.bookId}
