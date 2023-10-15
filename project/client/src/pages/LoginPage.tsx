@@ -3,8 +3,21 @@ import CommonBigButton from "components/common/CommonBigButton";
 import CommonTextField from "components/common/CommonTextField";
 import CommonLink from "components/common/CommonLink";
 import CommonTypography from "components/common/CommonTypography";
+import React from "react";
 
 const LoginPage = () => {
+  const handleLogin = () => {
+    console.log("loggedin");
+  };
+
+  const handleKakaoLogin = () => {
+    console.log("kakao login");
+  };
+
+  const handleGoogleLogin = () => {
+    console.log("google login");
+  };
+
   return (
     <Box
       sx={{
@@ -32,7 +45,7 @@ const LoginPage = () => {
         label="비밀번호"
         placeholder="비밀번호를 입력하세요"
       />
-      <CommonBigButton value="로그인" />
+      <CommonBigButton value="로그인" onClick={handleLogin} />
       <Box
         sx={{
           display: "flex",
@@ -54,8 +67,8 @@ const LoginPage = () => {
           />
         </CommonLink>
       </Box>
-      <CommonBigButton value="카카오로 로그인" />
-      <CommonBigButton value="구글로 로그인" />
+      <CommonBigButton value="카카오로 로그인" onClick={handleKakaoLogin} />
+      <CommonBigButton value="구글로 로그인" onClick={handleGoogleLogin} />
     </Box>
   );
 };

@@ -11,6 +11,11 @@ const MainBookProgressCover: React.FC<PropsType> = (props) => {
     complete: "🎉완독했어요! 독서기록 작성하기",
     error: "Error",
   };
+
+  const handleCardStatus = () => {
+    console.log("cover click");
+  };
+
   return (
     <Box
       sx={{
@@ -27,7 +32,11 @@ const MainBookProgressCover: React.FC<PropsType> = (props) => {
         zIndex: "1",
       }}
     >
-      <CommonButton value={cardStatus[props.status]} outline={true} />
+      <CommonButton
+        value={cardStatus[props.status]}
+        outline={true}
+        onClick={handleCardStatus}
+      />
     </Box>
   );
 };

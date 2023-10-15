@@ -68,7 +68,7 @@ const MainBookProgressCard: React.FC<PropsType> = (props) => {
                 p: 1,
               }}
             >
-              읽는 중
+              {props.isComplete ? "완독" : "읽는 중"}
             </Button>
           </Box>
           <CommonTypography

@@ -38,6 +38,10 @@ const HeaderBar = () => {
     setAnchorElNav(null);
   };
 
+  const handleUserStatus = () => {
+    console.log("user status");
+  };
+
   return (
     // 상단에 고정된 AppBar
     <AppBar position="sticky">
@@ -118,7 +122,11 @@ const HeaderBar = () => {
           {/* 로그인, 로그아웃 버튼 */}
           <Box sx={{ flexGrow: 0, display: "flex" }}>
             <CommonLink to={isLoggedIn ? "#" : "../login"}>
-              <CommonButton value="LOGIN" outline={true} />
+              <CommonButton
+                value="LOGIN"
+                outline={true}
+                onClick={handleUserStatus}
+              />
             </CommonLink>
           </Box>
         </Toolbar>

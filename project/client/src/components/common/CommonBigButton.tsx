@@ -2,6 +2,7 @@ import { Button } from "@mui/material";
 
 interface PropsType {
   value: string;
+  onClick: React.MouseEventHandler<HTMLButtonElement>;
 }
 
 const CommonBigButton: React.FC<PropsType> = (props) => {
@@ -17,6 +18,7 @@ const CommonBigButton: React.FC<PropsType> = (props) => {
         color: "text.secondary",
         mt: 2,
       }}
+      onClick={props.onClick}
     >
       {props.value}
     </Button>

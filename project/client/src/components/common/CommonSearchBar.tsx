@@ -3,6 +3,9 @@ import SearchIcon from "@mui/icons-material/Search";
 import CommonButton from "./CommonButton";
 
 const CommonSearchBar = () => {
+  const handleSearch = () => {
+    console.log("검색");
+  };
   return (
     <Box sx={{ display: "flex", alignItems: "center", m: 2 }}>
       {/* 검색 아이콘 */}
@@ -45,7 +48,7 @@ const CommonSearchBar = () => {
       </Box>
 
       {/* 검색버튼 */}
-      <CommonButton value="검색" outline={false} />
+      <CommonButton value="검색" outline={false} onClick={handleSearch} />
     </Box>
   );
 };

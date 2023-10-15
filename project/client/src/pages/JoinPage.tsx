@@ -16,6 +16,10 @@ const JoinPage = () => {
     }
   };
 
+  const handleJoin = () => {
+    console.log("join");
+  };
+
   return (
     <Box
       sx={{
@@ -82,7 +86,7 @@ const JoinPage = () => {
         <CommonAvaratImage size={100} src={profileImg} />
         <Input type="file" onChange={handleChangeImg} />
       </Box>
-      <CommonBigButton value="회원가입" />
+      <CommonBigButton value="회원가입" onClick={handleJoin} />
     </Box>
   );
 };

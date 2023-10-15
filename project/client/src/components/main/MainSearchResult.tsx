@@ -15,6 +15,18 @@ const MainSerarchReasult = () => {
       publish: "",
     },
   ];
+
+  const handleAddBook = () => {
+    console.log("책 직접 추가하기");
+  };
+
+  const handleReadBook = () => {
+    console.log("책 읽기");
+  };
+
+  const handleBookMark = () => {
+    console.log("책 찜하기");
+  };
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
       <MainBookEditDialog isOpen={false} type="read" />
@@ -28,7 +40,7 @@ const MainSerarchReasult = () => {
             alignItems: "center",
             borderRadius: 5,
             p: 2,
-            "&:nth-child(odd)": {
+            "&:nth-of-type(odd)": {
               backgroundColor: "background.default",
             },
           }}
@@ -56,7 +68,11 @@ const MainSerarchReasult = () => {
             />
           </Box>
           {item.bookId === "no-result" ? (
-            <CommonButton value="📕직접 추가하기" outline={false} />
+            <CommonButton
+              value="📕직접 추가하기"
+              outline={false}
+              onClick={handleAddBook}
+            />
           ) : (
             <Box
               sx={{
@@ -65,8 +81,16 @@ const MainSerarchReasult = () => {
                 alignItems: { xs: "end", md: "center" },
               }}
             >
-              <CommonButton value="📖읽기" outline={false} />
-              <CommonButton value="📌찜하기" outline={false} />
+              <CommonButton
+                value="📖읽기"
+                outline={false}
+                onClick={handleReadBook}
+              />
+              <CommonButton
+                value="📌찜하기"
+                outline={false}
+                onClick={handleBookMark}
+              />
             </Box>
           )}
         </Box>

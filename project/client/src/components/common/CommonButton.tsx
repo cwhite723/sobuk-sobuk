@@ -3,6 +3,7 @@ import { Button } from "@mui/material";
 interface PropsType {
   value: string;
   outline: boolean;
+  onClick: React.MouseEventHandler<HTMLButtonElement>;
 }
 
 const CommonButton: React.FC<PropsType> = (props) => {
@@ -28,6 +29,7 @@ const CommonButton: React.FC<PropsType> = (props) => {
             }
       }
       variant={props.outline ? "outlined" : "contained"}
+      onClick={props.onClick}
     >
       {props.value}
     </Button>
