@@ -5,6 +5,7 @@ import MainBookProgressCard from "components/main/MainBookProgressCard";
 import MainBookRankCard from "components/main/MainBookRankCard";
 import CommonSearchBar from "components/common/CommonSearchBar";
 import CommonTitle from "components/common/CommonTitle";
+import MainSerarchReasult from "components/main/MainSearchResult";
 
 const MainPage = () => {
   return (
@@ -13,6 +14,7 @@ const MainPage = () => {
       <MainSection>
         <CommonTitle value="📚 도서 검색" />
         <CommonSearchBar />
+        <MainSerarchReasult />
       </MainSection>
 
       {/* 독서진행률 */}

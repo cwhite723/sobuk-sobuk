@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import CommonBookImage from "components/common/CommonBookImage";
 import CommonTypography from "components/common/CommonTypography";
 import MainBookProgressCover from "./MainBookProgressCover";
@@ -56,11 +56,12 @@ const MainBookProgressCard: React.FC<PropsType> = (props) => {
           >
             <CommonTypography value="책 제목 |" variant="h6" bold={true} />
             <CommonTypography value="　지은이" variant="body2" bold={false} />
-            <Box
+            <Button
               sx={{
                 position: "absolute",
                 bottom: "5px",
                 right: "0px",
+                color: "text.primary",
                 fontWeight: "bold",
                 border: "1px solid",
                 borderRadius: 5,
@@ -68,7 +69,7 @@ const MainBookProgressCard: React.FC<PropsType> = (props) => {
               }}
             >
               읽는 중
-            </Box>
+            </Button>
           </Box>
           <CommonTypography
             value="2023.06.03 ~ 2023.10.03"
