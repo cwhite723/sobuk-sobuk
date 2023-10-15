@@ -17,7 +17,7 @@ const MainSerarchReasult = () => {
   ];
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
-      <MainBookEditDialog isOpen={true} type="edit" />
+      <MainBookEditDialog isOpen={true} type="read" />
 
       {bookList.map((item) => (
         <Box
