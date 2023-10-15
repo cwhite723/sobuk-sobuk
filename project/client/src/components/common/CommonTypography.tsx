@@ -10,7 +10,7 @@ const CommonTypography: React.FC<PropsType> = (props) => {
   return (
     <Typography
       variant={props.variant}
-      sx={{ fontWeight: props.bold ? 800 : 400 }}
+      sx={{ fontWeight: props.bold ? 800 : 400, mr: 2 }}
     >
       {props.value}
     </Typography>

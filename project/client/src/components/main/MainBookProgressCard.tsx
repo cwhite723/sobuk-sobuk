@@ -76,7 +76,7 @@ const MainBookProgressCard: React.FC<PropsType> = (props) => {
             }}
           >
             <CommonTypography value="책 제목 |" variant="h6" bold={true} />
-            <CommonTypography value="　지은이" variant="body2" bold={false} />
+            <CommonTypography value="지은이" variant="body2" bold={false} />
             <Button
               sx={{
                 position: "absolute",

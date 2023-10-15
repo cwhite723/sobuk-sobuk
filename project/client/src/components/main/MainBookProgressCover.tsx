@@ -1,5 +1,6 @@
 import { Box } from "@mui/material";
 import CommonButton from "components/common/CommonButton";
+import { useNavigate } from "react-router-dom";
 
 interface PropsType {
   status: "nonMember" | "complete" | "error";
@@ -12,8 +13,15 @@ const MainBookProgressCover: React.FC<PropsType> = (props) => {
     error: "Error",
   };
 
+  const navigate = useNavigate();
   const handleCardStatus = () => {
-    console.log("cover click");
+    if (props.status === "nonMember") {
+      navigate("../login");
+    } else if (props.status === "complete") {
+      navigate("../write");
+    } else {
+      navigate("../error");
+    }
   };
 
   return (

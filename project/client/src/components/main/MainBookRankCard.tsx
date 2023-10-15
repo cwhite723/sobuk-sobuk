@@ -12,7 +12,7 @@ const MainBookRankCard = () => {
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
-          alignItems: "center",
+          alignItems: "left",
           backgroundColor: "background.default",
           borderRadius: 5,
           p: 2,
@@ -20,9 +20,11 @@ const MainBookRankCard = () => {
       >
         <CommonBookImage width={100} height={150} />
 
-        <CommonTypography value="책 제목" variant="h6" bold={true} />
-        <CommonTypography value="지은이" variant="body2" bold={false} />
-        <CommonTypography value="한줄소개" variant="body2" bold={false} />
+        <Box sx={{ ml: 2, borderTop: "1px solid" }}>
+          <CommonTypography value="책 제목" variant="h6" bold={true} />
+          <CommonTypography value="지은이" variant="body2" bold={false} />
+          <CommonTypography value="한줄소개" variant="body2" bold={false} />
+        </Box>
       </Box>
     </Grid>
   );
