@@ -2,6 +2,7 @@ import { Box } from "@mui/material";
 import CommonButton from "components/common/CommonButton";
 import CommonTypography from "components/common/CommonTypography";
 import MainBookEditDialog from "./MainBookEditDialog";
+import React from "react";
 
 const MainSerarchReasult = () => {
   const bookList = [
@@ -16,20 +17,36 @@ const MainSerarchReasult = () => {
     },
   ];
 
+  const [openDialog, setOpenDialog] = React.useState<boolean>(false);
+  const [dialogType, setDialogType] = React.useState<"read" | "add" | "edit">(
+    "read",
+  );
+
   const handleAddBook = () => {
-    console.log("책 직접 추가하기");
+    setOpenDialog(true);
+    setDialogType("add");
   };
 
   const handleReadBook = () => {
-    console.log("책 읽기");
+    setOpenDialog(true);
+    setDialogType("read");
   };
 
   const handleBookMark = () => {
     console.log("책 찜하기");
   };
+
+  const handleClose = () => {
+    setOpenDialog(false);
+  };
+
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
-      <MainBookEditDialog isOpen={false} type="read" />
+      <MainBookEditDialog
+        isOpen={openDialog}
+        type={dialogType}
+        handleClose={handleClose}
+      />
 
       {bookList.map((item) => (
         <Box

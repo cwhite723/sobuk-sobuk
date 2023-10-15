@@ -2,6 +2,8 @@ import { Box, Button } from "@mui/material";
 import CommonBookImage from "components/common/CommonBookImage";
 import CommonTypography from "components/common/CommonTypography";
 import MainBookProgressCover from "./MainBookProgressCover";
+import MainBookEditDialog from "./MainBookEditDialog";
+import React from "react";
 
 interface PropsType {
   isNonMember?: boolean;
@@ -9,6 +11,20 @@ interface PropsType {
 }
 
 const MainBookProgressCard: React.FC<PropsType> = (props) => {
+  const [openDialog, setOpenDialog] = React.useState<boolean>(false);
+  const [dialogType, setDialogType] = React.useState<"read" | "add" | "edit">(
+    "read",
+  );
+
+  const handleEditBook = () => {
+    setOpenDialog(true);
+    setDialogType("edit");
+  };
+
+  const handleClose = () => {
+    setOpenDialog(false);
+  };
+
   return (
     <Box
       sx={{
@@ -23,6 +39,11 @@ const MainBookProgressCard: React.FC<PropsType> = (props) => {
         mb: 2,
       }}
     >
+      <MainBookEditDialog
+        isOpen={openDialog}
+        type={dialogType}
+        handleClose={handleClose}
+      />
       {(props.isNonMember || props.isComplete) && (
         <MainBookProgressCover
           status={
@@ -67,6 +88,7 @@ const MainBookProgressCard: React.FC<PropsType> = (props) => {
                 borderRadius: 5,
                 p: 1,
               }}
+              onClick={handleEditBook}
             >
               {props.isComplete ? "완독" : "읽는 중"}
             </Button>

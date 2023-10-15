@@ -4,7 +4,7 @@ interface PropsType {
   id: string;
   label: string;
   placeholder?: string;
-  type: "password" | "required";
+  type: "password" | "required" | "number" | "email" | "date";
 }
 
 const CommonTextField: React.FC<PropsType> = (props) => {
