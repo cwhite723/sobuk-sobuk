@@ -1,9 +1,8 @@
-import { Box, TextField } from "@mui/material";
-import CommonBigButton from "components/common/CommonBigButton";
-import CommonButton from "components/common/CommonButton";
-import CommonTextField from "components/common/CommonTextField";
+import { Box } from "@mui/material";
 import CommonTitle from "components/common/CommonTitle";
 import CommonTypography from "components/common/CommonTypography";
+import WritePostBookItem from "components/write/WritePostBookItem";
+import WritePostForm from "components/write/WritePostForm";
 import React from "react";
 
 interface BookItem {
@@ -24,11 +23,7 @@ const WritePage = () => {
     { bookId: 5, bookName: "책 제목5", writer: "저자5", publish: "출판사5" },
   ];
 
-  const handleSubmitPost = () => {
-    console.log("submit post");
-  };
-
-  const handleSelectBook = (item: BookItem) => {
+  const handleSelectBook = (item: BookItem | null) => {
     setSelectBook(item);
   };
 
@@ -54,7 +49,7 @@ const WritePage = () => {
         bold={true}
       />
       {/* 완독 도서 리스트 */}
-      {selectBook === null ? (
+      {selectBook === null && (
         <Box
           sx={{
             display: "flex",
@@ -70,102 +65,17 @@ const WritePage = () => {
           }}
         >
           {bookList.map((item) => (
-            <Box
+            <WritePostBookItem
               key={item.bookId}
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                p: 2,
-                "&:not(:last-of-type)": {
-                  borderBottom: "1px solid",
-                },
-                "&:nth-of-type(odd)": {
-                  backgroundColor: "primary.light",
-                },
-              }}
-            >
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: { xs: "column", md: "row" },
-                }}
-              >
-                <CommonTypography
-                  value={item.bookName}
-                  variant="body1"
-                  bold={true}
-                />
-                <CommonTypography
-                  value={item.writer}
-                  variant="body1"
-                  bold={false}
-                />
-                <CommonTypography
-                  value={item.publish}
-                  variant="body1"
-                  bold={false}
-                />
-              </Box>
-
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: { xs: "column", md: "row" },
-                  alignItems: { xs: "end", md: "center" },
-                }}
-              >
-                <CommonButton
-                  value="✔선택하기"
-                  outline={false}
-                  onClick={() => {
-                    handleSelectBook(item);
-                  }}
-                />
-              </Box>
-            </Box>
+              handleSelectBook={handleSelectBook}
+              book={item}
+            />
           ))}
         </Box>
-      ) : (
-        <></>
       )}
       {/* 독서기록 작성 form */}
       {selectBook && (
-        <Box sx={{ mt: 4 }}>
-          <Box sx={{ display: "flex", alignItems: "baseline" }}>
-            <CommonTypography
-              value={"👉" + selectBook.bookName}
-              variant="h5"
-              bold={true}
-            />
-            <CommonTypography
-              value={selectBook.writer}
-              variant="body1"
-              bold={true}
-            />
-          </Box>
-          <CommonTextField
-            id="post-title"
-            label="Post Title"
-            type="required"
-            placeholder="제목을 입력하세요"
-          />
-          <TextField
-            id="post-contents"
-            label="Post Contents"
-            type="required"
-            placeholder="내용을 입력하세요"
-            multiline
-            fullWidth
-            rows={10}
-            sx={{ mt: 2 }}
-          />
-          <CommonBigButton value="작성 완료" onClick={handleSubmitPost} />
-          <CommonBigButton
-            value="다른 책 선택하기"
-            onClick={handleChangeBook}
-          />
-        </Box>
+        <WritePostForm handleChangeBook={handleChangeBook} book={selectBook} />
       )}
     </Box>
   );
