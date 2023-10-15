@@ -13,7 +13,6 @@ const CommonBigButton: React.FC<PropsType> = (props) => {
       variant="contained"
       sx={{
         display: "block",
-        maxWidth: 500,
         backgroundColor: "text.primary",
         color: "text.secondary",
         mt: 2,

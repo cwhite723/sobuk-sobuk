@@ -10,6 +10,7 @@ interface PropsType {
 const CommonTextField: React.FC<PropsType> = (props) => {
   return (
     <TextField
+      fullWidth
       type={props.type}
       id={props.id}
       label={props.label}
