@@ -1,25 +1,15 @@
 import { Box } from "@mui/material";
-import CommonAvaratImage from "components/common/CommonAvatarImage";
-import CommonBigButton from "components/common/CommonBigButton";
-import CommonButton from "components/common/CommonButton";
 import CommonLink from "components/common/CommonLink";
-import CommonTextField from "components/common/CommonTextField";
 import CommonTitle from "components/common/CommonTitle";
 import CommonTypography from "components/common/CommonTypography";
+import CommonUserProfile from "components/common/CommonUserProfile";
 import PostBookInfo from "components/post/PostBookInfo";
 import PostCommentForm from "components/post/PostCommentForm";
 import PostCommentItem from "components/post/PostCommentItem";
 import PostContents from "components/post/PostContents";
 import PostReaction from "components/post/PostReaction";
-import React from "react";
 
 const PostPage = () => {
-  const [isFollow, setIsFollow] = React.useState(true);
-
-  const handleUserFollow = () => {
-    setIsFollow(!isFollow);
-  };
-
   return (
     <Box
       sx={{
@@ -44,37 +34,7 @@ const PostPage = () => {
       <CommonTitle value="독서기록 제목" />
 
       {/* user profile */}
-      {/* Common component로 빼기 */}
-      <Box
-        sx={{
-          width: "100%",
-          display: "flex",
-          justifyContent: "space-between",
-        }}
-      >
-        <CommonLink to="../user/1">
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <CommonAvaratImage size={50} />
-            <Box sx={{ m: 1 }}>
-              <CommonTypography
-                value="작성자 닉네임"
-                variant="body1"
-                bold={true}
-              />
-              <CommonTypography
-                value="작성자 아이디"
-                variant="body2"
-                bold={false}
-              />
-            </Box>
-          </Box>
-        </CommonLink>
-        <CommonButton
-          value="팔로우"
-          onClick={handleUserFollow}
-          outline={isFollow ? false : true}
-        />
-      </Box>
+      <CommonUserProfile userId="userId" userName="userName" avatarSize={50} />
 
       {/* 책 정보 */}
       <PostBookInfo />

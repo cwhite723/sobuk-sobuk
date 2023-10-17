@@ -1,9 +1,8 @@
 import { Box } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
-import React from "react";
-import FeedPostCardProfile from "./FeedPostCardProfile";
 import FeedPostCardInfo from "./FeedPostCardInfo";
 import FeedPostCardReaction from "./FeedPostCardReaction";
+import CommonUserProfile from "components/common/CommonUserProfile";
 
 const FeedPostCard = () => {
   return (
@@ -21,7 +20,11 @@ const FeedPostCard = () => {
         }}
       >
         {/* user profile */}
-        <FeedPostCardProfile />
+        <CommonUserProfile
+          userId="userId"
+          userName="userName"
+          avatarSize={50}
+        />
 
         {/* 책, 게시글 정보 영역 */}
         <FeedPostCardInfo />

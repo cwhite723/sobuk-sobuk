@@ -5,7 +5,14 @@ import CommonLink from "components/common/CommonLink";
 import CommonTypography from "components/common/CommonTypography";
 import React from "react";
 
-const FeedPostCardProfile = () => {
+interface PropsType {
+  userName: string;
+  userId: string;
+  userAvatar?: string;
+  avatarSize: number;
+}
+
+const CommonUserProfile: React.FC<PropsType> = (props) => {
   const [isFollow, setIsFollow] = React.useState(true);
 
   const handleUserFollow = () => {
@@ -21,15 +28,15 @@ const FeedPostCardProfile = () => {
     >
       <CommonLink to="../user/1">
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <CommonAvaratImage size={50} />
+          <CommonAvaratImage size={props.avatarSize} src={props.userAvatar} />
           <Box sx={{ m: 1 }}>
             <CommonTypography
-              value="작성자 닉네임"
+              value={props.userName}
               variant="body1"
               bold={true}
             />
             <CommonTypography
-              value="작성자 아이디"
+              value={props.userId}
               variant="body2"
               bold={false}
             />
@@ -45,4 +52,4 @@ const FeedPostCardProfile = () => {
   );
 };
 
-export default FeedPostCardProfile;
+export default CommonUserProfile;
