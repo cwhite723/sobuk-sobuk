@@ -1,11 +1,10 @@
-import { Box, Input } from "@mui/material";
+import { Box, Input, Tab, Tabs } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 
 import CommonAvaratImage from "components/common/CommonAvatarImage";
 import CommonBigButton from "components/common/CommonBigButton";
 import CommonBookImage from "components/common/CommonBookImage";
 import CommonButton from "components/common/CommonButton";
-import CommonLink from "components/common/CommonLink";
 import CommonTextField from "components/common/CommonTextField";
 import CommonTitle from "components/common/CommonTitle";
 import CommonTypography from "components/common/CommonTypography";
@@ -27,6 +26,10 @@ const UserPage = () => {
     console.log("계정 정보 수정 완료");
   };
 
+  const handleDropOut = () => {
+    console.log("회원탈퇴");
+  };
+
   const [selectTab, setSelectTab] = React.useState<TabMenu>("intro");
   const [isOwner, setIsOwner] = React.useState<boolean>(true);
   const [userName, setUserName] = React.useState("윤정");
@@ -38,33 +41,44 @@ const UserPage = () => {
   const handleUserFollow = () => {
     setIsFollow(!isFollow);
   };
+
+  const handleTabChange = (
+    event: React.SyntheticEvent,
+    newSelectMenu: TabMenu,
+  ) => {
+    setSelectTab(newSelectMenu);
+  };
   return (
     <Box sx={{ width: "100%" }}>
       {/* 유저(내서재) 페이지 상단바 */}
       {/* MUI Tab Menu 적용하기 */}
       <Box
         sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          borderBottom: "3px solid",
-          p: 2,
-          pb: 1,
+          width: "100%",
           mb: 2,
         }}
       >
-        <Box sx={{ display: "flex" }}>
-          <CommonTypography value="⛄소개" variant="h6" bold={true} />
-          <CommonTypography value="📚서재" variant="h6" bold={false} />
-          <CommonTypography value="📓독서기록" variant="h6" bold={false} />
-        </Box>
-        {isOwner && (
-          <Box sx={{ display: "flex" }}>
-            <CommonTypography value="수정" variant="h6" bold={false} />
-            <CommonLink to="#">
-              <CommonTypography value="탈퇴" variant="h6" bold={false} />
-            </CommonLink>
-          </Box>
-        )}
+        <Tabs
+          value={selectTab}
+          onChange={handleTabChange}
+          variant="scrollable"
+          scrollButtons
+          allowScrollButtonsMobile
+          aria-label="user page tab menu"
+          sx={{
+            "& .MuiTab-root": {
+              color: "text.primary",
+            },
+            "& .MuiTabs-indicator": {
+              backgroundColor: "text.primary",
+            },
+          }}
+        >
+          <Tab label="⛄소개" value="intro" />
+          <Tab label="📚서재" value="lib" />
+          <Tab label="📓독서기록" value="post" />
+          {isOwner && <Tab label="🔐계정정보/탈퇴" value="setting" />}
+        </Tabs>
       </Box>
 
       {/* 유저페이지 전체 container 영역(기본) */}
@@ -462,7 +476,6 @@ const UserPage = () => {
             flexDirection: "column",
             justifyContent: "center",
             width: "100%",
-            maxWidth: 500,
             backgroundColor: "primary.main",
             borderRadius: 5,
             border: "1px solid",
@@ -495,6 +508,7 @@ const UserPage = () => {
             placeholder="기존 소개글"
           />
           <CommonBigButton value="수정완료" onClick={handleSetting} />
+          <CommonBigButton value="회원탈퇴" onClick={handleDropOut} />
         </Box>
       )}
     </Box>
