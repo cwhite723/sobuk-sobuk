@@ -5,9 +5,14 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
 import reading.project.global.base.BaseEntity;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.hibernate.annotations.OnDeleteAction.CASCADE;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -36,6 +41,10 @@ public class Book extends BaseEntity {
 
     @Column(name = "is_user_input")
     private boolean isUserInput;
+
+    @OnDelete(action = CASCADE)
+    @OneToMany(mappedBy = "book", cascade = CascadeType.PERSIST)
+    private List<Record> records = new ArrayList<>();
 
     @Builder
     public Book(String title, String publisher, String author, LocalDate publicationDate, int pageNumber, boolean isUserInput) {
