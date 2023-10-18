@@ -1,25 +1,26 @@
-import { red } from "@mui/material/colors";
+import { red, green, blueGrey, grey } from "@mui/material/colors";
 import { createTheme, responsiveFontSizes } from "@mui/material/styles";
 
 const theme = responsiveFontSizes(
   createTheme({
     palette: {
       background: {
-        default: "#D9D3CC",
+        default: grey[200],
       },
       primary: {
-        main: "#D9BBA0",
-        light: "#F2F2F2",
+        main: blueGrey[300],
+        light: blueGrey[100],
+        dark: blueGrey[900],
       },
       text: {
-        primary: "#402721",
-        secondary: "#D9D3CC",
-      },
-      action: {
-        active: "#8C5F45",
+        primary: grey[800],
+        secondary: grey[50],
       },
       error: {
         main: red[500],
+      },
+      success: {
+        main: green[500],
       },
     },
   }),

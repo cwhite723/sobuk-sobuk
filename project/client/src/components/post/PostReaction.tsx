@@ -37,7 +37,7 @@ const PostReaction = () => {
       {/* buttons */}
       <Box sx={{ display: "flex" }}>
         {isOwner && (
-          <Box>
+          <Box sx={{ display: "flex" }}>
             <CommonButton
               value="삭제"
               outline={false}
