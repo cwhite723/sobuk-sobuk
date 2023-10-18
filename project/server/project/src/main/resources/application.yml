@@ -4,4 +4,4 @@ spring:
       "local": "local, common"
       "dev": "dev, common"
       "prod": "prod, common"
-    active: local
+    active: dev
