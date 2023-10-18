@@ -1,10 +1,23 @@
 import { Box, Pagination } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
+import CommonTabMenu from "components/common/CommonTabMenu";
 import FeedOptionMenu from "components/feed/FeedOptionMenu";
 import FeedPostCard from "components/feed/FeedPostCard";
-import FeedTopMenu from "components/feed/FeedTopMenu";
+import React from "react";
+
+const feedTabMenus = [
+  { label: "전체", value: "all" },
+  { label: "팔로잉", value: "following" },
+];
+
+type tabMenuType = { label: string; value: string };
 
 const FeedPage = () => {
+  const [nowTab, setNowTab] = React.useState(feedTabMenus[0]);
+
+  const handleTabFocus = (newTab: tabMenuType) => {
+    setNowTab(newTab);
+  };
   return (
     <Box
       sx={{
@@ -12,7 +25,12 @@ const FeedPage = () => {
       }}
     >
       {/* 피드 페이지 상단바 */}
-      <FeedTopMenu />
+      <CommonTabMenu
+        handelTabFocus={handleTabFocus}
+        nowTab={nowTab}
+        tabMenus={feedTabMenus}
+      />
+      {/* <FeedTopMenu /> */}
 
       {/* 피드 상단(정렬) */}
       <FeedOptionMenu />
