@@ -1,4 +1,4 @@
-package reading.project.domain.record.dto.request;
+package reading.project.domain.readingplan.dto.request;
 
 import lombok.Builder;
 import lombok.Getter;

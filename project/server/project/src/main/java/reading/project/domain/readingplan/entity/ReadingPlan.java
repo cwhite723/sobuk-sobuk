@@ -1,26 +1,29 @@
-package reading.project.domain.record.entity;
+package reading.project.domain.readingplan.entity;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import reading.project.domain.book.entity.Book;
 import reading.project.global.base.BaseEntity;
+import reading.project.global.member.entity.Member;
 
 import java.time.LocalDate;
 
 import static jakarta.persistence.FetchType.LAZY;
+import static jakarta.persistence.GenerationType.*;
+import static lombok.AccessLevel.*;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "records")
+@NoArgsConstructor(access = PROTECTED)
+@Table(name = "reading_plans")
 @Entity
-public class Record extends BaseEntity {
+public class ReadingPlan extends BaseEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "record_id", nullable = false)
+    @GeneratedValue(strategy = IDENTITY)
+    @Column(name = "reading_plan_id", nullable = false)
     private Long id;
 
     @Column(name = "start_date")
@@ -78,7 +81,7 @@ public class Record extends BaseEntity {
     }
 
     @Builder
-    public Record(LocalDate startDate, LocalDate endDate, int readPageNumber, Status status, Book book, Member member) {
+    public ReadingPlan(LocalDate startDate, LocalDate endDate, int readPageNumber, Status status, Book book, Member member) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.readPageNumber = readPageNumber;

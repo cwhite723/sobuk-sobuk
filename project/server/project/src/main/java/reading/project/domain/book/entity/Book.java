@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
+import reading.project.domain.readingplan.entity.ReadingPlan;
 import reading.project.global.base.BaseEntity;
 
 import java.time.LocalDate;
@@ -44,7 +45,7 @@ public class Book extends BaseEntity {
 
     @OnDelete(action = CASCADE)
     @OneToMany(mappedBy = "book", cascade = CascadeType.PERSIST)
-    private List<Record> records = new ArrayList<>();
+    private List<ReadingPlan> readingPlans = new ArrayList<>();
 
     @Builder
     public Book(String title, String publisher, String author, LocalDate publicationDate, int pageNumber, boolean isUserInput) {

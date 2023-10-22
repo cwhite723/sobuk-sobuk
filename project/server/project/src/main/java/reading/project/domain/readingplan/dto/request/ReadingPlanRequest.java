@@ -1,24 +1,26 @@
-package reading.project.domain.record.dto.request;
+package reading.project.domain.readingplan.dto.request;
 
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import reading.project.domain.record.entity.Record;
+import reading.project.domain.book.entity.Book;
+import reading.project.domain.readingplan.entity.ReadingPlan;
+import reading.project.global.member.entity.Member;
 
 import java.time.LocalDate;
 
-import static reading.project.domain.record.entity.Record.Status;
+import static reading.project.domain.readingplan.entity.ReadingPlan.Status;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class RecordRequest {
+public class ReadingPlanRequest {
     private LocalDate startDate;
     private LocalDate endDate;
     private int readPageNumber;
     private Status status;
 
-    public Record toEntity(Member member, Book book) {
-        return Record.builder()
+    public ReadingPlan toEntity(Member member, Book book) {
+        return ReadingPlan.builder()
                 .startDate(startDate)
                 .endDate(endDate)
                 .readPageNumber(readPageNumber)
