@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
+import static org.springframework.http.HttpStatus.*;
+
 @Getter
 @RequiredArgsConstructor
 public enum ErrorCode {
@@ -13,7 +15,9 @@ public enum ErrorCode {
     // 401
 
     // 404
-    MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND,"회원을 찾을 수 없습니다."),
+    NOT_FOUND_BOOK(NOT_FOUND, "도서 정보가 존재하지 않습니다."),
+    MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND,"회원이 존재하지 않습니다."),
+
     // 409
 
     // 500

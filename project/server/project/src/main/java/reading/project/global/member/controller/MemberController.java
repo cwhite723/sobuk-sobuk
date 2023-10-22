@@ -1,13 +1,10 @@
 package reading.project.global.member.controller;
 
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reading.project.global.member.dto.MemberDto;
-import reading.project.global.member.entity.Member;
 import reading.project.global.member.service.MemberService;
 import reading.project.global.response.ApplicationResponse;
 

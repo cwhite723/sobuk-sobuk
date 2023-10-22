@@ -35,13 +35,8 @@ public class MemberService {
         this.memberRepository.delete(this.findExistsMember(memberId));
     }
 
-    private Member findExistsMember(long memberId) {
+    public Member findExistsMember(long memberId) {
         return this.memberRepository.findById(memberId)
-                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
-    }
-
-    public Member findExistsMember(String userName){
-        return this.memberRepository.findByUserName(userName)
                 .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
     }
 }
