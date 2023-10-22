@@ -13,7 +13,7 @@ public enum ErrorCode {
     // 401
 
     // 404
-
+    MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND,"회원을 찾을 수 없습니다."),
     // 409
 
     // 500
