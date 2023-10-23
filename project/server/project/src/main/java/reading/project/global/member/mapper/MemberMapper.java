@@ -25,7 +25,7 @@ public class MemberMapper {
 
     public MemberDto.Response memberToMemberDtoResponse(Member member) {
         return MemberDto.Response.builder()
-                .memberId(member.getMemberId())
+                .memberId(member.getId())
                 .userName(member.getUserName())
                 .password(member.getPassword())
                 .nickname(member.getNickname())

@@ -1,24 +1,27 @@
 package reading.project.global.member.entity;
 
-
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import reading.project.domain.book.entity.Bookmark;
 import reading.project.global.member.dto.MemberDto;
 
 import javax.management.relation.Role;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED) //아무런 값도 갖지 않는 의미 없는 객체 생성 방지
 @Getter
 @Table(name = "Member")
 public class Member {
     // 생성자에만 builder 사용
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long memberId;
+    @Column(name = "member_id", nullable = false, updatable = false)
+    private Long id;
 
     @Column(nullable = false)
     private String userName;
@@ -43,6 +46,9 @@ public class Member {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @OneToMany(mappedBy = "member")
+    private List<Bookmark> bookmarks = new ArrayList<>();
 
     @Builder //NoArgsContructor 오류 방지를 위한 생성자에 @Builder 붙이기
     public Member(String userName, String password, String nickname, String email, String introduction, String image, Role role) {
