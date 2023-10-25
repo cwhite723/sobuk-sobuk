@@ -1,6 +1,7 @@
 package reading.project.global.member.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reading.project.global.exception.CustomException;
@@ -19,8 +20,14 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final MemberMapper mapper;
 
+    private final PasswordEncoder passwordEncoder;
+
     public void createMember(MemberDto.Post requestBody) {
-        this.memberRepository.save(mapper.memberDtoPostToMember(requestBody));
+        verifyExistUserName(requestBody.getUserName());
+        Member member =mapper.memberDtoPostToMember(requestBody);
+        member.changePassword(passwordEncoder.encode(member.getPassword()));
+        //역할 부여 필요
+        this.memberRepository.save(member);
     }
 
     public MemberDto.Response updateMember(long memberId, MemberDto.Patch requestBody) {
@@ -39,4 +46,16 @@ public class MemberService {
         return this.memberRepository.findById(memberId)
                 .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
     }
+
+    public Member findExistsMember(String userName) {
+        return this.memberRepository.findByUserName(userName)
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+    }
+
+    public void verifyExistUserName(String userName){
+        if(memberRepository.findByUserName(userName).isPresent()){
+            throw new CustomException(ErrorCode.MEMBER_EXISTS);
+        }
+    }
+
 }

@@ -1,14 +1,10 @@
 package reading.project.global.member.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import reading.project.domain.book.entity.Bookmark;
 import reading.project.global.member.dto.MemberDto;
 
-import javax.management.relation.Role;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,7 +47,8 @@ public class Member {
     private List<Bookmark> bookmarks = new ArrayList<>();
 
     @Builder //NoArgsContructor 오류 방지를 위한 생성자에 @Builder 붙이기
-    public Member(String userName, String password, String nickname, String email, String introduction, String image, Role role) {
+    public Member(Long memberId, String userName, String password, String nickname, String email, String introduction, String image, Role role) {
+        this.id = memberId;
         this.userName = userName;
         this.password = password;
         this.nickname = nickname;
@@ -70,5 +67,9 @@ public class Member {
         this.introduction = request.getIntroduction();
         this.image = request.getImage();
         return this;
+    }
+
+    public void changePassword(String newPassword) {
+        this.password = newPassword;
     }
 }

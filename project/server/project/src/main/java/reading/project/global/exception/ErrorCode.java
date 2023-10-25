@@ -21,6 +21,7 @@ public enum ErrorCode {
 
     // 409
     NOT_CREATOR(CONFLICT, "작성자가 아닙니다."),
+    MEMBER_EXISTS(CONFLICT,"아이디가 존재 합니다."),
 
     // 500
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 오류입니다. 관리자에게 문의하세요."),

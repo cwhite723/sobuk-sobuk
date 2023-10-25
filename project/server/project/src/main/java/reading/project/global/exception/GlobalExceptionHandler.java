@@ -42,7 +42,7 @@ public class GlobalExceptionHandler {
         String requestURI = request.getRequestURI();
         log.info("validationFailed at {}: {}", requestURI, errorMessage);
 
-        return new ErrorResponse(REQUEST_VALIDATION_FAIL.name(), errorMessage);
+        return new ErrorResponse(null,REQUEST_VALIDATION_FAIL.name(), errorMessage);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
@@ -52,6 +52,6 @@ public class GlobalExceptionHandler {
         String requestURI = request.getRequestURI();
         log.info("validationFailed at {}: {}", requestURI, errorMessage);
 
-        return new ErrorResponse(REQUEST_VALIDATION_FAIL.name(), errorMessage);
+        return new ErrorResponse(null,REQUEST_VALIDATION_FAIL.name(), errorMessage);
     }
 }
