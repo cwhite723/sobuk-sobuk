@@ -5,17 +5,21 @@ import FeedOptionMenu from "components/feed/FeedOptionMenu";
 import FeedPostCard from "components/feed/FeedPostCard";
 import React from "react";
 
+// 피드 서브 탭 메뉴 리스트 데이터
 const feedTabMenus = [
   { label: "전체", value: "all" },
   { label: "팔로잉", value: "following" },
 ];
 
 const FeedPage = () => {
+  // 현재 선택된 서브 탭 메뉴
   const [nowTab, setNowTab] = React.useState(feedTabMenus[0]);
 
+  // 선택된 서브 탭 메뉴 변경 함수
   const handleTabFocus = (newTab: tabMenuType) => {
     setNowTab(newTab);
   };
+
   return (
     <Box
       sx={{

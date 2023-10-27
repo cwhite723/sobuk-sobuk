@@ -6,19 +6,22 @@ import CommonTitle from "components/common/CommonTitle";
 import React from "react";
 
 const UserSetting = () => {
-  // 계정정보 수정
+  // 로그인한 유저의 프로필 이미지
   const [profileImg, setProfileImg] = React.useState<string>("");
 
+  // 로그인한 유저의 프로필 이미지 변경 함수
   const handleChangeImg = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       setProfileImg(URL.createObjectURL(event.target.files[0]));
     }
   };
 
+  // 정보 수정 완료 버튼 함수
   const handleSetting = () => {
     console.log("계정 정보 수정 완료");
   };
 
+  // 회원탈퇴 버튼 함수
   const handleDropOut = () => {
     console.log("회원탈퇴");
   };
@@ -38,6 +41,8 @@ const UserSetting = () => {
         }}
       >
         <CommonTitle value="😊 계정 정보 수정하기" />
+
+        {/* 프로필 이미지 업데이트 */}
         <Box
           sx={{
             display: "flex",
@@ -49,6 +54,8 @@ const UserSetting = () => {
           <CommonAvaratImage size={100} src={profileImg} />
           <Input type="file" onChange={handleChangeImg} />
         </Box>
+
+        {/* 프로필 수정 폼 */}
         <CommonTextField
           type="required"
           id="user-name"

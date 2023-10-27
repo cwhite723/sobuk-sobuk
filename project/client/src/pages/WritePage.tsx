@@ -5,28 +5,25 @@ import WritePostBookItem from "components/write/WritePostBookItem";
 import WritePostForm from "components/write/WritePostForm";
 import React from "react";
 
-interface BookItem {
-  bookId: number;
-  bookName: string;
-  writer: string;
-  publish: string;
-}
+// 더미 데이터
+const bookList = [
+  { bookId: 1, bookName: "책 제목1", writer: "저자1", publish: "출판사1" },
+  { bookId: 2, bookName: "책 제목2", writer: "저자2", publish: "출판사2" },
+  { bookId: 3, bookName: "책 제목3", writer: "저자3", publish: "출판사3" },
+  { bookId: 4, bookName: "책 제목4", writer: "저자4", publish: "출판사4" },
+  { bookId: 5, bookName: "책 제목5", writer: "저자5", publish: "출판사5" },
+];
 
 const WritePage = () => {
+  // 선택된 책
   const [selectBook, setSelectBook] = React.useState<BookItem | null>(null);
 
-  const bookList = [
-    { bookId: 1, bookName: "책 제목1", writer: "저자1", publish: "출판사1" },
-    { bookId: 2, bookName: "책 제목2", writer: "저자2", publish: "출판사2" },
-    { bookId: 3, bookName: "책 제목3", writer: "저자3", publish: "출판사3" },
-    { bookId: 4, bookName: "책 제목4", writer: "저자4", publish: "출판사4" },
-    { bookId: 5, bookName: "책 제목5", writer: "저자5", publish: "출판사5" },
-  ];
-
+  // 선택된 책을 컨트롤 하는 함수
   const handleSelectBook = (item: BookItem | null) => {
     setSelectBook(item);
   };
 
+  // 선택된 책 초기화 함수
   const handleChangeBook = () => {
     setSelectBook(null);
   };
@@ -64,6 +61,7 @@ const WritePage = () => {
             },
           }}
         >
+          {/* 도서 아이템 */}
           {bookList.map((item) => (
             <WritePostBookItem
               key={item.bookId}
@@ -73,7 +71,7 @@ const WritePage = () => {
           ))}
         </Box>
       )}
-      {/* 독서기록 작성 form */}
+      {/* 독서기록 작성 폼 */}
       {selectBook && (
         <WritePostForm handleChangeBook={handleChangeBook} book={selectBook} />
       )}

@@ -6,14 +6,18 @@ interface PropsType {
   status: "nonMember" | "complete" | "error";
 }
 
-const MainBookProgressCover: React.FC<PropsType> = (props) => {
-  const cardStatus = {
-    nonMember: "🤝로그인하고 독서기록 작성하기",
-    complete: "🎉완독했어요! 독서기록 작성하기",
-    error: "Error",
-  };
+// 상태값에 따른 버튼 내용
+const cardStatus = {
+  nonMember: "🤝로그인하고 독서기록 작성하기",
+  complete: "🎉완독했어요! 독서기록 작성하기",
+  error: "Error",
+};
 
+const MainBookProgressCover: React.FC<PropsType> = (props) => {
+  // 네비게이트
   const navigate = useNavigate();
+
+  // 상태값에 따른 버튼 내용 변경
   const handleCardStatus = () => {
     if (props.status === "nonMember") {
       navigate("../login");

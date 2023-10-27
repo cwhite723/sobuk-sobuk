@@ -9,12 +9,14 @@ type PropsType = {
 };
 
 const WritePostForm: React.FC<PropsType> = (props) => {
+  // 포스트(독서기록) 작성 완료 함수
   const handleSubmitPost = () => {
     console.log("submit post");
   };
 
   return (
     <Box sx={{ mt: 4 }}>
+      {/* 선택된 책 정보 */}
       <Box sx={{ display: "flex", alignItems: "baseline" }}>
         <CommonTypography
           value={"👉" + props.book.bookName}
@@ -27,6 +29,8 @@ const WritePostForm: React.FC<PropsType> = (props) => {
           bold={true}
         />
       </Box>
+
+      {/* 포스트(독서기록) 작성 폼 */}
       <CommonTextField
         id="post-title"
         label="Post Title"

@@ -24,6 +24,7 @@ const PostPage = () => {
         mt: 4,
       }}
     >
+      {/* 피드로 돌아가기 버튼 */}
       <CommonLink to="../feed">
         <CommonTypography
           value="⬅피드로 돌아가기"
@@ -31,6 +32,7 @@ const PostPage = () => {
           bold={true}
         />
       </CommonLink>
+
       <CommonTitle value="독서기록 제목" />
 
       {/* user profile */}

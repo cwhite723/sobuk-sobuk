@@ -6,6 +6,7 @@ import UserPostList from "components/user/UserPostList";
 import UserSetting from "components/user/UserSetting";
 import React from "react";
 
+// 내 서재 서브 탭 메뉴 데이터
 const userTabMenus = [
   { label: "⛄소개", value: "intro" },
   { label: "📚서재", value: "lib" },
@@ -14,14 +15,20 @@ const userTabMenus = [
 ];
 
 const UserPage = () => {
+  // 현재 선택된 탭 메뉴
   const [nowTab, setNowTab] = React.useState(userTabMenus[0]);
 
+  // 로그인한 유저 이름
   const [userName, setUserName] = React.useState("윤정");
+
+  // 로그인한 유저의 도서 리스트
   const [userBookCount, setUserBookCount] = React.useState(4);
+
+  // 로그인한 유저의 기록 리스트
   const [userPostCount, setUserPostCount] = React.useState(2);
 
+  // 선택된 탭 메뉴를 변경하는 함수
   const handelTabFocus = (newSelectMenu: tabMenuType) => {
-    console.log(newSelectMenu);
     setNowTab(newSelectMenu);
   };
 
@@ -36,6 +43,8 @@ const UserPage = () => {
 
       {/* 유저페이지 전체 container 영역(기본) */}
       {/* 상단 메뉴 선택에 따라 바뀌어야 하는 영역 */}
+
+      {/* 유저페이지 소개 선택시 표출 영역 */}
       {nowTab.value === "intro" && (
         <Box>
           {/* 소개(intro) 선택시 */}

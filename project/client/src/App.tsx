@@ -7,7 +7,6 @@ import FeedPage from "pages/FeedPage";
 import PostPage from "pages/PostPage";
 import WritePage from "pages/WritePage";
 import UserPage from "pages/UserPage";
-import SettingPage from "pages/SettingPage";
 import GroupPage from "pages/GroupPage";
 import ErrorPage from "pages/ErrorPage";
 import MainLayout from "components/common/MainLayout";
@@ -26,7 +25,6 @@ function App() {
           <Route path="write" element={<WritePage />} />
 
           <Route path="user/:userid" element={<UserPage />} />
-          <Route path="setting" element={<SettingPage />} />
           <Route path="group" element={<GroupPage />} />
         </Route>
 

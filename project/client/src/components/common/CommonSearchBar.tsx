@@ -3,9 +3,11 @@ import SearchIcon from "@mui/icons-material/Search";
 import CommonButton from "./CommonButton";
 
 const CommonSearchBar = () => {
+  // 검색 버튼 함수
   const handleSearch = () => {
     console.log("검색");
   };
+
   return (
     <Box sx={{ display: "flex", alignItems: "center", m: 2 }}>
       {/* 검색 아이콘 */}

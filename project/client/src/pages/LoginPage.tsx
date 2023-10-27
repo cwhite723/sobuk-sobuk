@@ -6,14 +6,17 @@ import CommonTypography from "components/common/CommonTypography";
 import React from "react";
 
 const LoginPage = () => {
+  // 로그인 버튼 함수
   const handleLogin = () => {
     console.log("loggedin");
   };
 
+  // 카카오 로그인 버튼 함수
   const handleKakaoLogin = () => {
     console.log("kakao login");
   };
 
+  // 구글 로그인 버튼 함수
   const handleGoogleLogin = () => {
     console.log("google login");
   };
@@ -28,11 +31,14 @@ const LoginPage = () => {
         maxWidth: 500,
       }}
     >
+      {/* HOME 버튼 */}
       <Box sx={{ position: "fixed", top: "30px", right: "30px" }}>
         <CommonLink to="../main">
           <CommonTypography value="🏠HOME" variant="body1" bold={true} />
         </CommonLink>
       </Box>
+
+      {/* 로그인 폼 */}
       <CommonTextField
         type="required"
         id="user-id"
@@ -46,6 +52,8 @@ const LoginPage = () => {
         placeholder="비밀번호를 입력하세요"
       />
       <CommonBigButton value="로그인" onClick={handleLogin} />
+
+      {/* 회원가입, 아이디/비밀번호 찾기 */}
       <Box
         sx={{
           display: "flex",
@@ -67,6 +75,8 @@ const LoginPage = () => {
           />
         </CommonLink>
       </Box>
+
+      {/* 소셜 로그인 */}
       <CommonBigButton value="카카오로 로그인" onClick={handleKakaoLogin} />
       <CommonBigButton value="구글로 로그인" onClick={handleGoogleLogin} />
     </Box>

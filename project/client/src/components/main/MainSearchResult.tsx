@@ -4,38 +4,46 @@ import CommonTypography from "components/common/CommonTypography";
 import MainBookEditDialog from "./MainBookEditDialog";
 import React from "react";
 
-const MainSerarchReasult = () => {
-  const bookList = [
-    { bookId: 1, bookName: "책 제목1", writer: "저자1", publish: "출판사1" },
-    { bookId: 2, bookName: "책 제목2", writer: "저자2", publish: "출판사2" },
-    { bookId: 3, bookName: "책 제목3", writer: "저자3", publish: "출판사3" },
-    {
-      bookId: "no-result",
-      bookName: "찾는 책이 없어요",
-      writer: "",
-      publish: "",
-    },
-  ];
+// 검색된 책 리스트 더미 데이터
+const bookList = [
+  { bookId: 1, bookName: "책 제목1", writer: "저자1", publish: "출판사1" },
+  { bookId: 2, bookName: "책 제목2", writer: "저자2", publish: "출판사2" },
+  { bookId: 3, bookName: "책 제목3", writer: "저자3", publish: "출판사3" },
+  {
+    bookId: "no-result",
+    bookName: "찾는 책이 없어요",
+    writer: "",
+    publish: "",
+  },
+];
 
+const MainSerarchReasult = () => {
+  // Dialog open 여부
   const [openDialog, setOpenDialog] = React.useState<boolean>(false);
+
+  // Dialog 타입 관리
   const [dialogType, setDialogType] = React.useState<"read" | "add" | "edit">(
     "read",
   );
 
+  // 책 추가하기
   const handleAddBook = () => {
     setOpenDialog(true);
     setDialogType("add");
   };
 
+  // 책 읽기
   const handleReadBook = () => {
     setOpenDialog(true);
     setDialogType("read");
   };
 
+  // 책 찜하기
   const handleBookMark = () => {
     console.log("책 찜하기");
   };
 
+  // Dialog 닫기
   const handleClose = () => {
     setOpenDialog(false);
   };
@@ -48,6 +56,7 @@ const MainSerarchReasult = () => {
         handleClose={handleClose}
       />
 
+      {/* 검색된 도서 리스트 */}
       {bookList.map((item) => (
         <Box
           key={item.bookId}

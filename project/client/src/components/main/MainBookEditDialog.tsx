@@ -20,6 +20,7 @@ interface PropsType {
 }
 
 const MainBookEditDialog: React.FC<PropsType> = (props) => {
+  // 화면 크기가 md보다 작아지면 Dialog를 fullscreen으로 띄움
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
   return (
@@ -29,6 +30,7 @@ const MainBookEditDialog: React.FC<PropsType> = (props) => {
       fullScreen={fullScreen}
       sx={{ minWidth: "300px" }}
     >
+      {/* 제목 */}
       <DialogTitle>
         {props.type === "edit"
           ? "🔖 오늘 읽은 페이지 기록하기"
@@ -36,6 +38,8 @@ const MainBookEditDialog: React.FC<PropsType> = (props) => {
           ? "📕 책 추가하기"
           : "📖 완독 기간 설정하기"}
       </DialogTitle>
+
+      {/* 컨텐트 */}
       <DialogContent>
         <DialogContentText sx={{ color: "text.primary" }}>
           {props.type === "edit"
@@ -126,6 +130,8 @@ const MainBookEditDialog: React.FC<PropsType> = (props) => {
           </Box>
         )}
       </DialogContent>
+
+      {/* 하단 버튼 */}
       <DialogActions>
         <Button onClick={props.handleClose}>취소</Button>
         <Button onClick={props.handleClose}>완료</Button>

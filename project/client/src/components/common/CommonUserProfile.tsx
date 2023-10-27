@@ -13,8 +13,10 @@ interface PropsType {
 }
 
 const CommonUserProfile: React.FC<PropsType> = (props) => {
+  // 팔로우 여부
   const [isFollow, setIsFollow] = React.useState(true);
 
+  // 팔로우 상태 변경 함수
   const handleUserFollow = () => {
     setIsFollow(!isFollow);
   };

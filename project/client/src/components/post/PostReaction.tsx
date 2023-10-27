@@ -4,16 +4,20 @@ import CommonTypography from "components/common/CommonTypography";
 import React from "react";
 
 const PostReaction = () => {
+  // 로그인 한 정보와 포스트 작성자가 일치 하는지
   const [isOwner, setIsOwner] = React.useState(true);
 
+  // 포스트 삭제 버튼 함수
   const handlePostDelete = () => {
     console.log("post delete");
   };
 
+  // 포스트 수정 버튼 함수
   const handlePostEdit = () => {
     console.log("post edit");
   };
 
+  // 포스트 좋아요 버튼 함수
   const handlePostLike = () => {
     console.log("post like");
   };

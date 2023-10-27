@@ -3,9 +3,11 @@ import CommonBigButton from "components/common/CommonBigButton";
 import CommonTextField from "components/common/CommonTextField";
 
 const PostCommentForm = () => {
+  // 댓글 작성 완료 버튼 함수
   const handleSubmitComment = () => {
     console.log("SubmitComment");
   };
+
   return (
     <Box
       sx={{

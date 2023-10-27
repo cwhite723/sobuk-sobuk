@@ -10,12 +10,14 @@ const JoinPage = () => {
   // 프로필 이미지
   const [profileImg, setProfileImg] = React.useState<string>("");
 
+  // 프로필 이미지 변경 함수
   const handleChangeImg = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       setProfileImg(URL.createObjectURL(event.target.files[0]));
     }
   };
 
+  // 회원가입 버튼 함수
   const handleJoin = () => {
     console.log("join");
   };
@@ -37,6 +39,7 @@ const JoinPage = () => {
         </CommonLink>
       </Box>
 
+      {/* 회원가입 폼 */}
       <CommonTextField
         type="required"
         id="user-id"
@@ -86,6 +89,8 @@ const JoinPage = () => {
         <CommonAvaratImage size={100} src={profileImg} />
         <Input type="file" onChange={handleChangeImg} />
       </Box>
+
+      {/* 회원가입 버튼 */}
       <CommonBigButton value="회원가입" onClick={handleJoin} />
     </Box>
   );

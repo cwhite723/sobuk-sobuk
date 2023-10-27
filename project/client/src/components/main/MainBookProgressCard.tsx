@@ -11,16 +11,21 @@ interface PropsType {
 }
 
 const MainBookProgressCard: React.FC<PropsType> = (props) => {
+  // Dialog open 여부
   const [openDialog, setOpenDialog] = React.useState<boolean>(false);
+
+  // Dialog 타입 관리
   const [dialogType, setDialogType] = React.useState<"read" | "add" | "edit">(
     "read",
   );
 
+  // 책 진행률 수정하기
   const handleEditBook = () => {
     setOpenDialog(true);
     setDialogType("edit");
   };
 
+  // Dialog 닫기
   const handleClose = () => {
     setOpenDialog(false);
   };
@@ -98,6 +103,9 @@ const MainBookProgressCard: React.FC<PropsType> = (props) => {
             variant="body2"
             bold={false}
           />
+
+          {/* 진행률 그래프 부분 */}
+          {/* 따로 빼야함 */}
           <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}>
             <CommonTypography
               value="오늘은 368쪽까지 읽어야 해요"

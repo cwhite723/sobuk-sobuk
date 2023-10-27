@@ -26,6 +26,8 @@ const HeaderBar = () => {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null,
   );
+
+  // 로그인 여부
   const [isLoggedIn, setIsLoggedIn] = React.useState<boolean>(false);
 
   // 네비게이션 메뉴 열기
@@ -38,6 +40,7 @@ const HeaderBar = () => {
     setAnchorElNav(null);
   };
 
+  // 로그인 상태에 따라 로그인 또는 로그아웃 보여줌
   const handleUserStatus = () => {
     console.log("user status");
   };
