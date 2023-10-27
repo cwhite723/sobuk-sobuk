@@ -39,8 +39,10 @@ const MainBookProgressCard: React.FC<PropsType> = (props) => {
         justifyContent: "left",
         alignItems: "center",
         backgroundColor: "background.default",
+        boxShadow: "0px 0px 5px rgba(0,0,0,0.3)",
         borderRadius: 5,
         p: 2,
+        mt: 2,
         mb: 2,
       }}
     >
@@ -78,10 +80,12 @@ const MainBookProgressCard: React.FC<PropsType> = (props) => {
               display: "flex",
               alignItems: "end",
               borderBottom: "1px solid",
+              pb: 1,
+              mb: 1,
             }}
           >
-            <CommonTypography value="책 제목 |" variant="h6" bold={true} />
-            <CommonTypography value="지은이" variant="body2" bold={false} />
+            <CommonTypography value="책 제목 |" variant="h5" bold={true} />
+            <CommonTypography value="지은이" variant="h6" bold={true} />
             <Button
               sx={{
                 position: "absolute",
@@ -98,10 +102,11 @@ const MainBookProgressCard: React.FC<PropsType> = (props) => {
               {props.isComplete ? "완독" : "읽는 중"}
             </Button>
           </Box>
+
           <CommonTypography
             value="2023.06.03 ~ 2023.10.03"
             variant="body2"
-            bold={false}
+            bold={true}
           />
 
           {/* 진행률 그래프 부분 */}
@@ -109,7 +114,7 @@ const MainBookProgressCard: React.FC<PropsType> = (props) => {
           <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}>
             <CommonTypography
               value="오늘은 368쪽까지 읽어야 해요"
-              variant="body2"
+              variant="body1"
               bold={true}
             />
             <CommonTypography value="93/100" variant="body2" bold={true} />

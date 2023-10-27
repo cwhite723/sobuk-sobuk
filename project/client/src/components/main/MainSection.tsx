@@ -16,10 +16,10 @@ const MainSection: React.FC<PropsType> = (props) => {
           display: "none",
         },
         backgroundColor: "primary.main",
+        boxShadow: "0px 0px 5px rgba(0,0,0,0.5)",
         borderRadius: 5,
-        border: "1px solid",
-        m: { xs: 2, md: 4 },
-        p: 2,
+        mt: { xs: 4, md: 6 },
+        p: 4,
       }}
     >
       {props.children}

@@ -10,7 +10,7 @@ const PostCommentItem = () => {
         flexDirection: { xs: "column", md: "row" },
         alignItems: { xs: "baseline", md: "center" },
         borderBottom: "1px solid",
-        p: 1,
+        p: 2,
       }}
     >
       {/* 작성자 profile */}
@@ -20,7 +20,7 @@ const PostCommentItem = () => {
           sx={{
             display: "flex",
             flexDirection: { xs: "row", md: "column" },
-            ml: 1,
+            mx: 1,
             flexShrink: 0,
           }}
         >
@@ -30,7 +30,7 @@ const PostCommentItem = () => {
       </Box>
 
       {/* 댓글 내용 */}
-      <Box sx={{ ml: 1, p: 1 }}>
+      <Box sx={{ ml: 1, p: 2 }}>
         <CommonTypography
           value="댓글 내용댓글 내용댓글 내용댓글 내용댓글 내용댓글 내용댓글 내용댓글 내용댓글 내용"
           variant="body1"

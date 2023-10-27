@@ -15,7 +15,7 @@ const CommonButton: React.FC<PropsType> = (props) => {
           props.outline
             ? {
                 borderRadius: 20,
-                m: 0.5,
+                m: 1,
                 color: "text.primary",
                 border: "1px solid",
                 borderColor: "text.primary",
@@ -26,7 +26,7 @@ const CommonButton: React.FC<PropsType> = (props) => {
               }
             : {
                 borderRadius: 20,
-                m: 0.5,
+                m: 1,
                 color: "text.secondary",
                 backgroundColor: "text.primary",
               }

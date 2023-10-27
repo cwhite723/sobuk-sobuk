@@ -25,7 +25,7 @@ const CommonTabMenu: React.FC<PropsType> = (props) => {
           "& .MuiTab-root": {
             color: "text.primary",
           },
-          "& .MuiTab-focused": {
+          "& .MuiTab-root.Mui-selected": {
             color: "text.primary",
           },
           "& .MuiTabs-indicator": {

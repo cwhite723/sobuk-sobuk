@@ -9,7 +9,7 @@ interface PropsType {
 
 const PostContents: React.FC<PropsType> = (props) => {
   return (
-    <Box sx={{ mt: 2 }}>
+    <Box sx={{ my: 4 }}>
       <CommonTitle value={props.title} />
       <CommonTypography value={props.contents} variant="body1" bold={false} />
     </Box>

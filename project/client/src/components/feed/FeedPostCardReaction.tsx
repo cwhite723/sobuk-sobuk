@@ -9,10 +9,6 @@ const FeedPostCardReaction = () => {
         sx={{
           display: "flex",
           justifyContent: "space-around",
-          backgroundColor: "background.default",
-          borderRadius: 5,
-          border: "1px solid",
-          py: 1,
         }}
       >
         <CommonTypography value="📄댓글수" variant="body2" bold={true} />

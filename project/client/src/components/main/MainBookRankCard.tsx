@@ -14,8 +14,10 @@ const MainBookRankCard = () => {
           justifyContent: "center",
           alignItems: "left",
           backgroundColor: "background.default",
+          boxShadow: "0px 0px 5px rgba(0,0,0,0.3)",
           borderRadius: 5,
           p: 2,
+          m: 1,
         }}
       >
         <CommonBookImage width={100} height={150} />

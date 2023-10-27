@@ -17,7 +17,7 @@ const UserBookList: React.FC<PropsType> = (props) => {
       <Box
         sx={{
           display: "flex",
-          pt: 2,
+          pt: 4,
           mt: 2,
         }}
       >
@@ -33,12 +33,12 @@ const UserBookList: React.FC<PropsType> = (props) => {
       </Box>
       <Grid
         container
-        columns={{ xs: 1, md: 4 }}
+        columns={{ xs: 1, md: 3 }}
         sx={{
           width: "100%",
           backgroundColor: "primary.main",
           borderRadius: 5,
-          border: "1px solid",
+          boxShadow: "0px 0px 5px rgba(0,0,0,0.5)",
         }}
       >
         {/* 유저 서재 도서 item */}
@@ -51,8 +51,9 @@ const UserBookList: React.FC<PropsType> = (props) => {
               alignItems: "center",
               backgroundColor: "background.default",
               borderRadius: 5,
+              boxShadow: "0px 0px 5px rgba(0,0,0,0.3)",
               p: 2,
-              m: 2,
+              m: 4,
             }}
           >
             <CommonBookImage width={100} height={150} />

@@ -30,6 +30,7 @@ const PostReaction = () => {
         alignItems: "baseline",
         borderBottom: "1px solid",
         mt: 4,
+        pb: 1,
       }}
     >
       {/* comment and like */}

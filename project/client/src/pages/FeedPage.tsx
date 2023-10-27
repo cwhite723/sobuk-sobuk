@@ -38,7 +38,7 @@ const FeedPage = () => {
       <FeedOptionMenu />
 
       {/* 피드 container 영역 */}
-      <Grid container spacing={2} columns={{ xs: 1, md: 10 }}>
+      <Grid container spacing={4} columns={{ xs: 1, md: 10 }}>
         {/* 피드 item */}
         <FeedPostCard />
         <FeedPostCard />

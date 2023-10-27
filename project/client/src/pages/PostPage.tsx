@@ -17,10 +17,10 @@ const PostPage = () => {
         display: "flex",
         flexDirection: "column",
         backgroundColor: "primary.light",
-        boxShadow: "0px 0px 10px rgba(0,0,0,0.3)",
+        boxShadow: "0px 0px 5px rgba(0,0,0,0.5)",
         borderRadius: 5,
         py: { xs: 4, md: 6 },
-        px: { xs: 2, md: 4 },
+        px: { xs: 4, md: 6 },
         mt: 4,
       }}
     >

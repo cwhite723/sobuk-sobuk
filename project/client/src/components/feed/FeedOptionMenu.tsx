@@ -11,7 +11,7 @@ const FeedOptionMenu = () => {
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
-        p: 2,
+        pb: 2,
       }}
     >
       <Box

@@ -9,10 +9,10 @@ const PostBookInfo = () => {
         width: "100%",
         display: "flex",
         backgroundColor: "background.default",
-        boxShadow: "0px 0px 5px rgba(0,0,0,0.5)",
+        boxShadow: "0px 0px 5px rgba(0,0,0,0.3)",
         borderRadius: 5,
         p: 2,
-        my: 2,
+        my: 4,
       }}
     >
       <CommonBookImage width={150} height={180} />

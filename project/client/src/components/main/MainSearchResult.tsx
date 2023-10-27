@@ -65,7 +65,7 @@ const MainSerarchReasult = () => {
             justifyContent: "space-between",
             alignItems: "center",
             borderRadius: 5,
-            p: 2,
+            p: 3,
             "&:nth-of-type(odd)": {
               backgroundColor: "background.default",
             },

@@ -15,10 +15,8 @@ const WritePostBookItem: React.FC<PropsType> = (props) => {
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
-        p: 2,
-        "&:not(:last-of-type)": {
-          borderBottom: "1px solid",
-        },
+        px: 4,
+        py: 2,
         "&:nth-of-type(odd)": {
           backgroundColor: "primary.light",
         },

@@ -16,7 +16,7 @@ const UserPostList: React.FC<PropsType> = (props) => {
       <Box
         sx={{
           display: "flex",
-          pt: 2,
+          pt: 4,
           mt: 2,
         }}
       >
@@ -39,7 +39,7 @@ const UserPostList: React.FC<PropsType> = (props) => {
           width: "100%",
           backgroundColor: "primary.main",
           borderRadius: 5,
-          border: "1px solid",
+          boxShadow: "0px 0px 5px rgba(0,0,0,0.5)",
         }}
       >
         {/* 유저 독서기록 item */}
@@ -52,8 +52,9 @@ const UserPostList: React.FC<PropsType> = (props) => {
               alignItems: "center",
               backgroundColor: "background.default",
               borderRadius: 5,
+              boxShadow: "0px 0px 5px rgba(0,0,0,0.3)",
               p: 2,
-              m: 2,
+              m: 4,
             }}
           >
             <CommonBookImage width={100} height={150} />
@@ -66,13 +67,12 @@ const UserPostList: React.FC<PropsType> = (props) => {
               }}
             >
               <CommonTypography value="책 제목" variant="h6" bold={true} />
-              <CommonTypography value="지은이" variant="body2" bold={false} />
               <CommonTypography
                 value="독서기록 제목"
                 variant="body2"
                 bold={false}
               />
-              <Box sx={{ display: "flex", mt: 1 }}>
+              <Box sx={{ display: "flex", mt: 2 }}>
                 <CommonTypography
                   value="📄댓글수"
                   variant="body2"

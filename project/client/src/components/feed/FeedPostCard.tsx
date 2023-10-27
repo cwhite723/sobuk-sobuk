@@ -15,8 +15,8 @@ const FeedPostCard = () => {
           alignItems: "left",
           backgroundColor: "primary.main",
           borderRadius: 5,
-          border: "1px solid",
-          p: 2,
+          boxShadow: "0px 0px 5px rgba(0,0,0,0.5)",
+          p: 3,
         }}
       >
         {/* user profile */}

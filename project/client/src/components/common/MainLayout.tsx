@@ -14,7 +14,7 @@ const MainLayout = () => {
         {/* 사이드 영역 */}
         <Grid xs />
         {/* 컨텐츠 영역 */}
-        <Grid xs={10}>
+        <Grid xs={10} md={8}>
           <Box
             sx={{
               display: "flex",

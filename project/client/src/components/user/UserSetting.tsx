@@ -35,9 +35,9 @@ const UserSetting = () => {
           justifyContent: "center",
           backgroundColor: "primary.main",
           borderRadius: 5,
-          border: "1px solid",
-          m: { xs: 2, md: 4 },
-          p: 2,
+          boxShadow: "0px 0px 5px rgba(0,0,0,0.5)",
+          m: { xs: 4, md: 6 },
+          p: 4,
         }}
       >
         <CommonTitle value="😊 계정 정보 수정하기" />

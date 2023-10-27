@@ -11,8 +11,9 @@ const UserIntroProfile = () => {
         flexDirection: "column",
         backgroundColor: "primary.main",
         borderRadius: 5,
-        border: "1px solid",
-        p: 2,
+        boxShadow: "0px 0px 5px rgba(0,0,0,0.5)",
+        p: 4,
+        mt: 4,
       }}
     >
       {/* 유저 정보 및 팔로우 버튼 */}
@@ -21,10 +22,10 @@ const UserIntroProfile = () => {
       {/* 자기소개 영역 */}
       <Box
         sx={{
-          mt: 2,
+          mt: 4,
           backgroundColor: "background.default",
           borderRadius: 5,
-          p: 2,
+          p: 3,
         }}
       >
         <CommonTypography
