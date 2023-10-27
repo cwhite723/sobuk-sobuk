@@ -10,8 +10,6 @@ const feedTabMenus = [
   { label: "팔로잉", value: "following" },
 ];
 
-type tabMenuType = { label: string; value: string };
-
 const FeedPage = () => {
   const [nowTab, setNowTab] = React.useState(feedTabMenus[0]);
 

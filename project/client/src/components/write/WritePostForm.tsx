@@ -3,13 +3,6 @@ import CommonBigButton from "components/common/CommonBigButton";
 import CommonTextField from "components/common/CommonTextField";
 import CommonTypography from "components/common/CommonTypography";
 
-interface BookItem {
-  bookId: number;
-  bookName: string;
-  writer: string;
-  publish: string;
-}
-
 type PropsType = {
   handleChangeBook: (item: BookItem | null) => void;
   book: BookItem;

@@ -1,8 +1,6 @@
 import { Box, Tab, Tabs } from "@mui/material";
 import React from "react";
 
-type tabMenuType = { label: string; value: string };
-
 interface PropsType {
   // handleTabChange: (newSelectMenu: tabMenuType) => void;
   handelTabFocus: (newSelectMenu: tabMenuType) => void;

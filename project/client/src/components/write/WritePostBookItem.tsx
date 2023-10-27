@@ -2,13 +2,6 @@ import { Box } from "@mui/material";
 import CommonButton from "components/common/CommonButton";
 import CommonTypography from "components/common/CommonTypography";
 
-interface BookItem {
-  bookId: number;
-  bookName: string;
-  writer: string;
-  publish: string;
-}
-
 type PropsType = {
   handleSelectBook: (item: BookItem | null) => void;
   book: BookItem;

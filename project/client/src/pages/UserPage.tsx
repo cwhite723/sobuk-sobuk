@@ -13,8 +13,6 @@ const userTabMenus = [
   { label: "🔐계정정보/탈퇴", value: "setting" },
 ];
 
-type tabMenuType = { label: string; value: string };
-
 const UserPage = () => {
   const [nowTab, setNowTab] = React.useState(userTabMenus[0]);
 
