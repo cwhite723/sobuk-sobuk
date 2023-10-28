@@ -1,4 +1,4 @@
-import { Box, TextField } from "@mui/material";
+import { Box } from "@mui/material";
 import CommonBigButton from "components/common/CommonBigButton";
 import CommonTextField from "components/common/CommonTextField";
 import CommonTypography from "components/common/CommonTypography";
@@ -38,7 +38,7 @@ const WritePostForm: React.FC<PropsType> = (props) => {
           bold={true}
         />
         <CommonTypography
-          value={props.book.writer}
+          value={props.book.bookWriter}
           variant="body1"
           bold={true}
         />

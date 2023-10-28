@@ -2,9 +2,9 @@ import { Box, Tab, Tabs } from "@mui/material";
 import React from "react";
 
 interface PropsType {
-  handelTabFocus: (newSelectMenu: tabMenuType) => void;
-  nowTab: tabMenuType;
-  tabMenus: tabMenuType[];
+  handelTabFocus: (newSelectMenu: TabMenuType) => void;
+  nowTab: TabMenuType;
+  tabMenus: TabMenuType[];
 }
 
 const CommonTabMenu: React.FC<PropsType> = (props) => {

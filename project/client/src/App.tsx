@@ -11,27 +11,68 @@ import GroupPage from "pages/GroupPage";
 import ErrorPage from "pages/ErrorPage";
 import MainLayout from "components/common/MainLayout";
 import SubLayout from "components/common/SubLayout";
+import PrivateRoute from "pages/auth/PrivateRoute";
+import NotPrivateRoute from "pages/auth/NotPrivateRoute";
 
 function App() {
   return (
     <>
       <Routes>
+        {/* 비로그인으로만 접근 가능 */}
+        <Route element={<SubLayout />}>
+          <Route
+            path="login"
+            element={
+              <NotPrivateRoute>
+                <LoginPage />
+              </NotPrivateRoute>
+            }
+          />
+          <Route
+            path="join"
+            element={
+              <NotPrivateRoute>
+                <JoinPage />
+              </NotPrivateRoute>
+            }
+          />
+        </Route>
+
+        {/* 로그인해야 접근 가능 */}
+        <Route element={<MainLayout />}>
+          <Route
+            path="post/:postid"
+            element={
+              <PrivateRoute>
+                <PostPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="write"
+            element={
+              <PrivateRoute>
+                <WritePage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="user/:userid"
+            element={
+              <PrivateRoute>
+                <UserPage />
+              </PrivateRoute>
+            }
+          />
+        </Route>
+
+        {/* 상관없이 접근 가능 */}
         <Route element={<MainLayout />}>
           <Route path="/" element={<Navigate replace to="main" />} />
           <Route path="main" element={<MainPage />} />
-
           <Route path="feed" element={<FeedPage />} />
-          <Route path="post/:postid" element={<PostPage />} />
-          <Route path="write" element={<WritePage />} />
-
-          <Route path="user/:userid" element={<UserPage />} />
           <Route path="group" element={<GroupPage />} />
           <Route path="*" element={<ErrorPage />} />
-        </Route>
-
-        <Route element={<SubLayout />}>
-          <Route path="login" element={<LoginPage />} />
-          <Route path="join" element={<JoinPage />} />
         </Route>
       </Routes>
     </>

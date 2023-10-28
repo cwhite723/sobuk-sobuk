@@ -4,25 +4,51 @@ import CommonTextField from "components/common/CommonTextField";
 import CommonLink from "components/common/CommonLink";
 import CommonTypography from "components/common/CommonTypography";
 import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { login } from "store/user";
+import { useNavigate } from "react-router-dom";
 
 interface FormValue {
   id: string;
   password: string;
 }
 
+// 더미데이터
+
 const LoginPage = () => {
+  // 에러메세지
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const dispatch = useDispatch();
+
+  const navigate = useNavigate();
+
   // react hook form
-  const { control, handleSubmit } = useForm<FormValue>({
+  const { control, handleSubmit, formState } = useForm<FormValue>({
     defaultValues: {
       id: "",
       password: "",
     },
+    // mode를 설정하여 해당 mode에 검증 로직이 동작하도록 함
+    mode: "onChange",
   });
 
   // 로그인 버튼 함수
   const handleLogin = (data: FormValue) => {
-    localStorage.setItem("id", data.id);
-    location.reload();
+    // 로그인 성공 로직
+    localStorage.setItem("token", data.id);
+    dispatch(
+      login({
+        token: data.id,
+        userId: data.id,
+        userName: data.id,
+        userImg: "",
+        userIntroduction: "안녕하세요",
+      }),
+    );
+    navigate("../main");
+    // 로그인 실패 로직
   };
 
   // 카카오 로그인 버튼 함수
@@ -34,6 +60,17 @@ const LoginPage = () => {
   const handleGoogleLogin = () => {
     console.log("google login");
   };
+
+  // 검증 로직에 따른 에러 메세지 표시
+  useEffect(() => {
+    if (formState.errors.id) {
+      setErrorMessage("ID를 입력해주세요.");
+    } else if (formState.errors.password) {
+      setErrorMessage("Password는 6자 이상입니다.");
+    } else {
+      setErrorMessage("");
+    }
+  }, [formState]);
 
   return (
     <Box
@@ -67,13 +104,22 @@ const LoginPage = () => {
         <CommonTextField
           name="password"
           control={control}
-          rules={{ required: true }}
+          rules={{
+            required: true,
+            minLength: { value: 6, message: "비밀번호는 6자 이상입니다." },
+          }}
           textFieldProps={{
             type: "password",
             id: "user-password",
             label: "비밀번호",
             placeholder: "비밀번호를 입력하세요",
           }}
+        />
+        <CommonTypography
+          value={errorMessage}
+          variant="body2"
+          bold={true}
+          error={true}
         />
         <CommonBigButton value="로그인" onClick={handleSubmit(handleLogin)} />
       </form>
@@ -84,7 +130,6 @@ const LoginPage = () => {
           display: "flex",
           justifyContent: "space-between",
           marginTop: "10px",
-          textAlign: "right",
           borderBottom: "1px solid",
           paddingBottom: "25px",
         }}

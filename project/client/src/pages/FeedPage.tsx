@@ -16,7 +16,7 @@ const FeedPage = () => {
   const [nowTab, setNowTab] = React.useState(feedTabMenus[0]);
 
   // 선택된 서브 탭 메뉴 변경 함수
-  const handleTabFocus = (newTab: tabMenuType) => {
+  const handleTabFocus = (newTab: TabMenuType) => {
     setNowTab(newTab);
   };
 

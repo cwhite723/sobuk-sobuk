@@ -34,12 +34,12 @@ const WritePostBookItem: React.FC<PropsType> = (props) => {
           bold={true}
         />
         <CommonTypography
-          value={props.book.writer}
+          value={props.book.bookWriter}
           variant="body1"
           bold={false}
         />
         <CommonTypography
-          value={props.book.publish}
+          value={props.book.bookPublish}
           variant="body1"
           bold={false}
         />

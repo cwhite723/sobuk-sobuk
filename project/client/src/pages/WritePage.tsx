@@ -7,11 +7,36 @@ import React from "react";
 
 // 더미 데이터
 const bookList = [
-  { bookId: 1, bookName: "책 제목1", writer: "저자1", publish: "출판사1" },
-  { bookId: 2, bookName: "책 제목2", writer: "저자2", publish: "출판사2" },
-  { bookId: 3, bookName: "책 제목3", writer: "저자3", publish: "출판사3" },
-  { bookId: 4, bookName: "책 제목4", writer: "저자4", publish: "출판사4" },
-  { bookId: 5, bookName: "책 제목5", writer: "저자5", publish: "출판사5" },
+  {
+    bookId: 1,
+    bookName: "책 제목1",
+    bookWriter: "저자1",
+    bookPublish: "출판사1",
+  },
+  {
+    bookId: 2,
+    bookName: "책 제목2",
+    bookWriter: "저자2",
+    bookPublish: "출판사2",
+  },
+  {
+    bookId: 3,
+    bookName: "책 제목3",
+    bookWriter: "저자3",
+    bookPublish: "출판사3",
+  },
+  {
+    bookId: 4,
+    bookName: "책 제목4",
+    bookWriter: "저자4",
+    bookPublish: "출판사4",
+  },
+  {
+    bookId: 5,
+    bookName: "책 제목5",
+    bookWriter: "저자5",
+    bookPublish: "출판사5",
+  },
 ];
 
 const WritePage = () => {

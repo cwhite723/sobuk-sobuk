@@ -28,7 +28,7 @@ const UserPage = () => {
   const [userPostCount, setUserPostCount] = React.useState(2);
 
   // 선택된 탭 메뉴를 변경하는 함수
-  const handelTabFocus = (newSelectMenu: tabMenuType) => {
+  const handelTabFocus = (newSelectMenu: TabMenuType) => {
     setNowTab(newSelectMenu);
   };
 
