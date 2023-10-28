@@ -44,8 +44,9 @@ const MainSerarchReasult = () => {
   };
 
   // Dialog 닫기
-  const handleClose = () => {
+  const handleClose = (): boolean => {
     setOpenDialog(false);
+    return false;
   };
 
   return (

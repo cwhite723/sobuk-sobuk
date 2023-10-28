@@ -26,14 +26,13 @@ function App() {
 
           <Route path="user/:userid" element={<UserPage />} />
           <Route path="group" element={<GroupPage />} />
+          <Route path="*" element={<ErrorPage />} />
         </Route>
 
         <Route element={<SubLayout />}>
           <Route path="login" element={<LoginPage />} />
           <Route path="join" element={<JoinPage />} />
         </Route>
-
-        <Route path="*" element={<ErrorPage />} />
       </Routes>
     </>
   );

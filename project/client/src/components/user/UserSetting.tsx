@@ -4,8 +4,24 @@ import CommonBigButton from "components/common/CommonBigButton";
 import CommonTextField from "components/common/CommonTextField";
 import CommonTitle from "components/common/CommonTitle";
 import React from "react";
+import { useForm } from "react-hook-form";
+
+interface FormValue {
+  name: string;
+  introduce: string;
+  img: string;
+}
 
 const UserSetting = () => {
+  // react hook form
+  const { control, handleSubmit } = useForm<FormValue>({
+    defaultValues: {
+      name: "",
+      introduce: "",
+      img: "",
+    },
+  });
+
   // 로그인한 유저의 프로필 이미지
   const [profileImg, setProfileImg] = React.useState<string>("");
 
@@ -17,12 +33,14 @@ const UserSetting = () => {
   };
 
   // 정보 수정 완료 버튼 함수
-  const handleSetting = () => {
-    console.log("계정 정보 수정 완료");
+  const handleSetting = (data: FormValue) => {
+    data.img = profileImg;
+    console.log(data);
   };
 
   // 회원탈퇴 버튼 함수
   const handleDropOut = () => {
+    localStorage.clear();
     console.log("회원탈퇴");
   };
 
@@ -42,34 +60,47 @@ const UserSetting = () => {
       >
         <CommonTitle value="😊 계정 정보 수정하기" />
 
-        {/* 프로필 이미지 업데이트 */}
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            mt: 2,
-          }}
-        >
-          <CommonAvaratImage size={100} src={profileImg} />
-          <Input type="file" onChange={handleChangeImg} />
-        </Box>
-
         {/* 프로필 수정 폼 */}
-        <CommonTextField
-          type="required"
-          id="user-name"
-          label="닉네임"
-          placeholder="기존 닉네임"
-        />
-        <CommonTextField
-          type="required"
-          id="user-introduce"
-          label="자기소개"
-          placeholder="기존 소개글"
-        />
-        <CommonBigButton value="수정완료" onClick={handleSetting} />
-        <CommonBigButton value="회원탈퇴" onClick={handleDropOut} />
+        {/* 프로필 이미지 업데이트 */}
+        <form>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              mt: 2,
+            }}
+          >
+            <CommonAvaratImage size={100} src={profileImg} />
+            <Input type="file" onChange={handleChangeImg} />
+          </Box>
+
+          <CommonTextField
+            name="name"
+            control={control}
+            rules={{ required: true }}
+            textFieldProps={{
+              id: "user-name",
+              label: "닉네임",
+              placeholder: "기존 닉네임",
+            }}
+          />
+          <CommonTextField
+            name="introduce"
+            control={control}
+            rules={{ required: true }}
+            textFieldProps={{
+              id: "user-introduce",
+              label: "자기소개",
+              placeholder: "기존 소개글",
+            }}
+          />
+          <CommonBigButton
+            value="수정완료"
+            onClick={handleSubmit(handleSetting)}
+          />
+          <CommonBigButton value="회원탈퇴" onClick={handleDropOut} />
+        </form>
       </Box>
     </Box>
   );

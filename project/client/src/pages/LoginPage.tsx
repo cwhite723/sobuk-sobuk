@@ -3,12 +3,26 @@ import CommonBigButton from "components/common/CommonBigButton";
 import CommonTextField from "components/common/CommonTextField";
 import CommonLink from "components/common/CommonLink";
 import CommonTypography from "components/common/CommonTypography";
-import React from "react";
+import { useForm } from "react-hook-form";
+
+interface FormValue {
+  id: string;
+  password: string;
+}
 
 const LoginPage = () => {
+  // react hook form
+  const { control, handleSubmit } = useForm<FormValue>({
+    defaultValues: {
+      id: "",
+      password: "",
+    },
+  });
+
   // 로그인 버튼 함수
-  const handleLogin = () => {
-    console.log("loggedin");
+  const handleLogin = (data: FormValue) => {
+    localStorage.setItem("id", data.id);
+    location.reload();
   };
 
   // 카카오 로그인 버튼 함수
@@ -39,19 +53,30 @@ const LoginPage = () => {
       </Box>
 
       {/* 로그인 폼 */}
-      <CommonTextField
-        type="required"
-        id="user-id"
-        label="아이디"
-        placeholder="아이디를 입력하세요."
-      />
-      <CommonTextField
-        type="password"
-        id="user-password"
-        label="비밀번호"
-        placeholder="비밀번호를 입력하세요"
-      />
-      <CommonBigButton value="로그인" onClick={handleLogin} />
+      <form>
+        <CommonTextField
+          name="id"
+          control={control}
+          rules={{ required: true }}
+          textFieldProps={{
+            id: "user-id",
+            label: "아이디",
+            placeholder: "아이디를 입력하세요.",
+          }}
+        />
+        <CommonTextField
+          name="password"
+          control={control}
+          rules={{ required: true }}
+          textFieldProps={{
+            type: "password",
+            id: "user-password",
+            label: "비밀번호",
+            placeholder: "비밀번호를 입력하세요",
+          }}
+        />
+        <CommonBigButton value="로그인" onClick={handleSubmit(handleLogin)} />
+      </form>
 
       {/* 회원가입, 아이디/비밀번호 찾기 */}
       <Box

@@ -1,20 +1,30 @@
 import { TextField } from "@mui/material";
+import {
+  useController,
+  FieldValues,
+  FieldPath,
+  UseControllerProps,
+} from "react-hook-form";
+import { TextFieldProps } from "@mui/material";
 
-interface PropsType {
-  id: string;
-  label: string;
-  placeholder?: string;
-  type: "password" | "required" | "number" | "email" | "date";
+interface MuiProps {
+  textFieldProps?: TextFieldProps;
 }
 
-const CommonTextField: React.FC<PropsType> = (props) => {
+const CommonTextField = <
+  TFieldValues extends FieldValues = FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
+>({
+  textFieldProps,
+  ...props
+}: MuiProps & UseControllerProps<TFieldValues, TName>) => {
+  const { field } = useController(props);
+
   return (
     <TextField
       fullWidth
-      type={props.type}
-      id={props.id}
-      label={props.label}
-      placeholder={props.placeholder}
+      {...textFieldProps}
+      {...field}
       // MUI TextField 커스터마이징
       sx={{
         mt: "25px",

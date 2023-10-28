@@ -26,8 +26,9 @@ const MainBookProgressCard: React.FC<PropsType> = (props) => {
   };
 
   // Dialog 닫기
-  const handleClose = () => {
+  const handleClose = (): boolean => {
     setOpenDialog(false);
+    return false;
   };
 
   return (
