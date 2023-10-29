@@ -1,7 +1,7 @@
-import { Alert, Snackbar } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { Alert, Box, Snackbar } from "@mui/material";
+import { Outlet, useNavigate } from "react-router-dom";
 
-const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
+const PrivateRoute = () => {
   const isLoggedIn = localStorage.getItem("token");
   const navigate = useNavigate();
 
@@ -10,19 +10,33 @@ const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
   };
 
   return isLoggedIn ? (
-    <>{children}</>
+    <Outlet />
   ) : (
     <>
-      <Snackbar
-        open={true}
-        autoHideDuration={6000}
-        onClose={handleClose}
-        anchorOrigin={{ horizontal: "center", vertical: "bottom" }}
+      <Box
+        sx={{
+          width: "100%",
+          height: "100%",
+          position: "fixed",
+          top: "0",
+          left: "0",
+          backgroundColor: "rgba(0,0,0,0.2)",
+          backdropFilter: "blur(10px)",
+          zIndex: "2",
+        }}
       >
-        <Alert severity="error" variant="filled" onClose={handleClose}>
-          로그인이 필요합니다.
-        </Alert>
-      </Snackbar>
+        <Snackbar
+          open={true}
+          autoHideDuration={6000}
+          onClose={handleClose}
+          anchorOrigin={{ horizontal: "center", vertical: "bottom" }}
+        >
+          <Alert severity="error" variant="filled" onClose={handleClose}>
+            로그인이 필요합니다. 로그인 페이지로 이동합니다.
+          </Alert>
+        </Snackbar>
+      </Box>
+      <Outlet />
     </>
   );
 };

@@ -19,51 +19,20 @@ function App() {
     <>
       <Routes>
         {/* 비로그인으로만 접근 가능 */}
-        <Route element={<SubLayout />}>
-          <Route
-            path="login"
-            element={
-              <NotPrivateRoute>
-                <LoginPage />
-              </NotPrivateRoute>
-            }
-          />
-          <Route
-            path="join"
-            element={
-              <NotPrivateRoute>
-                <JoinPage />
-              </NotPrivateRoute>
-            }
-          />
+        <Route element={<NotPrivateRoute />}>
+          <Route element={<SubLayout />}>
+            <Route path="login" element={<LoginPage />} />
+            <Route path="join" element={<JoinPage />} />
+          </Route>
         </Route>
 
         {/* 로그인해야 접근 가능 */}
-        <Route element={<MainLayout />}>
-          <Route
-            path="post/:postid"
-            element={
-              <PrivateRoute>
-                <PostPage />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="write"
-            element={
-              <PrivateRoute>
-                <WritePage />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="user/:userid"
-            element={
-              <PrivateRoute>
-                <UserPage />
-              </PrivateRoute>
-            }
-          />
+        <Route element={<PrivateRoute />}>
+          <Route element={<MainLayout />}>
+            <Route path="post/:postid" element={<PostPage />} />
+            <Route path="write" element={<WritePage />} />
+            <Route path="user/:userid" element={<UserPage />} />
+          </Route>
         </Route>
 
         {/* 상관없이 접근 가능 */}
