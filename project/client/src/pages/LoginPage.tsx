@@ -17,7 +17,7 @@ interface FormValue {
 
 // 더미데이터
 const users: FormValue[] = [
-  { id: "test1", password: "123456" },
+  { id: "test1", password: "123456a!" },
   { id: "test2", password: "123456" },
   { id: "test3", password: "123456" },
 ];
@@ -83,9 +83,11 @@ const LoginPage = () => {
   // 검증 로직에 따른 에러 메세지 표시
   useEffect(() => {
     if (formState.errors.id) {
-      setErrorMessage("ID를 입력해주세요.");
+      setErrorMessage("ID는 영문과 숫자만 입력가능합니다.(2~15자)");
     } else if (formState.errors.password) {
-      setErrorMessage("Password는 6자 이상입니다.");
+      setErrorMessage(
+        "Password는 영문과 숫자, 특수문자만 입력가능합니다.(6~15자)",
+      );
     } else {
       setErrorMessage("");
     }
@@ -121,7 +123,7 @@ const LoginPage = () => {
         <CommonTextField
           name="id"
           control={control}
-          rules={{ required: true }}
+          rules={{ required: true, pattern: /^[a-zA-Z0-9]{2,15}$/ }}
           textFieldProps={{
             id: "user-id",
             label: "아이디",
@@ -133,7 +135,7 @@ const LoginPage = () => {
           control={control}
           rules={{
             required: true,
-            minLength: { value: 6, message: "비밀번호는 6자 이상입니다." },
+            pattern: /^(?=.*?[a-zA-Z])(?=.*?[0-9])(?=.*?[#?!@%^&+-]).{6,15}$/,
           }}
           textFieldProps={{
             type: "password",
@@ -142,6 +144,8 @@ const LoginPage = () => {
             placeholder: "비밀번호를 입력하세요",
           }}
         />
+
+        {/* error message */}
         <CommonTypography
           value={errorMessage}
           variant="body2"
