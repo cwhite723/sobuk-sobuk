@@ -1,25 +1,40 @@
 import { Box, Input } from "@mui/material";
 import CommonAvaratImage from "components/common/CommonAvatarImage";
 import CommonBigButton from "components/common/CommonBigButton";
+import CommonSnackBar from "components/common/CommonSnackBar";
 import CommonTextField from "components/common/CommonTextField";
 import CommonTitle from "components/common/CommonTitle";
-import React from "react";
+import CommonTypography from "components/common/CommonTypography";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "store/store";
+import { editUserInfo } from "store/user";
 
 interface FormValue {
-  name: string;
+  nickName: string;
   introduce: string;
-  img: string;
+  img?: string;
 }
 
 const UserSetting = () => {
+  // 에러메세지
+  const [errorMessage, setErrorMessage] = useState("");
+  const [snackBarOpen, setSnackBarOpen] = useState(false);
+
+  const dispatch = useDispatch();
+
+  // store 값 가져오기
+  const storedUserInfo = useSelector((state: RootState) => state.user.value);
+
   // react hook form
-  const { control, handleSubmit } = useForm<FormValue>({
+  const { control, handleSubmit, formState } = useForm<FormValue>({
     defaultValues: {
-      name: "",
-      introduce: "",
-      img: "",
+      nickName: storedUserInfo.userName,
+      introduce: storedUserInfo.userIntroduction,
+      img: storedUserInfo.userImg,
     },
+    mode: "onSubmit",
   });
 
   // 로그인한 유저의 프로필 이미지
@@ -35,7 +50,15 @@ const UserSetting = () => {
   // 정보 수정 완료 버튼 함수
   const handleSetting = (data: FormValue) => {
     data.img = profileImg;
-    console.log(data);
+    dispatch(
+      editUserInfo({
+        ...storedUserInfo,
+        userName: data.nickName,
+        userIntroduction: data.introduce,
+        userImg: profileImg,
+      }),
+    );
+    setSnackBarOpen(true);
   };
 
   // 회원탈퇴 버튼 함수
@@ -43,6 +66,18 @@ const UserSetting = () => {
     localStorage.clear();
     console.log("회원탈퇴");
   };
+
+  const handleClose = () => {
+    setSnackBarOpen(false);
+  };
+
+  useEffect(() => {
+    if (formState.errors.nickName) {
+      setErrorMessage("닉네임은 필수 입력입니다.(2~10자)");
+    } else {
+      setErrorMessage("");
+    }
+  }, [formState]);
 
   return (
     <Box>
@@ -58,6 +93,14 @@ const UserSetting = () => {
           p: 4,
         }}
       >
+        {/* snackbar */}
+        <CommonSnackBar
+          value="정보수정이 완료되었습니다."
+          severity="success"
+          open={snackBarOpen}
+          handleClose={handleClose}
+        />
+
         <CommonTitle value="😊 계정 정보 수정하기" />
 
         {/* 프로필 수정 폼 */}
@@ -76,25 +119,31 @@ const UserSetting = () => {
           </Box>
 
           <CommonTextField
-            name="name"
+            name="nickName"
             control={control}
-            rules={{ required: true }}
+            rules={{ required: true, minLength: 2, maxLength: 10 }}
             textFieldProps={{
               id: "user-name",
               label: "닉네임",
-              placeholder: "기존 닉네임",
             }}
           />
           <CommonTextField
             name="introduce"
             control={control}
-            rules={{ required: true }}
             textFieldProps={{
               id: "user-introduce",
               label: "자기소개",
-              placeholder: "기존 소개글",
             }}
           />
+
+          {/* error message */}
+          <CommonTypography
+            value={errorMessage}
+            variant="body2"
+            bold={true}
+            error={true}
+          />
+
           <CommonBigButton
             value="수정완료"
             onClick={handleSubmit(handleSetting)}

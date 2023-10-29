@@ -22,11 +22,14 @@ const userSlice = createSlice({
       localStorage.clear();
       state.value = initialState;
     },
+    editUserInfo: (state, action: PayloadAction<UserInfo>) => {
+      state.value = action.payload;
+    },
   },
 });
 
 const { actions, reducer } = userSlice;
 
-export const { login, logout } = actions;
+export const { login, logout, editUserInfo } = actions;
 
 export default reducer;
