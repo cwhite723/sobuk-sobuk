@@ -9,8 +9,12 @@ import reading.project.domain.book.dto.request.BookRequest;
 import reading.project.domain.book.dto.request.FilterCondition;
 import reading.project.domain.book.dto.response.BookResponse;
 import reading.project.domain.book.entity.Book;
+import reading.project.domain.book.entity.Bookmark;
 import reading.project.domain.book.repository.BookRepository;
+import reading.project.domain.book.repository.BookmarkRepository;
 import reading.project.global.exception.CustomException;
+import reading.project.global.member.entity.Member;
+import reading.project.global.member.service.MemberService;
 
 import java.util.Optional;
 
@@ -21,6 +25,8 @@ import static reading.project.global.exception.ErrorCode.NOT_FOUND_BOOK;
 @Transactional(readOnly = true)
 public class BookService {
     private final BookRepository bookRepository;
+    private final BookmarkRepository bookmarkRepository;
+    private final MemberService memberService;
 
     @Transactional
     public Long registerBook(BookRequest request) {
@@ -52,6 +58,19 @@ public class BookService {
         Page<BookResponse> responses = bookRepository.findBooksByFilterCondition(filterCondition, pageable);
 
         return responses;
+    }
+
+    @Transactional
+    public void toggleBookmark(Long loginId, Long bookId) {
+        Book book = findBookById(bookId);
+        Member member = memberService.findExistsMember(loginId);
+
+        Optional<Bookmark> bookmark = bookmarkRepository.findByBookIdAndMemberId(bookId, loginId);
+        if (bookmark.isPresent()) {
+            bookmarkRepository.delete(bookmark.get());
+        } else {
+            bookmarkRepository.save(Bookmark.of(book, member));
+        }
     }
 
     public Book findBookById(Long bookId) {

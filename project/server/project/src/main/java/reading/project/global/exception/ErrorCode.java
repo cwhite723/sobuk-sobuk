@@ -16,7 +16,9 @@ public enum ErrorCode {
 
     // 404
     NOT_FOUND_BOOK(NOT_FOUND, "도서 정보가 존재하지 않습니다."),
-    NOT_FOUND_CREATOR(NOT_FOUND, "독서 기록이 존재하지 않습니다."),
+    NOT_FOUND_READING_PLAN(NOT_FOUND, "독서 기록이 존재하지 않습니다."),
+    NOT_FOUND_POST(NOT_FOUND, "게시글이 존재하지 않습니다."),
+    NOT_FOUND_COMMENT(NOT_FOUND, "댓글이 존재하지 않습니다."),
     MEMBER_NOT_FOUND(NOT_FOUND,"회원이 존재하지 않습니다."),
 
     // 409

@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import reading.project.domain.book.entity.Book;
+import reading.project.domain.post.entity.Post;
 import reading.project.global.base.BaseEntity;
 import reading.project.global.member.entity.Member;
 
@@ -51,6 +52,10 @@ public class ReadingPlan extends BaseEntity {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
+
+    @OneToOne(fetch = LAZY)
+    @JoinColumn(name = "post_id")
+    private Post post;
 
     public enum Status {
         READING("reading"),
