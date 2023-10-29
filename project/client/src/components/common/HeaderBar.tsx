@@ -10,9 +10,13 @@ import {
   Button,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import CommonButton from "./CommonButton";
 import CommonLink from "./CommonLink";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { logout } from "store/user";
+import CommonSnackBar from "./CommonSnackBar";
 
 const HeaderBar = () => {
   const pages = [
@@ -23,12 +27,19 @@ const HeaderBar = () => {
   ];
 
   // 네비게이션 메뉴 엘리먼트 셋팅
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
-    null,
-  );
+  const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
 
   // 로그인 여부
-  const [isLoggedIn, setIsLoggedIn] = React.useState<boolean>(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // snackbar 오픈
+  const [snackBarOpen, setSnackBarOpen] = useState(false);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleClose = () => {
+    setSnackBarOpen(false);
+  };
 
   // 네비게이션 메뉴 열기
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -40,10 +51,24 @@ const HeaderBar = () => {
     setAnchorElNav(null);
   };
 
-  // 로그인 상태에 따라 로그인 또는 로그아웃 보여줌
+  // 로그인 상태에 따라 로그인 또는 로그아웃 작동
   const handleUserStatus = () => {
-    console.log("user status");
+    if (isLoggedIn) {
+      // 로그아웃 작동
+      dispatch(logout());
+      setIsLoggedIn(false);
+      setSnackBarOpen(true);
+    } else {
+      // 로그인 페이지로 이동
+      navigate("../login");
+    }
   };
+
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      setIsLoggedIn(true);
+    }
+  }, []);
 
   return (
     // 상단에 고정된 AppBar
@@ -122,15 +147,21 @@ const HeaderBar = () => {
             ))}
           </Box>
 
+          {/* snackbar */}
+          <CommonSnackBar
+            value="로그아웃 되었습니다."
+            severity="success"
+            open={snackBarOpen}
+            handleClose={handleClose}
+          />
+
           {/* 로그인, 로그아웃 버튼 */}
           <Box sx={{ flexGrow: 0, display: "flex" }}>
-            <CommonLink to={isLoggedIn ? "#" : "../login"}>
-              <CommonButton
-                value="LOGIN"
-                outline={true}
-                onClick={handleUserStatus}
-              />
-            </CommonLink>
+            <CommonButton
+              value={isLoggedIn ? "LOGOUT" : "LOGIN"}
+              outline={true}
+              onClick={handleUserStatus}
+            />
           </Box>
         </Toolbar>
       </Container>

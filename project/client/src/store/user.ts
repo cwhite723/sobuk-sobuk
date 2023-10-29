@@ -15,9 +15,11 @@ const userSlice = createSlice({
   },
   reducers: {
     login: (state, action: PayloadAction<UserInfo>) => {
+      localStorage.setItem("token", action.payload.token);
       state.value = action.payload;
     },
     logout: (state) => {
+      localStorage.clear();
       state.value = initialState;
     },
   },

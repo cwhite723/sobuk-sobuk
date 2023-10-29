@@ -1,4 +1,5 @@
-import { Alert, Box, Snackbar } from "@mui/material";
+import { Box } from "@mui/material";
+import CommonSnackBar from "components/common/CommonSnackBar";
 import { Outlet, useNavigate } from "react-router-dom";
 
 const PrivateRoute = () => {
@@ -25,16 +26,13 @@ const PrivateRoute = () => {
           zIndex: "2",
         }}
       >
-        <Snackbar
+        {/* snackbar */}
+        <CommonSnackBar
+          value="로그인이 필요합니다. 로그인 페이지로 이동합니다."
+          severity="error"
           open={true}
-          autoHideDuration={6000}
-          onClose={handleClose}
-          anchorOrigin={{ horizontal: "center", vertical: "bottom" }}
-        >
-          <Alert severity="error" variant="filled" onClose={handleClose}>
-            로그인이 필요합니다. 로그인 페이지로 이동합니다.
-          </Alert>
-        </Snackbar>
+          handleClose={handleClose}
+        />
       </Box>
       <Outlet />
     </>

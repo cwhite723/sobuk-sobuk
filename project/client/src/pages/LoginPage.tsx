@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { login } from "store/user";
 import { useNavigate } from "react-router-dom";
+import CommonSnackBar from "components/common/CommonSnackBar";
 
 interface FormValue {
   id: string;
@@ -15,10 +16,16 @@ interface FormValue {
 }
 
 // 더미데이터
+const users: FormValue[] = [
+  { id: "test1", password: "123456" },
+  { id: "test2", password: "123456" },
+  { id: "test3", password: "123456" },
+];
 
 const LoginPage = () => {
   // 에러메세지
   const [errorMessage, setErrorMessage] = useState("");
+  const [snackBarOpen, setSnackBarOpen] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -36,19 +43,31 @@ const LoginPage = () => {
 
   // 로그인 버튼 함수
   const handleLogin = (data: FormValue) => {
-    // 로그인 성공 로직
-    localStorage.setItem("token", data.id);
-    dispatch(
-      login({
-        token: data.id,
-        userId: data.id,
-        userName: data.id,
-        userImg: "",
-        userIntroduction: "안녕하세요",
-      }),
-    );
-    navigate("../main");
-    // 로그인 실패 로직
+    if (
+      users.find(
+        (element) =>
+          element.id === data.id && element.password === data.password,
+      )
+    ) {
+      // 로그인 성공 로직
+      dispatch(
+        login({
+          token: data.id,
+          userId: data.id,
+          userName: data.id,
+          userImg: "",
+          userIntroduction: "안녕하세요",
+        }),
+      );
+      navigate("../main");
+    } else {
+      // 로그인 실패 로직
+      setSnackBarOpen(true);
+    }
+  };
+
+  const handleClose = () => {
+    setSnackBarOpen(false);
   };
 
   // 카카오 로그인 버튼 함수
@@ -88,6 +107,14 @@ const LoginPage = () => {
           <CommonTypography value="🏠HOME" variant="body1" bold={true} />
         </CommonLink>
       </Box>
+
+      {/* snackbar */}
+      <CommonSnackBar
+        value="아이디 또는 비밀번호가 틀립니다."
+        severity="error"
+        open={snackBarOpen}
+        handleClose={handleClose}
+      />
 
       {/* 로그인 폼 */}
       <form>
