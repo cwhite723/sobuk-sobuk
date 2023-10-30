@@ -6,11 +6,28 @@ declare global {
     value: string;
   }
 
+  type BookState = "bookmark" | "reading" | "pending" | "complete";
+
   interface BookItem {
     bookId: number;
     bookName: string;
     bookWriter: string;
     bookPublish: string;
+    bookPages: number;
+    bookImg?: string;
+    bookState?: BookState;
+    bookProgress: number;
+    bookDate?: Date[];
+  }
+
+  interface PostItem {
+    postId: number;
+    postBookInfo: BookItem;
+    postTitle: string;
+    postOwner: string;
+    postContents: string;
+    postCommentsCount: number;
+    postLikeCount: number;
   }
 
   interface UserInfo {

@@ -3,45 +3,51 @@ import CommonTitle from "components/common/CommonTitle";
 import CommonTypography from "components/common/CommonTypography";
 import WritePostBookItem from "components/write/WritePostBookItem";
 import WritePostForm from "components/write/WritePostForm";
-import React from "react";
+import { useState } from "react";
 
 // 더미 데이터
-const bookList = [
+const userLibrary: BookItem[] = [
   {
     bookId: 1,
-    bookName: "책 제목1",
-    bookWriter: "저자1",
+    bookName: "제목1",
+    bookWriter: "작가1",
     bookPublish: "출판사1",
+    bookPages: 365,
+    bookState: "reading",
+    bookProgress: 75,
   },
   {
     bookId: 2,
-    bookName: "책 제목2",
-    bookWriter: "저자2",
+    bookName: "제목2",
+    bookWriter: "작가2",
     bookPublish: "출판사2",
+    bookPages: 563,
+    bookState: "pending",
+    bookProgress: 30,
   },
   {
     bookId: 3,
-    bookName: "책 제목3",
-    bookWriter: "저자3",
+    bookName: "제목3",
+    bookWriter: "작가3",
     bookPublish: "출판사3",
+    bookPages: 156,
+    bookState: "bookmark",
+    bookProgress: 0,
   },
   {
     bookId: 4,
-    bookName: "책 제목4",
-    bookWriter: "저자4",
+    bookName: "제목4",
+    bookWriter: "작가4",
     bookPublish: "출판사4",
-  },
-  {
-    bookId: 5,
-    bookName: "책 제목5",
-    bookWriter: "저자5",
-    bookPublish: "출판사5",
+    bookPages: 298,
+    bookState: "complete",
+    bookProgress: 100,
   },
 ];
 
 const WritePage = () => {
   // 선택된 책
-  const [selectBook, setSelectBook] = React.useState<BookItem | null>(null);
+  const [selectBook, setSelectBook] = useState<BookItem | null>(null);
 
   // 선택된 책을 컨트롤 하는 함수
   const handleSelectBook = (item: BookItem | null) => {
@@ -87,13 +93,17 @@ const WritePage = () => {
           }}
         >
           {/* 도서 아이템 */}
-          {bookList.map((item) => (
-            <WritePostBookItem
-              key={item.bookId}
-              handleSelectBook={handleSelectBook}
-              book={item}
-            />
-          ))}
+          {userLibrary.map((bookItem) =>
+            bookItem.bookState === "complete" ? (
+              <WritePostBookItem
+                key={bookItem.bookId}
+                handleSelectBook={handleSelectBook}
+                book={bookItem}
+              />
+            ) : (
+              <></>
+            ),
+          )}
         </Box>
       )}
       {/* 독서기록 작성 폼 */}

@@ -4,13 +4,21 @@ import CommonBookImage from "components/common/CommonBookImage";
 
 import CommonTitle from "components/common/CommonTitle";
 import CommonTypography from "components/common/CommonTypography";
+import { useEffect } from "react";
 
 interface PropsType {
   userName: string;
-  userBookCount: number;
+  userBookList: BookItem[];
+  isPreview: boolean;
 }
 
 const UserBookList: React.FC<PropsType> = (props) => {
+  useEffect(() => {
+    if (props.isPreview) {
+      props.userBookList.slice(2);
+    }
+  }, []);
+
   return (
     <Box>
       {/* tabmenu 서재 title */}
@@ -26,7 +34,7 @@ const UserBookList: React.FC<PropsType> = (props) => {
             "📚 " +
             props.userName +
             "님의 서재에 총 " +
-            props.userBookCount +
+            props.userBookList.length +
             "권의 책이 있어요"
           }
         />
@@ -42,35 +50,55 @@ const UserBookList: React.FC<PropsType> = (props) => {
         }}
       >
         {/* 유저 서재 도서 item */}
-        <Grid xs={1} md={1}>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              backgroundColor: "background.default",
-              borderRadius: 5,
-              boxShadow: "0px 0px 5px rgba(0,0,0,0.3)",
-              p: 2,
-              m: 4,
-            }}
-          >
-            <CommonBookImage width={100} height={150} />
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                ml: 2,
-              }}
-            >
-              <CommonTypography value="책 제목" variant="h6" bold={true} />
-              <CommonTypography value="지은이" variant="body2" bold={false} />
-              <CommonTypography value="80/100" variant="body2" bold={false} />
-            </Box>
-          </Box>
-        </Grid>
+        {props.userBookList
+          .filter((bookItem, index) => (props.isPreview ? index < 3 : bookItem))
+          .map((bookItem) => (
+            <Grid xs={1} md={1} key={bookItem.bookId}>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  backgroundColor: "background.default",
+                  borderRadius: 5,
+                  boxShadow: "0px 0px 5px rgba(0,0,0,0.3)",
+                  p: 2,
+                  m: 4,
+                }}
+              >
+                <CommonBookImage
+                  width={100}
+                  height={150}
+                  src={bookItem.bookImg}
+                />
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    ml: 2,
+                  }}
+                >
+                  <CommonTypography
+                    value={bookItem.bookName}
+                    variant="h6"
+                    bold={true}
+                  />
+                  <CommonTypography
+                    value={bookItem.bookWriter}
+                    variant="body2"
+                    bold={false}
+                  />
+                  <CommonTypography
+                    value={bookItem.bookProgress.toString()}
+                    variant="body2"
+                    bold={false}
+                  />
+                </Box>
+              </Box>
+            </Grid>
+          ))}
       </Grid>
     </Box>
   );

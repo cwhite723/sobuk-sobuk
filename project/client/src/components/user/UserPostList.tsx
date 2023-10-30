@@ -6,7 +6,8 @@ import CommonTypography from "components/common/CommonTypography";
 
 interface PropsType {
   userName: string;
-  userPostCount: number;
+  userPostList: PostItem[];
+  isPreview?: boolean;
 }
 
 const UserPostList: React.FC<PropsType> = (props) => {
@@ -25,7 +26,7 @@ const UserPostList: React.FC<PropsType> = (props) => {
             "📓 " +
             props.userName +
             "님의 독서기록은 총 " +
-            props.userPostCount +
+            props.userPostList.length +
             "개가 있어요"
           }
         />
@@ -43,50 +44,62 @@ const UserPostList: React.FC<PropsType> = (props) => {
         }}
       >
         {/* 유저 독서기록 item */}
-        <Grid xs={1} md={1}>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              backgroundColor: "background.default",
-              borderRadius: 5,
-              boxShadow: "0px 0px 5px rgba(0,0,0,0.3)",
-              p: 2,
-              m: 4,
-            }}
-          >
-            <CommonBookImage width={100} height={150} />
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                ml: 2,
-              }}
-            >
-              <CommonTypography value="책 제목" variant="h6" bold={true} />
-              <CommonTypography
-                value="독서기록 제목"
-                variant="body2"
-                bold={false}
-              />
-              <Box sx={{ display: "flex", mt: 2 }}>
-                <CommonTypography
-                  value="📄댓글수"
-                  variant="body2"
-                  bold={true}
+        {props.userPostList
+          .filter((postItem, index) => (props.isPreview ? index < 3 : postItem))
+          .map((postItem) => (
+            <Grid xs={1} md={1} key={postItem.postId}>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  backgroundColor: "background.default",
+                  borderRadius: 5,
+                  boxShadow: "0px 0px 5px rgba(0,0,0,0.3)",
+                  p: 2,
+                  m: 4,
+                }}
+              >
+                <CommonBookImage
+                  width={100}
+                  height={150}
+                  src={postItem.postBookInfo.bookImg}
                 />
-                <CommonTypography
-                  value="✨추천수"
-                  variant="body2"
-                  bold={true}
-                />
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    ml: 2,
+                  }}
+                >
+                  <CommonTypography
+                    value={postItem.postBookInfo.bookName}
+                    variant="h6"
+                    bold={true}
+                  />
+                  <CommonTypography
+                    value={postItem.postTitle}
+                    variant="body2"
+                    bold={false}
+                  />
+                  <Box sx={{ display: "flex", mt: 2 }}>
+                    <CommonTypography
+                      value={"📄" + postItem.postCommentsCount.toString()}
+                      variant="body2"
+                      bold={true}
+                    />
+                    <CommonTypography
+                      value={"✨" + postItem.postLikeCount.toString()}
+                      variant="body2"
+                      bold={true}
+                    />
+                  </Box>
+                </Box>
               </Box>
-            </Box>
-          </Box>
-        </Grid>
+            </Grid>
+          ))}
       </Grid>
     </Box>
   );
