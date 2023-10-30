@@ -56,7 +56,7 @@ public class ReadingPlanService {
     public ReadingPlan findReadingPlanById(Long planId) {
 
         return readingPlanRepository.findById(planId)
-                .orElseThrow(() -> new CustomException(NOT_FOUND_CREATOR));
+                .orElseThrow(() -> new CustomException(NOT_FOUND_READING_PLAN));
     }
 
     //TODO: Book, Member Entity 완성 후 수정 및 스케줄러 적용하기
