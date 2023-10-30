@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import reading.project.domain.book.dto.request.BookRequest;
 import reading.project.domain.book.dto.request.FilterCondition;
+import reading.project.domain.book.dto.response.BookDetailResponse;
 import reading.project.domain.book.dto.response.BookResponse;
 import reading.project.domain.book.service.BookService;
 import reading.project.global.page.CommonPageRequest;
@@ -45,8 +46,8 @@ public class BookController {
 
     @GetMapping("/{book-id}")
     @ResponseStatus(OK)
-    public ApplicationResponse<BookResponse> getBook(@PathVariable("book-id") Long bookId) {
-        BookResponse response = bookService.getBook(bookId);
+    public ApplicationResponse<BookDetailResponse> getBook(@PathVariable("book-id") Long bookId) {
+        BookDetailResponse response = bookService.getBookDetails(bookId);
 
         return ApplicationResponse.ok(response);
     }

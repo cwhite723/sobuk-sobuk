@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reading.project.domain.book.dto.request.BookRequest;
 import reading.project.domain.book.dto.request.FilterCondition;
+import reading.project.domain.book.dto.response.BookDetailResponse;
 import reading.project.domain.book.dto.response.BookResponse;
 import reading.project.domain.book.entity.Book;
 import reading.project.domain.book.entity.Bookmark;
@@ -47,10 +48,10 @@ public class BookService {
         bookRepository.deleteById(bookId);
     }
 
-    public BookResponse getBook(Long bookId) {
+    public BookDetailResponse getBookDetails(Long bookId) {
         Book book = findBookById(bookId);
 
-        return bookRepository.getBook(bookId);
+        return bookRepository.getBookDetails(bookId);
     }
 
     public Page<BookResponse> getBooks(FilterCondition filterCondition,

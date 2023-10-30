@@ -8,8 +8,10 @@ import reading.project.domain.book.entity.Book;
 
 import java.time.LocalDate;
 
+import static lombok.AccessLevel.*;
+
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = PROTECTED)
 public class BookRequest {
     private String title;
     private String publisher;

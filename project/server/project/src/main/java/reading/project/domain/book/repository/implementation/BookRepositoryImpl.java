@@ -10,7 +10,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import reading.project.domain.book.dto.request.FilterCondition;
+import reading.project.domain.book.dto.response.BookDetailResponse;
 import reading.project.domain.book.dto.response.BookResponse;
+import reading.project.domain.book.dto.response.QBookDetailResponse;
 import reading.project.domain.book.dto.response.QBookResponse;
 import reading.project.domain.book.repository.BookRepositoryCustom;
 
@@ -23,9 +25,9 @@ public class BookRepositoryImpl implements BookRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public BookResponse getBook(Long bookId) {
+    public BookDetailResponse getBookDetails(Long bookId) {
         return queryFactory
-                .select(new QBookResponse(
+                .select(new QBookDetailResponse(
                         book.id,
                         book.title,
                         book.publisher,
@@ -41,17 +43,25 @@ public class BookRepositoryImpl implements BookRepositoryCustom {
     }
 
     @Override
+    public BookResponse getBook(Long bookId) {
+        return queryFactory
+                .select(new QBookResponse(
+                        book.id,
+                        book.title,
+                        book.author
+                ))
+                .from(book)
+                .where(book.id.eq(bookId))
+                .fetchOne();
+    }
+
+    @Override
     public Page<BookResponse> findBooksByFilterCondition(FilterCondition filterCondition, Pageable pageable) {
         List<BookResponse> responses = queryFactory
                 .select(new QBookResponse(
                         book.id,
                         book.title,
-                        book.publisher,
-                        book.author,
-                        book.publicationDate,
-                        book.createdAt,
-                        book.pageNumber,
-                        book.isUserInput
+                        book.author
                 ))
                 .from(book)
                 .where(searchFilter(filterCondition))
@@ -94,17 +104,16 @@ public class BookRepositoryImpl implements BookRepositoryCustom {
     }
 
     private OrderSpecifier<?> sortConditions(String sortType) {
-        //TODO: 북마크, 기록 엔티티 개발 후 수정하기
         if (StringUtils.isBlank(sortType)) {
             return book.createdAt.desc();
+        } else if (sortType.equals("publicationDate")) {
+            return book.publicationDate.desc();
+        } else if (sortType.equals("bookmarksCount")) {
+            return book.bookmarks.size().desc();
+        } else if (sortType.equals("readingPlansCount")) {
+            return book.readingPlans.size().desc();
         } else {
             return book.createdAt.desc();
-        }/*else if (sortType.equals("publicationDate")) {
-            return book.publicationDate.desc();
-        } else if (sortType.equals("bookmarkCount")) {
-            return book.bookmarks.size().desc();
-        } else if (sortType.equals("recordCount")) {
-            return book.records.size().desc();
-        }*/
+        }
     }
 }
