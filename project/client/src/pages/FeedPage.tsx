@@ -11,6 +11,25 @@ const feedTabMenus = [
   { label: "팔로잉", value: "following" },
 ];
 
+// 더미 데이터
+// 피드 주인
+const feedOwners: UserInfo[] = [
+  {
+    token: "test2",
+    userId: "test2",
+    userImg: "",
+    userName: "test2",
+    userIntroduction: "hi",
+  },
+  {
+    token: "test3",
+    userId: "test3",
+    userImg: "",
+    userName: "test3",
+    userIntroduction: "hello",
+  },
+];
+
 const FeedPage = () => {
   // 현재 선택된 서브 탭 메뉴
   const [nowTab, setNowTab] = React.useState(feedTabMenus[0]);
@@ -40,12 +59,9 @@ const FeedPage = () => {
       {/* 피드 container 영역 */}
       <Grid container spacing={4} columns={{ xs: 1, md: 10 }}>
         {/* 피드 item */}
-        <FeedPostCard />
-        <FeedPostCard />
-        <FeedPostCard />
-        <FeedPostCard />
-        <FeedPostCard />
-        <FeedPostCard />
+        {feedOwners.map((element) => (
+          <FeedPostCard key={element.token} userInfo={element} />
+        ))}
       </Grid>
 
       {/* pagination 구현 필요*/}

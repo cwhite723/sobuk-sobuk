@@ -9,6 +9,16 @@ import PostCommentItem from "components/post/PostCommentItem";
 import PostContents from "components/post/PostContents";
 import PostReaction from "components/post/PostReaction";
 
+// 더미 데이터
+// 포스트 주인
+const dummyOwner: UserInfo = {
+  token: "test2",
+  userId: "test2",
+  userImg: "",
+  userName: "test2",
+  userIntroduction: "hi",
+};
+
 const PostPage = () => {
   return (
     <Box
@@ -36,7 +46,7 @@ const PostPage = () => {
       <CommonTitle value="독서기록 제목" />
 
       {/* user profile */}
-      <CommonUserProfile userId="userId" userName="userName" avatarSize={50} />
+      <CommonUserProfile userInfo={dummyOwner} avatarSize={50} />
 
       {/* 책 정보 */}
       <PostBookInfo />

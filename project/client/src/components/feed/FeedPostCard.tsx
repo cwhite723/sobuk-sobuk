@@ -4,7 +4,11 @@ import FeedPostCardInfo from "./FeedPostCardInfo";
 import FeedPostCardReaction from "./FeedPostCardReaction";
 import CommonUserProfile from "components/common/CommonUserProfile";
 
-const FeedPostCard = () => {
+interface PropsType {
+  userInfo: UserInfo;
+}
+
+const FeedPostCard: React.FC<PropsType> = (props) => {
   return (
     <Grid xs="auto" md={5} sx={{ width: "100%" }}>
       <Box
@@ -20,11 +24,7 @@ const FeedPostCard = () => {
         }}
       >
         {/* user profile */}
-        <CommonUserProfile
-          userId="userId"
-          userName="userName"
-          avatarSize={50}
-        />
+        <CommonUserProfile userInfo={props.userInfo} avatarSize={50} />
 
         {/* 책, 게시글 정보 영역 */}
         <FeedPostCardInfo />
