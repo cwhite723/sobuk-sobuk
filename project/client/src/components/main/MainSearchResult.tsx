@@ -1,19 +1,46 @@
 import { Box } from "@mui/material";
 import CommonButton from "components/common/CommonButton";
 import CommonTypography from "components/common/CommonTypography";
-import MainBookEditDialog from "./MainBookEditDialog";
-import React, { useState } from "react";
+import { useState } from "react";
+import MainBookReadDialog from "./MainBookReadDialog";
+import MainBookSubmitDialog from "./MainBookSubmitDialog";
 
 // 검색된 책 리스트 더미 데이터
-const bookList = [
-  { bookId: 1, bookName: "책 제목1", writer: "저자1", publish: "출판사1" },
-  { bookId: 2, bookName: "책 제목2", writer: "저자2", publish: "출판사2" },
-  { bookId: 3, bookName: "책 제목3", writer: "저자3", publish: "출판사3" },
+const searchList: BookItem[] = [
   {
-    bookId: "no-result",
+    bookId: 1,
+    bookName: "제목1",
+    bookWriter: "작가1",
+    bookPublish: "출판사1",
+    bookPages: 365,
+  },
+  {
+    bookId: 2,
+    bookName: "제목2",
+    bookWriter: "작가2",
+    bookPublish: "출판사2",
+    bookPages: 563,
+  },
+  {
+    bookId: 3,
+    bookName: "제목3",
+    bookWriter: "작가3",
+    bookPublish: "출판사3",
+    bookPages: 156,
+  },
+  {
+    bookId: 4,
+    bookName: "제목4",
+    bookWriter: "작가4",
+    bookPublish: "출판사4",
+    bookPages: 298,
+  },
+  {
+    bookId: 0,
     bookName: "찾는 책이 없어요",
-    writer: "",
-    publish: "",
+    bookWriter: "",
+    bookPublish: "",
+    bookPages: 0,
   },
 ];
 
@@ -21,19 +48,22 @@ const MainSerarchReasult = () => {
   // Dialog open 여부
   const [openDialog, setOpenDialog] = useState(false);
 
-  // Dialog 타입 관리
-  const [dialogType, setDialogType] = useState<DialogType>("read");
+  // 책 읽기 mode 선택된 도서
+  const [selectedBook, setSelectedBook] = useState<BookItem>();
+
+  // 책 추가하기 mode
+  const [submitBook, setSubmitBook] = useState(false);
 
   // 책 추가하기
   const handleAddBook = () => {
+    setSubmitBook(true);
     setOpenDialog(true);
-    setDialogType("submit");
   };
 
   // 책 읽기
-  const handleReadBook = () => {
+  const handleReadBook = (book: BookItem) => {
+    setSelectedBook(book);
     setOpenDialog(true);
-    setDialogType("read");
   };
 
   // 책 찜하기
@@ -42,21 +72,27 @@ const MainSerarchReasult = () => {
   };
 
   // Dialog 닫기
-  const handleClose = (): boolean => {
+  const handleClose = () => {
+    setSelectedBook(undefined);
     setOpenDialog(false);
-    return false;
   };
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
-      <MainBookEditDialog
-        isOpen={openDialog}
-        type={dialogType}
-        handleClose={handleClose}
-      />
+      {submitBook && (
+        <MainBookSubmitDialog isOpen={openDialog} handleClose={handleClose} />
+      )}
+
+      {selectedBook && (
+        <MainBookReadDialog
+          isOpen={openDialog}
+          handleClose={handleClose}
+          selectedBook={selectedBook}
+        />
+      )}
 
       {/* 검색된 도서 리스트 */}
-      {bookList.map((item) => (
+      {searchList.map((item) => (
         <Box
           key={item.bookId}
           sx={{
@@ -82,23 +118,17 @@ const MainSerarchReasult = () => {
               bold={true}
             />
             <CommonTypography
-              value={item.writer}
+              value={item.bookWriter}
               variant="body1"
               bold={false}
             />
             <CommonTypography
-              value={item.publish}
+              value={item.bookPublish}
               variant="body1"
               bold={false}
             />
           </Box>
-          {item.bookId === "no-result" ? (
-            <CommonButton
-              value="📕직접 추가하기"
-              outline={false}
-              onClick={handleAddBook}
-            />
-          ) : (
+          {item.bookId !== 0 ? (
             <Box
               sx={{
                 display: "flex",
@@ -109,7 +139,7 @@ const MainSerarchReasult = () => {
               <CommonButton
                 value="📖읽기"
                 outline={false}
-                onClick={handleReadBook}
+                onClick={() => handleReadBook(item)}
               />
               <CommonButton
                 value="📌찜하기"
@@ -117,6 +147,12 @@ const MainSerarchReasult = () => {
                 onClick={handleBookMark}
               />
             </Box>
+          ) : (
+            <CommonButton
+              value="📕직접 추가하기"
+              outline={false}
+              onClick={handleAddBook}
+            />
           )}
         </Box>
       ))}

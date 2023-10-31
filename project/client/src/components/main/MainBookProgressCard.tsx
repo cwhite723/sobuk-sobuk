@@ -2,8 +2,8 @@ import { Box, Button } from "@mui/material";
 import CommonBookImage from "components/common/CommonBookImage";
 import CommonTypography from "components/common/CommonTypography";
 import MainBookProgressCover from "./MainBookProgressCover";
-import MainBookEditDialog from "./MainBookEditDialog";
 import React, { useState } from "react";
+import MainBookProgressDialog from "./MainBookProgressDialog";
 
 interface PropsType {
   bookItem: BookItem;
@@ -14,19 +14,14 @@ const MainBookProgressCard: React.FC<PropsType> = (props) => {
   // Dialog open 여부
   const [openDialog, setOpenDialog] = useState(false);
 
-  // Dialog 타입 관리
-  const [dialogType, setDialogType] = useState<DialogType>("read");
-
   // 책 진행률 수정하기
   const handleEditBook = () => {
     setOpenDialog(true);
-    setDialogType("progress");
   };
 
   // Dialog 닫기
-  const handleClose = (): boolean => {
+  const handleClose = () => {
     setOpenDialog(false);
-    return false;
   };
 
   return (
@@ -45,14 +40,16 @@ const MainBookProgressCard: React.FC<PropsType> = (props) => {
         mb: 2,
       }}
     >
-      <MainBookEditDialog
-        isOpen={openDialog}
-        type={dialogType}
-        handleClose={handleClose}
-      />
+      {props.bookItem && (
+        <MainBookProgressDialog
+          isOpen={openDialog}
+          handleClose={handleClose}
+          selectedUserBook={props.bookItem}
+        />
+      )}
       {(props.isNonMember || props.bookItem.bookState === "complete") && (
         <MainBookProgressCover
-          status={
+          state={
             props.isNonMember
               ? "nonMember"
               : props.bookItem.bookState === "complete"
