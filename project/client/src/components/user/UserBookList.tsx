@@ -4,7 +4,6 @@ import CommonBookImage from "components/common/CommonBookImage";
 
 import CommonTitle from "components/common/CommonTitle";
 import CommonTypography from "components/common/CommonTypography";
-import { useEffect } from "react";
 
 interface PropsType {
   userName: string;
@@ -13,12 +12,6 @@ interface PropsType {
 }
 
 const UserBookList: React.FC<PropsType> = (props) => {
-  useEffect(() => {
-    if (props.isPreview) {
-      props.userBookList.slice(2);
-    }
-  }, []);
-
   return (
     <Box>
       {/* tabmenu 서재 title */}
@@ -91,7 +84,11 @@ const UserBookList: React.FC<PropsType> = (props) => {
                     bold={false}
                   />
                   <CommonTypography
-                    value={bookItem.bookProgress.toString()}
+                    value={
+                      bookItem.bookProgress
+                        ? bookItem.bookProgress.toString()
+                        : "진행률 없음"
+                    }
                     variant="body2"
                     bold={false}
                   />

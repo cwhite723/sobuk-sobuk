@@ -3,26 +3,24 @@ import CommonBookImage from "components/common/CommonBookImage";
 import CommonTypography from "components/common/CommonTypography";
 import MainBookProgressCover from "./MainBookProgressCover";
 import MainBookEditDialog from "./MainBookEditDialog";
-import React from "react";
+import React, { useState } from "react";
 
 interface PropsType {
+  bookItem: BookItem;
   isNonMember?: boolean;
-  isComplete?: boolean;
 }
 
 const MainBookProgressCard: React.FC<PropsType> = (props) => {
   // Dialog open 여부
-  const [openDialog, setOpenDialog] = React.useState<boolean>(false);
+  const [openDialog, setOpenDialog] = useState(false);
 
   // Dialog 타입 관리
-  const [dialogType, setDialogType] = React.useState<"read" | "add" | "edit">(
-    "read",
-  );
+  const [dialogType, setDialogType] = useState<DialogType>("read");
 
   // 책 진행률 수정하기
   const handleEditBook = () => {
     setOpenDialog(true);
-    setDialogType("edit");
+    setDialogType("progress");
   };
 
   // Dialog 닫기
@@ -52,12 +50,12 @@ const MainBookProgressCard: React.FC<PropsType> = (props) => {
         type={dialogType}
         handleClose={handleClose}
       />
-      {(props.isNonMember || props.isComplete) && (
+      {(props.isNonMember || props.bookItem.bookState === "complete") && (
         <MainBookProgressCover
           status={
             props.isNonMember
               ? "nonMember"
-              : props.isComplete
+              : props.bookItem.bookState === "complete"
               ? "complete"
               : "error"
           }
@@ -85,8 +83,16 @@ const MainBookProgressCard: React.FC<PropsType> = (props) => {
               mb: 1,
             }}
           >
-            <CommonTypography value="책 제목 |" variant="h5" bold={true} />
-            <CommonTypography value="지은이" variant="h6" bold={true} />
+            <CommonTypography
+              value={props.bookItem.bookName + " |"}
+              variant="h5"
+              bold={true}
+            />
+            <CommonTypography
+              value={props.bookItem.bookWriter}
+              variant="h6"
+              bold={true}
+            />
             <Button
               sx={{
                 position: "absolute",
@@ -100,7 +106,7 @@ const MainBookProgressCard: React.FC<PropsType> = (props) => {
               }}
               onClick={handleEditBook}
             >
-              {props.isComplete ? "완독" : "읽는 중"}
+              {props.bookItem.bookState === "complete" ? "완독" : "읽는 중"}
             </Button>
           </Box>
 
@@ -118,7 +124,13 @@ const MainBookProgressCard: React.FC<PropsType> = (props) => {
               variant="body1"
               bold={true}
             />
-            <CommonTypography value="93/100" variant="body2" bold={true} />
+            <CommonTypography
+              value={
+                props.bookItem.bookProgress + "/" + props.bookItem.bookPages
+              }
+              variant="body2"
+              bold={true}
+            />
           </Box>
           <Box
             sx={{

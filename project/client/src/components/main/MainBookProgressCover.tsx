@@ -40,6 +40,8 @@ const MainBookProgressCover: React.FC<PropsType> = (props) => {
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: "rgba(0,0,0,0.2)",
+        backdropFilter:
+          props.status === "nonMember" ? "blur(3px)" : "blur(0px)",
         borderRadius: 5,
         zIndex: "1",
       }}

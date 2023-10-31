@@ -1,10 +1,13 @@
 import { Box } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
-
 import CommonBookImage from "components/common/CommonBookImage";
 import CommonTypography from "components/common/CommonTypography";
 
-const MainBookRankCard = () => {
+interface PropsType {
+  bookItem: BookItem;
+}
+
+const MainBookRankCard: React.FC<PropsType> = (props) => {
   return (
     <Grid xs="auto" md={5} sx={{ width: "100%" }}>
       <Box
@@ -20,12 +23,32 @@ const MainBookRankCard = () => {
           m: 1,
         }}
       >
-        <CommonBookImage width={100} height={150} />
+        <CommonBookImage
+          width={100}
+          height={150}
+          src={props.bookItem.bookImg}
+        />
 
         <Box sx={{ ml: 2, borderTop: "1px solid" }}>
-          <CommonTypography value="책 제목" variant="h6" bold={true} />
-          <CommonTypography value="지은이" variant="body2" bold={false} />
-          <CommonTypography value="한줄소개" variant="body2" bold={false} />
+          <CommonTypography
+            value={props.bookItem.bookName}
+            variant="h6"
+            bold={true}
+          />
+          <CommonTypography
+            value={props.bookItem.bookWriter}
+            variant="body2"
+            bold={false}
+          />
+          <CommonTypography
+            value={
+              props.bookItem.bookIntroduction
+                ? props.bookItem.bookIntroduction
+                : "한줄 소개가 없어요"
+            }
+            variant="body2"
+            bold={false}
+          />
         </Box>
       </Box>
     </Grid>

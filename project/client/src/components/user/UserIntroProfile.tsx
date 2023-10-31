@@ -33,7 +33,7 @@ const UserIntroProfile = () => {
         }}
       >
         <CommonTypography
-          value="소개글이 없습니다😥"
+          value={storedUserInfo.userIntroduction}
           variant="body1"
           bold={true}
         />

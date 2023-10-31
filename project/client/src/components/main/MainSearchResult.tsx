@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import CommonButton from "components/common/CommonButton";
 import CommonTypography from "components/common/CommonTypography";
 import MainBookEditDialog from "./MainBookEditDialog";
-import React from "react";
+import React, { useState } from "react";
 
 // 검색된 책 리스트 더미 데이터
 const bookList = [
@@ -19,17 +19,15 @@ const bookList = [
 
 const MainSerarchReasult = () => {
   // Dialog open 여부
-  const [openDialog, setOpenDialog] = React.useState<boolean>(false);
+  const [openDialog, setOpenDialog] = useState(false);
 
   // Dialog 타입 관리
-  const [dialogType, setDialogType] = React.useState<"read" | "add" | "edit">(
-    "read",
-  );
+  const [dialogType, setDialogType] = useState<DialogType>("read");
 
   // 책 추가하기
   const handleAddBook = () => {
     setOpenDialog(true);
-    setDialogType("add");
+    setDialogType("submit");
   };
 
   // 책 읽기

@@ -6,6 +6,8 @@ declare global {
     value: string;
   }
 
+  type DialogType = "read" | "progress" | "submit";
+
   type BookState = "bookmark" | "reading" | "pending" | "complete";
 
   interface BookItem {
@@ -14,9 +16,10 @@ declare global {
     bookWriter: string;
     bookPublish: string;
     bookPages: number;
+    bookIntroduction?: string;
     bookImg?: string;
     bookState?: BookState;
-    bookProgress: number;
+    bookProgress?: number;
     bookDate?: Date[];
   }
 

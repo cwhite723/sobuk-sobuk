@@ -16,7 +16,7 @@ import theme from "styles/theme";
 
 interface PropsType {
   isOpen: boolean;
-  type: "edit" | "add" | "read";
+  type: DialogType;
   handleClose: () => boolean;
 }
 
@@ -66,9 +66,9 @@ const MainBookEditDialog: React.FC<PropsType> = (props) => {
     >
       {/* 제목 */}
       <DialogTitle>
-        {props.type === "edit"
+        {props.type === "progress"
           ? "🔖 오늘 읽은 페이지 기록하기"
-          : props.type === "add"
+          : props.type === "submit"
           ? "📕 책 추가하기"
           : "📖 완독 기간 설정하기"}
       </DialogTitle>
@@ -77,14 +77,14 @@ const MainBookEditDialog: React.FC<PropsType> = (props) => {
       <form>
         <DialogContent>
           <DialogContentText sx={{ color: "text.primary" }}>
-            {props.type === "edit"
+            {props.type === "progress"
               ? "오늘은 몇 페이지까지 읽었나요? 기록하고 완독까지 달려보세요!"
-              : props.type === "add"
+              : props.type === "submit"
               ? "도서 검색으로 나오지 않는 책을 직접 등록해보세요!"
               : "기간을 설정하고 독서를 습관으로 만들어보세요!"}
           </DialogContentText>
 
-          {props.type === "edit" ? (
+          {props.type === "progress" ? (
             <CommonTextField
               name="todayPages"
               control={control}
@@ -95,7 +95,7 @@ const MainBookEditDialog: React.FC<PropsType> = (props) => {
                 type: "number",
               }}
             />
-          ) : props.type === "add" ? (
+          ) : props.type === "submit" ? (
             <Box
               sx={{
                 display: "flex",
