@@ -5,9 +5,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import reading.project.domain.book.dto.request.BookRequest;
 import reading.project.domain.book.dto.request.FilterCondition;
+import reading.project.domain.book.dto.response.BookDetailResponse;
 import reading.project.domain.book.dto.response.BookResponse;
 import reading.project.domain.book.service.BookService;
-import reading.project.domain.book.service.BookmarkService;
 import reading.project.global.page.CommonPageRequest;
 import reading.project.global.response.ApplicationResponse;
 
@@ -19,7 +19,6 @@ import static org.springframework.http.HttpStatus.OK;
 @RequestMapping("/api/books")
 public class BookController {
     private final BookService bookService;
-    private final BookmarkService bookmarkService;
 
     @PostMapping
     @ResponseStatus(CREATED)
@@ -47,8 +46,8 @@ public class BookController {
 
     @GetMapping("/{book-id}")
     @ResponseStatus(OK)
-    public ApplicationResponse<BookResponse> getBook(@PathVariable("book-id") Long bookId) {
-        BookResponse response = bookService.getBook(bookId);
+    public ApplicationResponse<BookDetailResponse> getBook(@PathVariable("book-id") Long bookId) {
+        BookDetailResponse response = bookService.getBookDetails(bookId);
 
         return ApplicationResponse.ok(response);
     }
@@ -67,7 +66,7 @@ public class BookController {
     public ApplicationResponse<Void> toggleBookmark(@PathVariable("book-id") Long bookId) {
         //TODO: 토큰 받아와서 사용하도록 변경
         Long loginId = 1L;
-        bookmarkService.toggleBookmark(loginId, bookId);
+        bookService.toggleBookmark(loginId, bookId);
 
         return ApplicationResponse.noData();
     }

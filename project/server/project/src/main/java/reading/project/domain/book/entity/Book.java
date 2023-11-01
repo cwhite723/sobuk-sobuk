@@ -13,15 +13,18 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static jakarta.persistence.CascadeType.*;
+import static jakarta.persistence.GenerationType.*;
+import static lombok.AccessLevel.*;
 import static org.hibernate.annotations.OnDeleteAction.CASCADE;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = PROTECTED)
 @Table(name = "books")
 @Entity
 public class Book extends BaseEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
     @Column(name = "book_id", nullable = false, updatable = false)
     private Long id;
 
@@ -44,8 +47,12 @@ public class Book extends BaseEntity {
     private boolean isUserInput;
 
     @OnDelete(action = CASCADE)
-    @OneToMany(mappedBy = "book", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "book", cascade = PERSIST)
     private List<ReadingPlan> readingPlans = new ArrayList<>();
+
+    @OnDelete(action = CASCADE)
+    @OneToMany(mappedBy = "book", cascade = PERSIST)
+    private List<Bookmark> bookmarks = new ArrayList<>();
 
     @Builder
     public Book(String title, String publisher, String author, LocalDate publicationDate, int pageNumber, boolean isUserInput) {
