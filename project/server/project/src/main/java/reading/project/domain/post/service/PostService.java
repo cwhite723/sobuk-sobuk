@@ -16,6 +16,7 @@ import reading.project.domain.member.service.MemberService;
 
 import java.util.Optional;
 
+import static reading.project.domain.readingplan.entity.ReadingPlan.Status.*;
 import static reading.project.global.exception.ErrorCode.NOT_CREATOR;
 import static reading.project.global.exception.ErrorCode.NOT_FOUND_POST;
 
@@ -34,6 +35,8 @@ public class PostService {
         ReadingPlan plan = planService.findReadingPlanById(planId);
         Post post = request.toEntity(plan, member);
 
+        planService.changeStatus(plan, COMPLETED);
+
         return postRepository.save(post).getId();
     }
 
@@ -49,6 +52,8 @@ public class PostService {
     public void deletePost(Long loginId, Long postId) {
         Post post = findPostById(postId);
         validateCreator(loginId, post.getMember().getId());
+
+        planService.changeStatus(post.getReadingPlan(), NOT_CREATED_POST);
 
         postRepository.delete(post);
     }

@@ -60,7 +60,9 @@ public class ReadingPlan extends BaseEntity {
     public enum Status {
         READING("reading"),
         COMPLETED("completed"),
-        PENDING("pending");
+        NOT_CREATED_POST("not_created_post"),
+        NOT_STARTED("not_started"),
+        OVERDUE("overdue");
 
         private final String value;
 
@@ -100,5 +102,18 @@ public class ReadingPlan extends BaseEntity {
         this.endDate = endDate;
         this.readPageNumber = readPageNumber;
         this.status = status;
+    }
+
+    public void changeStatus(Status status) {
+        this.status = status;
+    }
+
+    public void updatePagesPerDay(int pagesPerDay) {
+        this.pagesPerDay = pagesPerDay;
+        updateTodayReadPage(this.readPageNumber + this.pagesPerDay);
+    }
+
+    private void updateTodayReadPage(int todayReadPage) {
+        this.todayPage = todayReadPage > this.book.getPageNumber() ? this.book.getPageNumber() : todayReadPage;
     }
 }
