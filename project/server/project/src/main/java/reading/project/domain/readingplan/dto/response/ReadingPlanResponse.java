@@ -11,20 +11,22 @@ import static reading.project.domain.readingplan.entity.ReadingPlan.Status;
 public class ReadingPlanResponse {
     private Long planId;
     private String title;
-    private String creator;
+    private String author;
     private Status status;
     private LocalDate startDate;
     private LocalDate endDate;
     private int todayPage;
+    private int totalPage;
 
     @QueryProjection
-    public ReadingPlanResponse(Long planId, String title, String creator, Status status, LocalDate startDate, LocalDate endDate, int todayPage) {
+    public ReadingPlanResponse(Long planId, String title, String author, Status status, LocalDate startDate, LocalDate endDate, int todayPage, int totalPage) {
         this.planId = planId;
         this.title = title;
-        this.creator = creator;
+        this.author = author;
         this.status = status;
         this.startDate = startDate;
         this.endDate = endDate;
         this.todayPage = todayPage;
+        this.totalPage = totalPage;
     }
 }
