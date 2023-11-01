@@ -14,8 +14,8 @@ import reading.project.domain.book.entity.Bookmark;
 import reading.project.domain.book.repository.BookRepository;
 import reading.project.domain.book.repository.BookmarkRepository;
 import reading.project.global.exception.CustomException;
-import reading.project.global.member.entity.Member;
-import reading.project.global.member.service.MemberService;
+import reading.project.domain.member.entity.Member;
+import reading.project.domain.member.service.MemberService;
 
 import java.util.Optional;
 

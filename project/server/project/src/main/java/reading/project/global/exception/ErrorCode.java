@@ -13,7 +13,7 @@ public enum ErrorCode {
     REQUEST_VALIDATION_FAIL(BAD_REQUEST, "잘못된 요청 값입니다."),
 
     // 401
-
+    MEMBER_NOT_AUTHORIZED(UNAUTHORIZED,"권한이 없습니다."),
     // 404
     NOT_FOUND_BOOK(NOT_FOUND, "도서 정보가 존재하지 않습니다."),
     NOT_FOUND_READING_PLAN(NOT_FOUND, "독서 기록이 존재하지 않습니다."),
@@ -23,6 +23,7 @@ public enum ErrorCode {
 
     // 409
     NOT_CREATOR(CONFLICT, "작성자가 아닙니다."),
+    MEMBER_EXISTS(CONFLICT,"아이디가 존재 합니다."),
 
     // 500
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 오류입니다. 관리자에게 문의하세요."),

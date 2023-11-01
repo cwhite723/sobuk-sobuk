@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import reading.project.domain.book.entity.Book;
 import reading.project.domain.readingplan.entity.ReadingPlan;
-import reading.project.global.member.entity.Member;
+import reading.project.domain.member.entity.Member;
 
 import java.time.LocalDate;
 

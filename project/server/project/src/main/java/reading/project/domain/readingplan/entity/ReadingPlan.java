@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import reading.project.domain.book.entity.Book;
 import reading.project.domain.post.entity.Post;
 import reading.project.global.base.BaseEntity;
-import reading.project.global.member.entity.Member;
+import reading.project.domain.member.entity.Member;
 
 import java.time.LocalDate;
 

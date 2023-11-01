@@ -1,14 +1,10 @@
-package reading.project.global.member.entity;
+package reading.project.domain.member.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import reading.project.domain.book.entity.Bookmark;
-import reading.project.global.member.dto.MemberDto;
+import reading.project.domain.member.dto.MemberDto;
 
-import javax.management.relation.Role;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,25 +40,26 @@ public class Member {
     @Column
     private String image;
 
-    @Enumerated(EnumType.STRING)
-    private Role role;
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> roles = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")
     private List<Bookmark> bookmarks = new ArrayList<>();
 
-    @Builder //NoArgsContructor 오류 방지를 위한 생성자에 @Builder 붙이기
-    public Member(String userName, String password, String nickname, String email, String introduction, String image, Role role) {
+    @Builder //NoArgsContructor 오류 방지를 위한 생성자에 @Builder
+    public Member(Long memberId, String userName, String password, String nickname, String email, String introduction, String image, List<String> roles) {
+        this.id = memberId;
         this.userName = userName;
         this.password = password;
         this.nickname = nickname;
         this.email = email;
         this.introduction = introduction;
         this.image = image;
-        this.role = role;
+        this.roles = roles;
     }
 
-    public enum Role {
-        ROLE_USER, ROLE_ADMIN
+    public void setRoles (List<String> roles) {
+        this.roles = roles;
     }
 
     public Member update(MemberDto.Patch request) {
@@ -70,5 +67,9 @@ public class Member {
         this.introduction = request.getIntroduction();
         this.image = request.getImage();
         return this;
+    }
+
+    public void changePassword(String newPassword) {
+        this.password = newPassword;
     }
 }

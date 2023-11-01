@@ -11,8 +11,8 @@ import reading.project.domain.readingplan.entity.ReadingPlan;
 import reading.project.domain.readingplan.entity.ReadingPlan.Status;
 import reading.project.domain.readingplan.repository.ReadingPlanRepository;
 import reading.project.global.exception.CustomException;
-import reading.project.global.member.entity.Member;
-import reading.project.global.member.service.MemberService;
+import reading.project.domain.member.entity.Member;
+import reading.project.domain.member.service.MemberService;
 
 import java.time.Duration;
 import java.time.LocalDate;

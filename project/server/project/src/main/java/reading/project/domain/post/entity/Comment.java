@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import reading.project.global.base.BaseEntity;
-import reading.project.global.member.entity.Member;
+import reading.project.domain.member.entity.Member;
 
 import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.IDENTITY;

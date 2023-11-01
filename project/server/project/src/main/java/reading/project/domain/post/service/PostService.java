@@ -11,8 +11,8 @@ import reading.project.domain.post.repository.PostRepository;
 import reading.project.domain.readingplan.entity.ReadingPlan;
 import reading.project.domain.readingplan.service.ReadingPlanService;
 import reading.project.global.exception.CustomException;
-import reading.project.global.member.entity.Member;
-import reading.project.global.member.service.MemberService;
+import reading.project.domain.member.entity.Member;
+import reading.project.domain.member.service.MemberService;
 
 import java.util.Optional;
 

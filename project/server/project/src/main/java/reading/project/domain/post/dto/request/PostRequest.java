@@ -1,11 +1,10 @@
 package reading.project.domain.post.dto.request;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import reading.project.domain.post.entity.Post;
 import reading.project.domain.readingplan.entity.ReadingPlan;
-import reading.project.global.member.entity.Member;
+import reading.project.domain.member.entity.Member;
 
 import static lombok.AccessLevel.*;
 

@@ -8,9 +8,8 @@ import reading.project.domain.post.entity.Comment;
 import reading.project.domain.post.entity.Post;
 import reading.project.domain.post.repository.CommentRepository;
 import reading.project.global.exception.CustomException;
-import reading.project.global.exception.ErrorCode;
-import reading.project.global.member.entity.Member;
-import reading.project.global.member.service.MemberService;
+import reading.project.domain.member.entity.Member;
+import reading.project.domain.member.service.MemberService;
 
 import static reading.project.global.exception.ErrorCode.*;
 import static reading.project.global.exception.ErrorCode.NOT_CREATOR;
