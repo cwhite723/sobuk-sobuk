@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import reading.project.domain.readingplan.entity.ReadingPlan;
 import reading.project.global.base.BaseEntity;
-import reading.project.global.member.entity.Member;
+import reading.project.domain.member.entity.Member;
 
 import static jakarta.persistence.CascadeType.PERSIST;
 import static jakarta.persistence.FetchType.*;

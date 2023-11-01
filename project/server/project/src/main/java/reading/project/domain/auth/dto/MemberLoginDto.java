@@ -1,4 +1,4 @@
-package reading.project.global.auth.dto;
+package reading.project.domain.auth.dto;
 
 import lombok.Getter;
 ///////////////////////////////////////////

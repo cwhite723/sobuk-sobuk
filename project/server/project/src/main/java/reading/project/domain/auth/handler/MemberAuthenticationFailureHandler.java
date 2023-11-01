@@ -1,4 +1,4 @@
-package reading.project.global.auth.handler;
+package reading.project.domain.auth.handler;
 
 import com.google.gson.Gson;
 import jakarta.servlet.ServletException;

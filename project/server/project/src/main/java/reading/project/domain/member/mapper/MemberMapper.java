@@ -1,7 +1,7 @@
-package reading.project.global.member.mapper;
+package reading.project.domain.member.mapper;
 import org.springframework.stereotype.Component;
-import reading.project.global.member.dto.MemberDto;
-import reading.project.global.member.entity.Member;
+import reading.project.domain.member.dto.MemberDto;
+import reading.project.domain.member.entity.Member;
 
 @Component
 public class MemberMapper {

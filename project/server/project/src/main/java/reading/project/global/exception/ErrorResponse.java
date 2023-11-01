@@ -1,7 +1,8 @@
 package reading.project.global.exception;
 
+import lombok.Builder;
 import org.springframework.http.HttpStatus;
-
+@Builder
 public record ErrorResponse(
         Integer status,
         String errorCode,

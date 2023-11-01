@@ -1,4 +1,4 @@
-package reading.project.global.auth.user;
+package reading.project.domain.auth.user;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;

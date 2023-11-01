@@ -1,4 +1,4 @@
-package reading.project.global.auth.user;
+package reading.project.domain.auth.user;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,8 +9,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import reading.project.global.exception.CustomException;
 import reading.project.global.exception.ErrorCode;
-import reading.project.global.member.entity.Member;
-import reading.project.global.member.repository.MemberRepository;
+import reading.project.domain.member.entity.Member;
+import reading.project.domain.member.repository.MemberRepository;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -49,7 +49,7 @@ public class MemberDetailsService implements UserDetailsService {
                     member.getEmail(),
                     member.getIntroduction(),
                     member.getImage() ,
-                    member.getRole());
+                    member.getRoles());
         }
 
         @Override

@@ -1,4 +1,4 @@
-package reading.project.global.auth.handler;
+package reading.project.domain.auth.handler;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
-import reading.project.global.auth.utils.ErrorResponder;
+import reading.project.domain.auth.utils.ErrorResponder;
 
 import java.io.IOException;
 ///////////////////////////////////////////

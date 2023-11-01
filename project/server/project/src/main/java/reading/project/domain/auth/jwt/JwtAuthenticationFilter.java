@@ -1,4 +1,4 @@
-package reading.project.global.auth.jwt;
+package reading.project.domain.auth.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
@@ -11,9 +11,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import reading.project.global.auth.dto.MemberLoginDto;
-import reading.project.global.member.entity.Member;
-import reading.project.global.member.service.MemberService;
+import reading.project.domain.auth.dto.MemberLoginDto;
+import reading.project.domain.member.entity.Member;
 
 import java.io.IOException;
 import java.util.Date;
@@ -61,8 +60,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     private String delegateAccessToken(Member member) {
         Map<String, Object> claims = new HashMap<>();
+        claims.put("Id",member.getId());
         claims.put("username", member.getUserName());
-        claims.put("roles", member.getRole());
+        claims.put("roles", member.getRoles());
 
         String subject = member.getUserName();
         Date expiration = jwtTokenizer.getTokenExpiration(jwtTokenizer.getAccessTokenExpirationMinutes());

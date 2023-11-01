@@ -1,4 +1,4 @@
-package reading.project.global.auth.jwt;
+package reading.project.domain.auth.jwt;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
@@ -11,12 +11,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
-import reading.project.global.auth.user.MemberCustomAuthorityUtils;
+import reading.project.domain.auth.user.MemberCustomAuthorityUtils;
 
 
 import java.io.IOException;
 import io.jsonwebtoken.security.SignatureException;
-import reading.project.global.member.entity.Member;
 
 import java.util.List;
 import java.util.Map;
@@ -52,7 +51,7 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
     }
 
     private Map<String,Object> verifyJws(HttpServletRequest request) {
-        String jws = request.getHeader("Authorization").replace("Bearer ","");
+        String jws = request.getHeader("Authorization").replace("Bearer","");
         String base64EncodedSecretKey = jwtTokenizer.encodeBase64SecretKey(jwtTokenizer.getSecretKey());
         Map<String,Object> claims = jwtTokenizer.getClaims(jws,base64EncodedSecretKey).getBody();
 
@@ -61,8 +60,7 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
 
     private void setAuthenticationToContext(Map<String,Object> claims) {
         String userName =(String) claims.get("userName");
-        Member.Role role = Member.Role.valueOf((String) claims.get("roles"));
-        List<GrantedAuthority> authorities = authorityUtils.createAuthorities(role.name());
+        List<GrantedAuthority> authorities = authorityUtils.createAuthorities((List)claims.get("roles"));
         Authentication authentication = new UsernamePasswordAuthenticationToken(userName,null,authorities);
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }

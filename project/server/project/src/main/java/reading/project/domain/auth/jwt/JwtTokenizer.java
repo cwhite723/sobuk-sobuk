@@ -1,4 +1,4 @@
-package reading.project.global.auth.jwt;
+package reading.project.domain.auth.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
