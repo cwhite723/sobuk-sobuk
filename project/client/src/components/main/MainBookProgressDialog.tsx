@@ -38,8 +38,11 @@ const MainBookProgressDialog: React.FC<PropsType> = (props) => {
   const handleDialogData = (data: FormValue) => {
     reset();
     props.handleClose();
+    // input 값 number 형식으로 변경 필요
     console.log(data);
   };
+
+  // dialog 전체 에러 메세지 추가 필요
 
   return (
     <Dialog
@@ -89,14 +92,14 @@ const MainBookProgressDialog: React.FC<PropsType> = (props) => {
                 variant="body1"
                 bold={false}
               />
-              {/* 진행률% 로 되어있는 부분 페이지로 환산 필요 */}
               <CommonTypography
                 value={
-                  "지금까지 " +
+                  props.selectedUserBook.bookPages +
+                  "쪽 중에 " +
                   (props.selectedUserBook.bookProgress
-                    ? props.selectedUserBook.bookProgress.toString()
+                    ? props.selectedUserBook.bookProgress
                     : "정보없음") +
-                  "쪽 까지 읽었어요."
+                  " 쪽 까지 읽었어요."
                 }
                 variant="body1"
                 bold={false}
@@ -105,6 +108,13 @@ const MainBookProgressDialog: React.FC<PropsType> = (props) => {
             <CommonTextField
               name="todayPages"
               control={control}
+              rules={{
+                required: true,
+                validate: (value) =>
+                  props.selectedUserBook.bookProgress === undefined
+                    ? value > 0
+                    : value > props.selectedUserBook.bookProgress,
+              }}
               textFieldProps={{
                 id: "today-pages",
                 label: "Today Pages",

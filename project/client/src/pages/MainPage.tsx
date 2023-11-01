@@ -16,7 +16,8 @@ const userLibrary: BookItem[] = [
     bookPublish: "출판사1",
     bookPages: 365,
     bookState: "reading",
-    bookProgress: 75,
+    bookProgress: 278,
+    bookDate: [new Date("2023-10-25"), new Date("2023-11-25")],
   },
   {
     bookId: 2,
@@ -25,7 +26,7 @@ const userLibrary: BookItem[] = [
     bookPublish: "출판사2",
     bookPages: 563,
     bookState: "pending",
-    bookProgress: 30,
+    bookProgress: 550,
   },
   {
     bookId: 3,

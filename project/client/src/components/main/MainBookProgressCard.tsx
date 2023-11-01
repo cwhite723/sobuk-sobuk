@@ -2,8 +2,9 @@ import { Box, Button } from "@mui/material";
 import CommonBookImage from "components/common/CommonBookImage";
 import CommonTypography from "components/common/CommonTypography";
 import MainBookProgressCover from "./MainBookProgressCover";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MainBookProgressDialog from "./MainBookProgressDialog";
+import MainBookProgressBar from "./MainBookProgressBar";
 
 interface PropsType {
   bookItem: BookItem;
@@ -14,6 +15,9 @@ const MainBookProgressCard: React.FC<PropsType> = (props) => {
   // Dialog open 여부
   const [openDialog, setOpenDialog] = useState(false);
 
+  // stringdate array
+  const [dates, setDates] = useState(["", ""]);
+
   // 책 진행률 수정하기
   const handleEditBook = () => {
     setOpenDialog(true);
@@ -23,6 +27,27 @@ const MainBookProgressCard: React.FC<PropsType> = (props) => {
   const handleClose = () => {
     setOpenDialog(false);
   };
+
+  const getStringDate = (dates: Date[]) => {
+    const stringDate: string[] = [];
+    for (let i = 0; i < dates.length; i++) {
+      stringDate[i] =
+        dates[i].getFullYear() +
+        "-" +
+        dates[i].getMonth() +
+        "-" +
+        dates[i].getDay();
+    }
+    return stringDate;
+  };
+
+  useEffect(() => {
+    if (props.bookItem.bookDate) {
+      setDates(getStringDate(props.bookItem.bookDate));
+    } else {
+      setDates(["0000-00-00", "0000-00-00"]);
+    }
+  }, []);
 
   return (
     <Box
@@ -58,7 +83,7 @@ const MainBookProgressCard: React.FC<PropsType> = (props) => {
           }
         />
       )}
-
+      {/* 책정보 */}
       <CommonBookImage width={100} height={150} />
       <Box
         sx={{
@@ -108,47 +133,20 @@ const MainBookProgressCard: React.FC<PropsType> = (props) => {
           </Box>
 
           <CommonTypography
-            value="2023.06.03 ~ 2023.10.03"
+            value={dates[0] + " ~ " + dates[1]}
             variant="body2"
             bold={true}
           />
 
           {/* 진행률 그래프 부분 */}
-          {/* 따로 빼야함 */}
-          <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}>
-            <CommonTypography
-              value="오늘은 368쪽까지 읽어야 해요"
-              variant="body1"
-              bold={true}
-            />
-            <CommonTypography
-              value={
-                props.bookItem.bookProgress + "/" + props.bookItem.bookPages
-              }
-              variant="body2"
-              bold={true}
-            />
-          </Box>
-          <Box
-            sx={{
-              position: "relative",
-              width: "100%",
-              height: "25px",
-              backgroundColor: "primary.main",
-              borderRadius: 5,
-              mt: 1,
-            }}
-          >
-            <Box
-              sx={{
-                position: "absolute",
-                width: "80%",
-                height: "25px",
-                backgroundColor: "text.primary",
-                borderRadius: 5,
-              }}
-            />
-          </Box>
+          {/* 기간 정보도 넘겨서 계산 필요 */}
+          <MainBookProgressBar
+            dateInfo={props.bookItem.bookDate ? props.bookItem.bookDate : []}
+            progressInfo={
+              props.bookItem.bookProgress ? props.bookItem.bookProgress : 0
+            }
+            pagesInfo={props.bookItem.bookPages}
+          />
         </Box>
       </Box>
     </Box>
