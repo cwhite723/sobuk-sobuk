@@ -21,8 +21,9 @@ import CommonSnackBar from "./CommonSnackBar";
 const HeaderBar = () => {
   const pages = [
     { name: "홈", link: "../main" },
+    { name: "도서 탐색", link: "../search" },
     { name: "피드", link: "../feed" },
-    { name: "독서모임", link: "../group" },
+    { name: "독서 모임", link: "../group" },
     { name: "내 서재", link: "../user/1" },
   ];
 
@@ -100,7 +101,9 @@ const HeaderBar = () => {
               {pages.map((page) => (
                 <CommonLink key={page.name} to={page.link}>
                   <MenuItem onClick={handleCloseNavMenu}>
-                    <Typography textAlign="center">{page.name}</Typography>
+                    <Typography textAlign="center" fontWeight="bold">
+                      {page.name}
+                    </Typography>
                   </MenuItem>
                 </CommonLink>
               ))}
@@ -139,6 +142,7 @@ const HeaderBar = () => {
                     color: "text.primary",
                     display: "block",
                     "&:hover": { color: "text.secondary" },
+                    fontWeight: "bold",
                   }}
                 >
                   {page.name}

@@ -1,16 +1,18 @@
 import { Box } from "@mui/material";
+
 interface PropsType {
   children: React.ReactNode;
+  maxHight: number;
 }
 
-const MainSection: React.FC<PropsType> = (props) => {
+const CommonSection: React.FC<PropsType> = (props) => {
   return (
     <Box
       sx={{
         display: "flex",
         flexDirection: "column",
         justifyContent: "start",
-        maxHeight: 700,
+        maxHeight: props.maxHight,
         overflowY: "auto",
         "::-webkit-scrollbar": {
           display: "none",
@@ -26,4 +28,4 @@ const MainSection: React.FC<PropsType> = (props) => {
     </Box>
   );
 };
-export default MainSection;
+export default CommonSection;

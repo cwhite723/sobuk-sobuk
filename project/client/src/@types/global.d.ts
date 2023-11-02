@@ -8,7 +8,7 @@ declare global {
 
   type DialogType = "read" | "progress" | "submit";
 
-  type BookState = "bookmark" | "reading" | "pending" | "complete";
+  type BookState = "before" | "reading" | "after" | "complete";
 
   interface BookItem {
     bookId: number;

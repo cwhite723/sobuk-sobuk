@@ -103,10 +103,10 @@ const LoginPage = () => {
         maxWidth: 500,
       }}
     >
-      {/* HOME 버튼 */}
+      {/* 구경하기 버튼 */}
       <Box sx={{ position: "fixed", top: "30px", right: "30px" }}>
-        <CommonLink to="../main">
-          <CommonTypography value="🏠HOME" variant="body1" bold={true} />
+        <CommonLink to="../search">
+          <CommonTypography value="🔍구경하기" variant="body1" bold={true} />
         </CommonLink>
       </Box>
 

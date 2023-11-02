@@ -14,7 +14,8 @@ const userLibrary: BookItem[] = [
     bookPublish: "출판사1",
     bookPages: 365,
     bookState: "reading",
-    bookProgress: 75,
+    bookProgress: 278,
+    bookDate: [new Date("2023-10-25"), new Date("2023-11-25")],
   },
   {
     bookId: 2,
@@ -22,8 +23,8 @@ const userLibrary: BookItem[] = [
     bookWriter: "작가2",
     bookPublish: "출판사2",
     bookPages: 563,
-    bookState: "pending",
-    bookProgress: 30,
+    bookState: "after",
+    bookProgress: 550,
   },
   {
     bookId: 3,
@@ -31,7 +32,7 @@ const userLibrary: BookItem[] = [
     bookWriter: "작가3",
     bookPublish: "출판사3",
     bookPages: 156,
-    bookState: "bookmark",
+    bookState: "before",
     bookProgress: 0,
   },
   {
@@ -41,10 +42,9 @@ const userLibrary: BookItem[] = [
     bookPublish: "출판사4",
     bookPages: 298,
     bookState: "complete",
-    bookProgress: 100,
+    bookProgress: 298,
   },
 ];
-
 const WritePage = () => {
   // 선택된 책
   const [selectBook, setSelectBook] = useState<BookItem | null>(null);

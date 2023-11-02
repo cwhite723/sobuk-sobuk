@@ -13,7 +13,6 @@ const CommonTypography: React.FC<PropsType> = (props) => {
       variant={props.variant}
       sx={{
         fontWeight: props.bold ? 800 : 400,
-        mr: 2,
         color: props.error ? "error.main" : "text.primary",
       }}
     >

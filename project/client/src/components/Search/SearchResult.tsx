@@ -2,8 +2,8 @@ import { Box } from "@mui/material";
 import CommonButton from "components/common/CommonButton";
 import CommonTypography from "components/common/CommonTypography";
 import { useState } from "react";
-import MainBookReadDialog from "./MainBookReadDialog";
-import MainBookSubmitDialog from "./MainBookSubmitDialog";
+import SearchBookReadDialog from "./SearchBookReadDialog";
+import SearchBookSubmitDialog from "./SearchBookSubmitDialog";
 
 // 검색된 책 리스트 더미 데이터
 const searchList: BookItem[] = [
@@ -44,7 +44,7 @@ const searchList: BookItem[] = [
   },
 ];
 
-const MainSerarchReasult = () => {
+const SerarchReasult = () => {
   // Dialog open 여부
   const [openDialog, setOpenDialog] = useState(false);
 
@@ -80,11 +80,11 @@ const MainSerarchReasult = () => {
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
       {submitBook && (
-        <MainBookSubmitDialog isOpen={openDialog} handleClose={handleClose} />
+        <SearchBookSubmitDialog isOpen={openDialog} handleClose={handleClose} />
       )}
 
       {selectedBook && (
-        <MainBookReadDialog
+        <SearchBookReadDialog
           isOpen={openDialog}
           handleClose={handleClose}
           selectedBook={selectedBook}
@@ -160,4 +160,4 @@ const MainSerarchReasult = () => {
   );
 };
 
-export default MainSerarchReasult;
+export default SerarchReasult;

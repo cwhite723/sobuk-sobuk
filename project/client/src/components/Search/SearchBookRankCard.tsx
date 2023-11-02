@@ -7,7 +7,7 @@ interface PropsType {
   bookItem: BookItem;
 }
 
-const MainBookRankCard: React.FC<PropsType> = (props) => {
+const SearchBookRankCard: React.FC<PropsType> = (props) => {
   return (
     <Grid xs="auto" md={5} sx={{ width: "100%" }}>
       <Box
@@ -55,4 +55,4 @@ const MainBookRankCard: React.FC<PropsType> = (props) => {
   );
 };
 
-export default MainBookRankCard;
+export default SearchBookRankCard;

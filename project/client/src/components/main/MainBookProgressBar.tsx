@@ -22,7 +22,11 @@ const MainBookProgressBar = (props: PropsType) => {
   const getTimeDiffFromToday = (date: Date) => {
     const day = 1000 * 60 * 60 * 24;
     const timeDiff = +date - +Date.now();
-    return Math.floor(timeDiff / day);
+    return Math.ceil(timeDiff / day);
+  };
+
+  const getTodayPages = (progress: number, pages: number, diff: number) => {
+    return progress + Math.ceil((pages - progress) / diff);
   };
 
   useEffect(() => {
@@ -34,8 +38,7 @@ const MainBookProgressBar = (props: PropsType) => {
         <CommonTypography
           value={
             "오늘은 " +
-            props.progressInfo +
-            (props.pagesInfo - props.progressInfo) / timeDiff +
+            getTodayPages(props.progressInfo, props.pagesInfo, timeDiff) +
             "쪽까지 읽어야 해요"
           }
           variant="body1"

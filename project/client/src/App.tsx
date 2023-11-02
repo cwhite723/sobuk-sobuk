@@ -1,4 +1,3 @@
-import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import MainPage from "pages/MainPage";
 import LoginPage from "pages/LoginPage";
@@ -13,6 +12,7 @@ import MainLayout from "components/common/MainLayout";
 import SubLayout from "components/common/SubLayout";
 import PrivateRoute from "pages/auth/PrivateRoute";
 import NotPrivateRoute from "pages/auth/NotPrivateRoute";
+import SearchPage from "pages/SearchPage";
 
 function App() {
   return (
@@ -29,6 +29,7 @@ function App() {
         {/* 로그인해야 접근 가능 */}
         <Route element={<PrivateRoute />}>
           <Route element={<MainLayout />}>
+            <Route path="main" element={<MainPage />} />
             <Route path="post/:postid" element={<PostPage />} />
             <Route path="write" element={<WritePage />} />
             <Route path="user/:userid" element={<UserPage />} />
@@ -37,8 +38,8 @@ function App() {
 
         {/* 상관없이 접근 가능 */}
         <Route element={<MainLayout />}>
-          <Route path="/" element={<Navigate replace to="main" />} />
-          <Route path="main" element={<MainPage />} />
+          <Route path="/" element={<Navigate replace to="search" />} />
+          <Route path="search" element={<SearchPage />} />
           <Route path="feed" element={<FeedPage />} />
           <Route path="group" element={<GroupPage />} />
           <Route path="*" element={<ErrorPage />} />

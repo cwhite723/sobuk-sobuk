@@ -31,12 +31,11 @@ const MainBookProgressCard: React.FC<PropsType> = (props) => {
   const getStringDate = (dates: Date[]) => {
     const stringDate: string[] = [];
     for (let i = 0; i < dates.length; i++) {
-      stringDate[i] =
-        dates[i].getFullYear() +
-        "-" +
-        dates[i].getMonth() +
-        "-" +
-        dates[i].getDay();
+      stringDate[i] = dates[i].toLocaleString();
+      stringDate[i] = stringDate[i]
+        .split(".", 3)
+        .join("-")
+        .replace(/(\s*)/g, "");
     }
     return stringDate;
   };
@@ -139,7 +138,6 @@ const MainBookProgressCard: React.FC<PropsType> = (props) => {
           />
 
           {/* 진행률 그래프 부분 */}
-          {/* 기간 정보도 넘겨서 계산 필요 */}
           <MainBookProgressBar
             dateInfo={props.bookItem.bookDate ? props.bookItem.bookDate : []}
             progressInfo={
