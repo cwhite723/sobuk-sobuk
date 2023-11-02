@@ -13,10 +13,13 @@ import SubLayout from "components/common/SubLayout";
 import PrivateRoute from "pages/auth/PrivateRoute";
 import NotPrivateRoute from "pages/auth/NotPrivateRoute";
 import SearchPage from "pages/SearchPage";
+import { QueryClient, QueryClientProvider } from "react-query";
+
+const queryClient = new QueryClient();
 
 function App() {
   return (
-    <>
+    <QueryClientProvider client={queryClient}>
       <Routes>
         {/* 비로그인으로만 접근 가능 */}
         <Route element={<NotPrivateRoute />}>
@@ -45,7 +48,7 @@ function App() {
           <Route path="*" element={<ErrorPage />} />
         </Route>
       </Routes>
-    </>
+    </QueryClientProvider>
   );
 }
 
