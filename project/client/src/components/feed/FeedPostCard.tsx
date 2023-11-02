@@ -5,7 +5,7 @@ import FeedPostCardReaction from "./FeedPostCardReaction";
 import CommonUserProfile from "components/common/CommonUserProfile";
 
 interface PropsType {
-  userInfo: UserInfo;
+  postItem: PostItem;
 }
 
 const FeedPostCard: React.FC<PropsType> = (props) => {
@@ -24,13 +24,20 @@ const FeedPostCard: React.FC<PropsType> = (props) => {
         }}
       >
         {/* user profile */}
-        <CommonUserProfile userInfo={props.userInfo} avatarSize={50} />
+        <CommonUserProfile
+          userInfo={props.postItem.postOwner}
+          avatarSize={50}
+        />
 
         {/* 책, 게시글 정보 영역 */}
-        <FeedPostCardInfo />
+        <FeedPostCardInfo postItem={props.postItem} />
 
         {/* 댓글 및 추천수 */}
-        <FeedPostCardReaction />
+        <FeedPostCardReaction
+          postId={props.postItem.postId}
+          commentCount={props.postItem.postCommentsCount}
+          likeCount={props.postItem.postLikeCount}
+        />
       </Box>
     </Grid>
   );

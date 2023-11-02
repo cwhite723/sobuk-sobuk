@@ -3,9 +3,13 @@ import CommonBookImage from "components/common/CommonBookImage";
 import CommonLink from "components/common/CommonLink";
 import CommonTypography from "components/common/CommonTypography";
 
-const FeedPostCardInfo = () => {
+interface PropsType {
+  postItem: PostItem;
+}
+
+const FeedPostCardInfo = (props: PropsType) => {
   return (
-    <CommonLink to="../post/1">
+    <CommonLink to={"../post/" + props.postItem.postId}>
       <Box
         sx={{
           display: "flex",
@@ -16,16 +20,32 @@ const FeedPostCardInfo = () => {
           py: 2,
         }}
       >
-        <CommonBookImage width={100} height={150} />
+        <CommonBookImage
+          width={100}
+          height={150}
+          src={props.postItem.postBookInfo.bookImg}
+        />
         <Box>
           <Box sx={{ display: "flex", alignItems: "baseline", my: 2 }}>
-            <CommonTypography value="책 제목" variant="h6" bold={true} />
-            <CommonTypography value="저자" variant="body2" bold={true} />
+            <CommonTypography
+              value={props.postItem.postBookInfo.bookName}
+              variant="h6"
+              bold={true}
+            />
+            <CommonTypography
+              value={props.postItem.postBookInfo.bookWriter}
+              variant="body2"
+              bold={true}
+            />
           </Box>
           <Box>
-            <CommonTypography value="제목" variant="body2" bold={true} />
             <CommonTypography
-              value="내용 미리보기"
+              value={props.postItem.postTitle}
+              variant="body2"
+              bold={true}
+            />
+            <CommonTypography
+              value={props.postItem.postContents}
               variant="body2"
               bold={false}
             />

@@ -45,6 +45,7 @@ const userLibrary: BookItem[] = [
     bookPages: 156,
     bookState: "before",
     bookProgress: 0,
+    bookDate: [new Date("2023-10-25"), new Date("2023-11-25")],
   },
   {
     bookId: 4,
@@ -57,50 +58,59 @@ const userLibrary: BookItem[] = [
   },
 ];
 
-const userPostList: PostItem[] = [
+// 피드 주인
+const feedOwners: UserInfo[] = [
+  {
+    token: "test2",
+    userId: "test2",
+    userImg: "",
+    userName: "test2",
+    userIntroduction: "hi",
+  },
+  {
+    token: "test3",
+    userId: "test3",
+    userImg: "",
+    userName: "test3",
+    userIntroduction: "hello",
+  },
+];
+
+const allPost: PostItem[] = [
   {
     postId: 1,
-    postBookInfo: userLibrary[0],
-    postTitle: "독서기록 제목1",
-    postOwner: "test2",
-    postContents: "독서기록 내용입니다1",
-    postCommentsCount: 5,
+    postBookInfo: userLibrary[4],
+    postTitle: "제목입니다.",
+    postOwner: feedOwners[0],
+    postContents: "내용입니다.",
+    postCommentsCount: 3,
     postLikeCount: 10,
   },
   {
     postId: 2,
-    postBookInfo: userLibrary[1],
-    postTitle: "독서기록 제목2",
-    postOwner: "test2",
-    postContents: "독서기록 내용입니다2",
-    postCommentsCount: 5,
+    postBookInfo: userLibrary[4],
+    postTitle: "제목입니다.",
+    postOwner: feedOwners[1],
+    postContents: "내용입니다.",
+    postCommentsCount: 3,
     postLikeCount: 10,
   },
   {
     postId: 3,
-    postBookInfo: userLibrary[2],
-    postTitle: "독서기록 제목3",
-    postOwner: "test2",
-    postContents: "독서기록 내용입니다3",
-    postCommentsCount: 5,
+    postBookInfo: userLibrary[4],
+    postTitle: "제목입니다.",
+    postOwner: feedOwners[0],
+    postContents: "내용입니다.",
+    postCommentsCount: 3,
     postLikeCount: 10,
   },
   {
     postId: 4,
-    postBookInfo: userLibrary[3],
-    postTitle: "독서기록 제목4",
-    postOwner: "test2",
-    postContents: "독서기록 내용입니다4",
-    postCommentsCount: 5,
-    postLikeCount: 10,
-  },
-  {
-    postId: 5,
-    postBookInfo: userLibrary[0],
-    postTitle: "독서기록 제목5",
-    postOwner: "test2",
-    postContents: "독서기록 내용입니다5",
-    postCommentsCount: 5,
+    postBookInfo: userLibrary[4],
+    postTitle: "제목입니다.",
+    postOwner: feedOwners[1],
+    postContents: "내용입니다.",
+    postCommentsCount: 3,
     postLikeCount: 10,
   },
 ];
@@ -147,7 +157,7 @@ const UserPage = () => {
           {/* 최신순 3개만 보여줌 */}
           <UserPostList
             userName={storedUserInfo.userName}
-            userPostList={userPostList}
+            userPostList={allPost}
             isPreview={true}
           />
         </Box>
@@ -167,7 +177,7 @@ const UserPage = () => {
       {nowTab.value === "post" && (
         <UserPostList
           userName={storedUserInfo.userName}
-          userPostList={userPostList}
+          userPostList={allPost}
         />
       )}
 

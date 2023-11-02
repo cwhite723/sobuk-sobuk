@@ -27,7 +27,7 @@ declare global {
     postId: number;
     postBookInfo: BookItem;
     postTitle: string;
-    postOwner: string;
+    postOwner: UserInfo;
     postContents: string;
     postCommentsCount: number;
     postLikeCount: number;
