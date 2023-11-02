@@ -79,7 +79,7 @@ const feedOwners: UserInfo[] = [
 const allPost: PostItem[] = [
   {
     postId: 1,
-    postBookInfo: userLibrary[4],
+    postBookInfo: userLibrary[3],
     postTitle: "제목입니다.",
     postOwner: feedOwners[0],
     postContents: "내용입니다.",
@@ -88,7 +88,7 @@ const allPost: PostItem[] = [
   },
   {
     postId: 2,
-    postBookInfo: userLibrary[4],
+    postBookInfo: userLibrary[3],
     postTitle: "제목입니다.",
     postOwner: feedOwners[1],
     postContents: "내용입니다.",
@@ -97,7 +97,7 @@ const allPost: PostItem[] = [
   },
   {
     postId: 3,
-    postBookInfo: userLibrary[4],
+    postBookInfo: userLibrary[3],
     postTitle: "제목입니다.",
     postOwner: feedOwners[0],
     postContents: "내용입니다.",
@@ -106,7 +106,7 @@ const allPost: PostItem[] = [
   },
   {
     postId: 4,
-    postBookInfo: userLibrary[4],
+    postBookInfo: userLibrary[3],
     postTitle: "제목입니다.",
     postOwner: feedOwners[1],
     postContents: "내용입니다.",
