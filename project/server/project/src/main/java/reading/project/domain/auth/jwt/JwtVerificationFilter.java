@@ -10,15 +10,19 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import reading.project.domain.auth.user.MemberCustomAuthorityUtils;
 
 
 import java.io.IOException;
 import io.jsonwebtoken.security.SignatureException;
+import reading.project.global.config.redis.util.RedisDao;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+
 ///////////////////////////////////////////
 //JWT를 검증하는 전용 Security Filter를 구현
 ///////////////////////////////////////////
@@ -27,11 +31,14 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
     private final JwtTokenizer jwtTokenizer;
     private final MemberCustomAuthorityUtils authorityUtils;
 
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             Map<String,Object> claims = verifyJws(request);
             setAuthenticationToContext(claims);
+
+
 
         } catch (SignatureException se) {
             request.setAttribute("exception", se);
@@ -64,4 +71,5 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
         Authentication authentication = new UsernamePasswordAuthenticationToken(userName,null,authorities);
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
+    // 리프레쉬 토큰 저장되어있는지 확인
 }

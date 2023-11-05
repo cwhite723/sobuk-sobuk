@@ -1,5 +1,6 @@
 package reading.project.domain.auth.jwt;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -13,11 +14,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import reading.project.domain.auth.dto.MemberLoginDto;
 import reading.project.domain.member.entity.Member;
+import reading.project.global.config.redis.util.RedisDao;
 
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 ///////////////////////////////////////////
 //클라이언트의 로그인 인증 정보를 직접적으로 수신하여
@@ -29,6 +32,8 @@ import java.util.Map;
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenizer jwtTokenizer;
+
+    private final RedisDao redisDao;
 
 
     @SneakyThrows
@@ -53,6 +58,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         response.setHeader("Authorization","Bearer" + accessToken);
         response.setHeader("Refresh",refreshToken);
+
+        //redis에 refreshToken 저장
+        redisDao.setValues(member.getUserName(),refreshToken);
 
         this.getSuccessHandler().onAuthenticationSuccess(request,response,authResult);
     }
@@ -83,4 +91,11 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         return refreshToken;
     }
+
+//    //만료된 access 토큰 재발급
+//    public String reissueAtk(Member member) throws Exception {
+//        String rtkInRedis = redisDao.getValues(member.getUserName());
+//        if(Objects.isNull(rtkInRedis)) throw new Exception("인증 정보가 만료되었습니다.");
+//        return delegateAccessToken(member);
+//    }
 }

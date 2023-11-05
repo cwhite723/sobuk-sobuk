@@ -1,7 +1,10 @@
 package reading.project.domain.member.controller;
 
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import reading.project.domain.member.service.MemberService;
@@ -15,6 +18,13 @@ import static org.springframework.http.HttpStatus.*;
 @RequestMapping("/members")
 public class MemberController {
     private final MemberService memberService;
+
+    @PostMapping("/log-out")
+    @ResponseStatus(OK)
+    public ApplicationResponse<Void> logOutMember(){
+        memberService.logout();
+        return ApplicationResponse.noData();
+    }
 
     @PostMapping("/sign-up")
     @ResponseStatus(CREATED)

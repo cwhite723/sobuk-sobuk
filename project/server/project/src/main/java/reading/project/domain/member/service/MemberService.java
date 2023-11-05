@@ -1,5 +1,6 @@
 package reading.project.domain.member.service;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -7,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import reading.project.domain.member.repository.MemberRepository;
 import reading.project.domain.auth.interceptor.JwtParseInterceptor;
 import reading.project.domain.auth.user.MemberCustomAuthorityUtils;
+import reading.project.global.config.redis.util.RedisDao;
 import reading.project.global.exception.CustomException;
 import reading.project.global.exception.ErrorCode;
 import reading.project.domain.member.dto.MemberDto;
@@ -25,6 +27,8 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
 
     private final JwtParseInterceptor jwtParseInterceptor;
+
+    private final RedisDao redisDao;
 
     public void createMember(MemberDto.Post requestBody) {
         verifyExistUserName(requestBody.getUserName());
@@ -60,4 +64,8 @@ public class MemberService {
         }
     }
 
+    public void logout() {
+        String loginUserName = findExistsMember(jwtParseInterceptor.getAuthenticatedUserId()).getUserName();
+        redisDao.deleteValues(loginUserName);
+    }
 }

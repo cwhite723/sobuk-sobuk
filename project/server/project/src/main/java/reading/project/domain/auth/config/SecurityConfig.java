@@ -26,6 +26,7 @@ import reading.project.domain.auth.jwt.JwtAuthenticationFilter;
 import reading.project.domain.auth.jwt.JwtTokenizer;
 import reading.project.domain.auth.jwt.JwtVerificationFilter;
 import reading.project.domain.auth.user.MemberCustomAuthorityUtils;
+import reading.project.global.config.redis.util.RedisDao;
 
 import java.util.Arrays;
 
@@ -43,6 +44,8 @@ public class SecurityConfig implements WebMvcConfigurer {
     private final MemberCustomAuthorityUtils authorityUtils;
 
     private final JwtUtils jwtUtils;
+
+    private final RedisDao redisDao;
 
 // 후기 작성한 글만 필요 로그인만 책정보 책리스트 전체공개
 
@@ -75,7 +78,7 @@ public class SecurityConfig implements WebMvcConfigurer {
 
             AuthenticationManager authenticationManager = builder.getSharedObject(AuthenticationManager.class);
 
-            JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager,jwtTokenizer);
+            JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager,jwtTokenizer,redisDao);
             jwtAuthenticationFilter.setFilterProcessesUrl("/user/log-in");
             jwtAuthenticationFilter.setAuthenticationSuccessHandler(new MemberAuthenticationSuccessHandler());
             jwtAuthenticationFilter.setAuthenticationFailureHandler(new MemberAuthenticationFailureHandler());
