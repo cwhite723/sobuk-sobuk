@@ -3,7 +3,7 @@ spring:
     url: jdbc:mysql://localhost:3306/sobuksobuk?serverTimezone=Asia/Seoul
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
-    password: 1234
+    password: dud90875@@
   jpa:
     hibernate:
       ddl-auto: create
@@ -34,5 +34,5 @@ logging.level:
 
 jwt:
   key: ${JWT_SECRET_KEY}
-  access-token-expiration-minutes: 30
+  access-token-expiration-minutes: 1
   refresh-token-expiration-minutes: 420

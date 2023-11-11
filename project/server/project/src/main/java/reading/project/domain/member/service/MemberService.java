@@ -25,9 +25,7 @@ public class MemberService {
     private final MemberMapper mapper;
     private final MemberCustomAuthorityUtils authorityUtils;
     private final PasswordEncoder passwordEncoder;
-
     private final JwtParseInterceptor jwtParseInterceptor;
-
     private final RedisDao redisDao;
 
     public void createMember(MemberDto.Post requestBody) {
@@ -42,6 +40,7 @@ public class MemberService {
     }
 
     public MemberDto.Response updateMember(long memberId, MemberDto.Patch requestBody) {
+        validateUser(memberId);
         return this.mapper.memberToMemberDtoResponse(this.findExistsMember(memberId).update(requestBody));
     }
 
@@ -50,6 +49,7 @@ public class MemberService {
     }
 
     public void deleteMember(long memberId) {
+        validateUser(memberId);
         this.memberRepository.delete(this.findExistsMember(memberId));
     }
 
@@ -64,8 +64,18 @@ public class MemberService {
         }
     }
 
-    public void logout() {
+    public void logout(String atk) {
         String loginUserName = findExistsMember(jwtParseInterceptor.getAuthenticatedUserId()).getUserName();
         redisDao.deleteValues(loginUserName);
+        if(atk != null) redisDao.setValueBlackList(atk,"access_token",30L);
+    }
+
+    // 로그인 유저 확인
+    public void validateUser(Long memberId) {
+        if(jwtParseInterceptor.getAuthenticatedUserId() != memberId) throw new CustomException(ErrorCode.MEMBER_NOT_AUTHORIZED);
+    }
+
+    public MemberDto.Response myPageInfo() {
+        return this.mapper.memberToMemberDtoResponse(this.findExistsMember(jwtParseInterceptor.getAuthenticatedUserId()));
     }
 }

@@ -17,8 +17,12 @@ import reading.project.domain.auth.user.MemberCustomAuthorityUtils;
 
 import java.io.IOException;
 import io.jsonwebtoken.security.SignatureException;
+import reading.project.domain.auth.utils.HeaderUtil;
 import reading.project.global.config.redis.util.RedisDao;
+import reading.project.global.exception.CustomException;
+import reading.project.global.exception.ErrorCode;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -31,23 +35,29 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
     private final JwtTokenizer jwtTokenizer;
     private final MemberCustomAuthorityUtils authorityUtils;
 
+    private final RedisDao redisDao;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        try {
-            Map<String,Object> claims = verifyJws(request);
-            setAuthenticationToContext(claims);
-
-
-
-        } catch (SignatureException se) {
-            request.setAttribute("exception", se);
-        } catch (ExpiredJwtException ee){
-            request.setAttribute("exception", ee);
-        } catch (Exception e) {
-            request.setAttribute("exception", e);
+        String accessToken = HeaderUtil.getAccessToken(request);
+        if (accessToken == null) {
+            throw new CustomException(ErrorCode.EMPTY_TOKEN);
         }
 
+        if(redisDao.hashKeyBlackList(accessToken)) {
+            throw new CustomException(ErrorCode.INVALID_ACCESSTOKEN);
+        }
+            try {
+                Map<String,Object> claims = verifyJws(request);
+                setAuthenticationToContext(claims);
+
+            } catch (SignatureException se) {
+                request.setAttribute("exception", se);
+            } catch (ExpiredJwtException ee){
+                request.setAttribute("exception", ee);
+            } catch (Exception e) {
+                request.setAttribute("exception", e);
+            }
         filterChain.doFilter(request,response);
     }
 
@@ -64,12 +74,10 @@ public class JwtVerificationFilter extends OncePerRequestFilter {
 
         return claims;
     }
-
-    private void setAuthenticationToContext(Map<String,Object> claims) {
+    private void setAuthenticationToContext(Map<String, Object> claims) {
         String userName =(String) claims.get("userName");
         List<GrantedAuthority> authorities = authorityUtils.createAuthorities((List)claims.get("roles"));
         Authentication authentication = new UsernamePasswordAuthenticationToken(userName,null,authorities);
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
-    // 리프레쉬 토큰 저장되어있는지 확인
 }

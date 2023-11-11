@@ -13,8 +13,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import reading.project.domain.auth.dto.MemberLoginDto;
+import reading.project.domain.auth.utils.HeaderUtil;
 import reading.project.domain.member.entity.Member;
 import reading.project.global.config.redis.util.RedisDao;
+import reading.project.global.exception.CustomException;
+import reading.project.global.exception.ErrorCode;
 
 import java.io.IOException;
 import java.util.Date;
@@ -56,6 +59,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String accessToken = delegateAccessToken(member);
         String refreshToken = delegateRefreshToken(member);
 
+        // accessToken 유효성 검사
+        if(redisDao.hashKeyBlackList(accessToken)) throw new CustomException(ErrorCode.INVALID_ACCESSTOKEN);
+
         response.setHeader("Authorization","Bearer" + accessToken);
         response.setHeader("Refresh",refreshToken);
 
@@ -92,10 +98,4 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         return refreshToken;
     }
 
-//    //만료된 access 토큰 재발급
-//    public String reissueAtk(Member member) throws Exception {
-//        String rtkInRedis = redisDao.getValues(member.getUserName());
-//        if(Objects.isNull(rtkInRedis)) throw new Exception("인증 정보가 만료되었습니다.");
-//        return delegateAccessToken(member);
-//    }
 }

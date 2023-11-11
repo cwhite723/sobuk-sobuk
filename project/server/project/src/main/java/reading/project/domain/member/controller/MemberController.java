@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.http.HeaderUtil;
 import org.springframework.web.bind.annotation.*;
 import reading.project.domain.member.service.MemberService;
 import reading.project.domain.member.dto.MemberDto;
@@ -21,8 +22,9 @@ public class MemberController {
 
     @PostMapping("/log-out")
     @ResponseStatus(OK)
-    public ApplicationResponse<Void> logOutMember(){
-        memberService.logout();
+    public ApplicationResponse<Void> logOutMember(@RequestHeader("Authorization") String atk) {
+        String accessToken = atk;
+        memberService.logout(atk);
         return ApplicationResponse.noData();
     }
 
@@ -54,5 +56,11 @@ public class MemberController {
     public ApplicationResponse<Void> deleteMember(@PathVariable("member-id") long memberId) {
         this.memberService.deleteMember(memberId);
         return ApplicationResponse.noData();
+    }
+
+    @GetMapping("/my-page")
+    @ResponseStatus(OK)
+    public ApplicationResponse myPageMember() {
+        return ApplicationResponse.ok(memberService.myPageInfo());
     }
 }
