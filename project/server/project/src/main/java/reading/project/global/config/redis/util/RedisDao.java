@@ -20,7 +20,7 @@ public class RedisDao {
 
     public void setValues(String key, String data) {
         ValueOperations<String, String> values = redisTemplate.opsForValue();
-        values.set(key, data,jwtTokenizer.getRefreshTokenExpirationMinutes());
+        values.set(key, data,jwtTokenizer.getRefreshTokenExpirationMinutes(), TimeUnit.MINUTES);
     }
 
     public void setValues(String key, String data, Duration duration) {

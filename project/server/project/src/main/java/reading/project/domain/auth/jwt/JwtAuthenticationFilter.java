@@ -66,7 +66,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setHeader("Refresh",refreshToken);
 
         //redis에 refreshToken 저장
-        redisDao.setValues(member.getUserName(),refreshToken);
+        redisDao.setValues(member.getUserName(), refreshToken);
 
         this.getSuccessHandler().onAuthenticationSuccess(request,response,authResult);
     }
