@@ -14,6 +14,9 @@ public enum ErrorCode {
 
     // 401
     MEMBER_NOT_AUTHORIZED(UNAUTHORIZED,"권한이 없습니다."),
+    // 403
+    INVALID_ACCESSTOKEN(FORBIDDEN,"로그아웃으로 인해 유효하지 않은 TOKEN"),
+    EMPTY_TOKEN(FORBIDDEN,"토큰이 없습니다"),
     // 404
     NOT_FOUND_BOOK(NOT_FOUND, "도서 정보가 존재하지 않습니다."),
     NOT_FOUND_READING_PLAN(NOT_FOUND, "독서 기록이 존재하지 않습니다."),
