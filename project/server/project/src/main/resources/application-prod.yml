@@ -7,7 +7,6 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create
-      dialect: org.hibernate.dialect.MySQL57Dialect
     properties:
       hibernate:
         format_sql: true
