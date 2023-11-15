@@ -1,11 +1,13 @@
 package reading.project.domain.auth.jwt;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.io.Encoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -96,4 +98,13 @@ public class JwtTokenizer {
         return key;
     }
 
+    public boolean validateToken (String jws, String base64EncodedSecretKey) {
+        String accessToken = jws.replace("Bearer","");
+        Map<String,Object> claims = getClaims(accessToken,base64EncodedSecretKey).getBody();
+        if(!((Claims) claims).getExpiration().before(new Date())){
+            return true;
+        }else {
+            return false;
+        }
+    }
 }

@@ -16,6 +16,10 @@ public enum ErrorCode {
     // 401
     MEMBER_NOT_AUTHORIZED(UNAUTHORIZED,"권한이 없습니다."),
 
+    // 403
+    INVALID_ACCESSTOKEN(FORBIDDEN,"로그아웃으로 인해 유효하지 않은 TOKEN"),
+    EMPTY_TOKEN(FORBIDDEN,"토큰이 없습니다"),
+
     // 404
     NOT_FOUND_BOOK(NOT_FOUND, "도서 정보가 존재하지 않습니다."),
     NOT_FOUND_READING_PLAN(NOT_FOUND, "독서 기록이 존재하지 않습니다."),
@@ -29,9 +33,7 @@ public enum ErrorCode {
     POST_EXISTS(CONFLICT, "게시글이 존재합니다."),
 
     // 500
-    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 오류입니다. 관리자에게 문의하세요."),
-
-    ;
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 오류입니다. 관리자에게 문의하세요.");
 
     private final HttpStatus httpStatus;
     private final String message;

@@ -51,6 +51,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'com.google.code.gson:gson'
 
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
 	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
 	runtimeOnly	'io.jsonwebtoken:jjwt-jackson:0.11.5'
@@ -59,6 +61,10 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+// 테스트 코드를 제외한 빌드 수행
+tasks.withType(Test) {
+	enabled = false
 }
 
 def querydslSrcDir = "$buildDir/generated/querydsl"

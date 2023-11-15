@@ -3,6 +3,7 @@ package reading.project.domain.readingplan.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import reading.project.domain.auth.interceptor.JwtParseInterceptor;
 import reading.project.domain.readingplan.dto.request.ReadingPlanRequest;
 import reading.project.domain.readingplan.dto.response.ReadingPlanResponse;
 import reading.project.domain.readingplan.entity.ReadingPlan;
@@ -25,8 +26,7 @@ public class ReadingPlanController {
     @PostMapping("/{book-id}")
     @ResponseStatus(CREATED)
     public ApplicationResponse<Void> registerPlan(@PathVariable("book-id") Long bookId, @Valid @RequestBody ReadingPlanRequest request) {
-        //TODO: memberId 토큰 받아와서 사용하도록 수정
-        Long loginId = 1L;
+        Long loginId = JwtParseInterceptor.getAuthenticatedUserId();
         readingPlanService.registerPlan(loginId, bookId, request);
 
         return ApplicationResponse.noData();
@@ -35,8 +35,7 @@ public class ReadingPlanController {
     @PatchMapping("/{plan-id}")
     @ResponseStatus(OK)
     public ApplicationResponse<Void> updatePlan(@PathVariable("plan-id") Long planId, @Valid @RequestBody ReadingPlanRequest request) {
-        //TODO: memberId 토큰 받아와서 사용하도록 수정
-        Long loginId = 1L;
+        Long loginId = JwtParseInterceptor.getAuthenticatedUserId();
         readingPlanService.updatePlan(loginId, planId, request);
 
         return ApplicationResponse.noData();
@@ -45,8 +44,7 @@ public class ReadingPlanController {
     @DeleteMapping("/{plan-id}")
     @ResponseStatus(OK)
     public ApplicationResponse<Void> deletePlan(@PathVariable("plan-id") Long planId) {
-        //TODO: memberId 토큰 받아와서 사용하도록 수정
-        Long loginId = 1L;
+        Long loginId = JwtParseInterceptor.getAuthenticatedUserId();
         readingPlanService.deletePlan(loginId, planId);
 
         return ApplicationResponse.noData();
@@ -55,8 +53,7 @@ public class ReadingPlanController {
     @GetMapping
     @ResponseStatus(OK)
     public ApplicationResponse<List<ReadingPlanResponse>> getReadingPlans(@RequestParam(value = "status") List<Status> statuses) {
-        //TODO: memberId 토큰 받아와서 사용하도록 수정
-        Long loginId = 1L;
+        Long loginId = JwtParseInterceptor.getAuthenticatedUserId();
         List<ReadingPlanResponse> responses = readingPlanService.getReadingPlans(loginId, statuses);
 
         return ApplicationResponse.ok(responses);

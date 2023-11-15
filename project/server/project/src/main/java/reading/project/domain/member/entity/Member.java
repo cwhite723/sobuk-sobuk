@@ -56,6 +56,12 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<Bookmark> bookmarks = new ArrayList<>();
 
+    @OneToMany(mappedBy = "followerId", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Follow> followers = new ArrayList<>();
+
+    @OneToMany(mappedBy = "followingId", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Follow> followings = new ArrayList<>();
+
     @Builder //NoArgsContructor 오류 방지를 위한 생성자에 @Builder
     public Member(Long memberId, String userName, String password, String nickname, String email, String introduction, String image, List<String> roles) {
         this.id = memberId;
