@@ -1,102 +1,99 @@
 import Api from "./api";
 
 /**
- * 도서 등록
- * @param title
- * @param publisher
- * @param author
- * @param publicationDate
- * @param isUserInput
- * @returns
+ * 도서 등록 - 완료
+ * @param data
+ * @returns body{ success: boolean, data: BookId }
  */
 
-export const postBook = async (
-  title: string,
-  publisher: string,
-  author: string,
-  publicationDate: string,
-  isUserInput: boolean,
-) => {
-  return Api.post("/books", {
-    title,
-    publisher,
-    author,
-    publicationDate,
-    isUserInput,
-  });
+export const postBook = async (data: BookInfo) => {
+  try {
+    return Api.post("/books", data);
+  } catch (error) {
+    console.error("Error in Post Book:", error);
+    throw new Error("Failed to Register Book");
+  }
 };
 
 /**
- * 도서 수정
- * @param bookId
- * @param title
- * @param publisher
- * @param author
- * @param publicationDate
- * @param isUserInput
- * @returns
+ * 도서 수정 - 완료
+ * @param patchBookVriables
+ * @returns body{ success: boolean, data: BookId }
  */
 
-export const patchBook = async (
-  bookId: number,
-  title: string,
-  publisher: string,
-  author: string,
-  publicationDate: string,
-  isUserInput: boolean,
-) => {
-  return Api.patch(`/books/${bookId}`, {
-    title,
-    publisher,
-    author,
-    publicationDate,
-    isUserInput,
-  });
+export const patchBook = async (patchBookVriables: BookPatch) => {
+  try {
+    return Api.patch(
+      `/books/${patchBookVriables.bookId}`,
+      patchBookVriables.data,
+    );
+  } catch (error) {
+    console.error("Error in Patch Book:", error);
+    throw new Error("Failed to Modify Book");
+  }
 };
 
 /**
- * 도서 삭제
+ * 도서 삭제 - 완료
  * @param bookId
- * @returns
+ * @returns body{ success: boolean }
  */
 
 export const deleteBook = async (bookId: number) => {
-  return Api.delete(`/books/${bookId}`);
+  try {
+    return Api.delete(`/books/${bookId}`);
+  } catch (error) {
+    console.error("Error in Delete Book:", error);
+    throw new Error("Failed to Delete Book");
+  }
 };
 
 /**
- * 도서 개별 조회
+ * 도서 개별 조회 - 완료
  * @param bookId
- * @returns
+ * @returns body{ success: boolean, data: BookInfo }
  */
-export const getBook = async (bookId: number) => {
-  const response = await Api.get(`/books/${bookId}`).then(
-    (response) => response.data,
-  );
-  return response.data;
+export const getBook = async (bookId: number): Promise<BookInfo> => {
+  try {
+    const response = await Api.get(`/books/${bookId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error in Get Book:", error);
+    throw new Error("Failed to Check Book Info");
+  }
 };
 
 /**
- * 도서 전체 조회
+ * 도서 다건 조회 - 완료
  * @param page
  * @param size
- * @param sortType
- * @param title
- * @param author
- * @returns
+ * @returns body{ success: boolean, data: { content: BookInfoSimple }}
  */
 
 export const getAllBooks = async (
-  page: number,
-  size: number,
-  sortType: string,
-  title: string,
-  author: string,
-) => {
-  const response = await Api.get("/books", {
-    params: { page, size, sortType, title, author },
-  }).then((response) => response.data);
-  return response.data;
+  params: BookParams,
+): Promise<BookInfoSimple> => {
+  try {
+    const response = await Api.get("/books", {
+      params: { params },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error in Get All Books:", error);
+    throw new Error("Failed to Check All Books Info");
+  }
 };
 
-// 도서 북마크 처리방법 필요
+/**
+ * 도서 북마크 토큰O 토글 - 완료
+ * @param bookId
+ * @returns body{ success: boolean }
+ */
+export const postBookMark = async (bookId: number) => {
+  try {
+    return Api.post(`/books/${bookId}/bookmark`);
+  } catch (error) {
+    console.error("Error in Post BookMark:", error);
+    throw new Error("Failed to BookMark");
+  }
+};

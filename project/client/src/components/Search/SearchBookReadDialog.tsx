@@ -16,7 +16,7 @@ import theme from "styles/theme";
 
 interface PropsType {
   isOpen: boolean;
-  selectedBook: BookItem;
+  selectedBook: BookInfo;
   handleClose: () => void;
 }
 
@@ -33,7 +33,7 @@ const SearchBookReadDialog: React.FC<PropsType> = (props) => {
   // react hook form
   const { control, handleSubmit, reset } = useForm<FormValue>({
     defaultValues: {
-      totalPages: props.selectedBook.bookPages,
+      totalPages: 0,
       startDate: undefined,
       endDate: undefined,
     },
@@ -79,15 +79,15 @@ const SearchBookReadDialog: React.FC<PropsType> = (props) => {
               }}
             >
               <CommonTypography
-                value={props.selectedBook.bookName}
+                value={props.selectedBook.title}
                 variant="h6"
                 bold={true}
               />
               <CommonTypography
                 value={
-                  props.selectedBook.bookWriter +
+                  props.selectedBook.author +
                   " | " +
-                  props.selectedBook.bookPublish
+                  props.selectedBook.publisher
                 }
                 variant="body1"
                 bold={false}

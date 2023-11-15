@@ -10,13 +10,14 @@ import {
   Button,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import CommonButton from "./CommonButton";
 import CommonLink from "./CommonLink";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { logout } from "store/user";
+import { logout } from "store/auth";
 import CommonSnackBar from "./CommonSnackBar";
+import { RootState } from "store/store";
 
 const HeaderBar = () => {
   const pages = [
@@ -30,8 +31,9 @@ const HeaderBar = () => {
   // 네비게이션 메뉴 엘리먼트 셋팅
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
 
-  // 로그인 여부
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // 로그인 여부 토큰으로 확인
+  const memberToken = useSelector((state: RootState) => state.auth.token);
+
   // snackbar 오픈
   const [snackBarOpen, setSnackBarOpen] = useState(false);
 
@@ -53,23 +55,17 @@ const HeaderBar = () => {
   };
 
   // 로그인 상태에 따라 로그인 또는 로그아웃 작동
+  // 로그아웃은 token 삭제하는 것으로 구현
   const handleUserStatus = () => {
-    if (isLoggedIn) {
+    if (memberToken) {
       // 로그아웃 작동
       dispatch(logout());
-      setIsLoggedIn(false);
       setSnackBarOpen(true);
     } else {
       // 로그인 페이지로 이동
       navigate("../login");
     }
   };
-
-  useEffect(() => {
-    if (localStorage.getItem("token")) {
-      setIsLoggedIn(true);
-    }
-  }, []);
 
   return (
     // 상단에 고정된 AppBar
@@ -162,7 +158,7 @@ const HeaderBar = () => {
           {/* 로그인, 로그아웃 버튼 */}
           <Box sx={{ flexGrow: 0, display: "flex" }}>
             <CommonButton
-              value={isLoggedIn ? "LOGOUT" : "LOGIN"}
+              value={memberToken ? "LOGOUT" : "LOGIN"}
               outline={true}
               onClick={handleUserStatus}
             />

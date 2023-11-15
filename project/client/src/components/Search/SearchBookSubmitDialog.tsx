@@ -8,9 +8,11 @@ import {
   DialogTitle,
   useMediaQuery,
 } from "@mui/material";
+import { postBook } from "apis/books";
 import CommonTextField from "components/common/CommonTextField";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { useMutation } from "react-query";
 import theme from "styles/theme";
 
 interface PropsType {
@@ -22,6 +24,8 @@ interface FormValue {
   bookTitle: string;
   bookWriter: string;
   bookPublish: string;
+  bookPublicationDate: string;
+  isUserInput: true;
 }
 
 const SearchBookSubmitDialog: React.FC<PropsType> = (props) => {
@@ -34,13 +38,31 @@ const SearchBookSubmitDialog: React.FC<PropsType> = (props) => {
       bookTitle: "",
       bookWriter: "",
       bookPublish: "",
+      bookPublicationDate: "",
     },
   });
 
+  // react-query
+  const { mutate, isLoading, isError, error, isSuccess } =
+    useMutation(postBook);
+
   const handleDialogData = (data: FormValue) => {
-    reset();
-    props.handleClose();
-    console.log(data);
+    mutate({
+      title: data.bookTitle,
+      author: data.bookWriter,
+      publisher: data.bookPublish,
+      publicationDate: data.bookPublicationDate,
+      isUserInput: true,
+    });
+    if (isError) {
+      console.log("isError:" + isError, error);
+    }
+    if (isSuccess) {
+      // 성공
+      reset();
+      props.handleClose();
+      console.log("등록 성공");
+    }
   };
 
   return (
@@ -94,6 +116,17 @@ const SearchBookSubmitDialog: React.FC<PropsType> = (props) => {
                 id: "book-publish",
                 label: "Publish",
                 placeholder: "출판사를 입력해주세요",
+              }}
+            />
+            <CommonTextField
+              name="bookPublicationDate"
+              control={control}
+              rules={{ required: true }}
+              textFieldProps={{
+                id: "book-publication-date",
+                label: "PublicationDate",
+                placeholder: "출간일을 입력해주세요",
+                type: "date",
               }}
             />
           </Box>

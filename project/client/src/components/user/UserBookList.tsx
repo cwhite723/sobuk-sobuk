@@ -6,7 +6,7 @@ import CommonTitle from "components/common/CommonTitle";
 import CommonTypography from "components/common/CommonTypography";
 
 interface PropsType {
-  userName: string;
+  nickname: string;
   userBookList: BookItem[];
   isPreview: boolean;
 }
@@ -25,7 +25,7 @@ const UserBookList: React.FC<PropsType> = (props) => {
         <CommonTitle
           value={
             "📚 " +
-            props.userName +
+            props.nickname +
             "님의 서재에 총 " +
             props.userBookList.length +
             "권의 책이 있어요"

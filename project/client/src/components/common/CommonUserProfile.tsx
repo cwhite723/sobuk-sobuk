@@ -7,7 +7,7 @@ import React, { useEffect, useState } from "react";
 
 interface PropsType {
   avatarSize: number;
-  userInfo: UserInfo;
+  memberInfo: MemberInfo;
 }
 
 // 사용 위치에 따라 로그인한 사용자의 정보 or
@@ -24,7 +24,9 @@ const CommonUserProfile: React.FC<PropsType> = (props) => {
   const [showFollow, setShowFollow] = useState(true);
 
   const followUsers = {
-    userTo: props.userInfo.userId,
+    // 프로필의 주인
+    userTo: props.memberInfo.userName,
+    // 현재 로그인한 유저
     userFrom: localStorage.getItem("token"),
   };
 
@@ -74,16 +76,16 @@ const CommonUserProfile: React.FC<PropsType> = (props) => {
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <CommonAvaratImage
             size={props.avatarSize}
-            src={props.userInfo.userImg}
+            src={props.memberInfo.img}
           />
           <Box sx={{ m: 1 }}>
             <CommonTypography
-              value={props.userInfo.userName}
+              value={props.memberInfo.nickname}
               variant="body1"
               bold={true}
             />
             <CommonTypography
-              value={props.userInfo.userId}
+              value={props.memberInfo.userName}
               variant="body2"
               bold={false}
             />

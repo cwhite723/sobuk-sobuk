@@ -1,16 +1,20 @@
 import { Box } from "@mui/material";
 import CommonSnackBar from "components/common/CommonSnackBar";
+import { useSelector } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
+import { RootState } from "store/store";
 
 const PrivateRoute = () => {
-  const isLoggedIn = localStorage.getItem("token");
   const navigate = useNavigate();
+
+  // 토큰으로 로그인 확인, 로그인 상태여야함
+  const memberToken = useSelector((state: RootState) => state.auth.token);
 
   const handleClose = () => {
     navigate("../login");
   };
 
-  return isLoggedIn ? (
+  return memberToken ? (
     <Outlet />
   ) : (
     <>

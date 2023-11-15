@@ -1,12 +1,12 @@
 import { Box } from "@mui/material";
 import CommonTypography from "components/common/CommonTypography";
 import CommonUserProfile from "components/common/CommonUserProfile";
-import { useSelector } from "react-redux";
-import { RootState } from "store/store";
 
-const UserIntroProfile = () => {
-  const storedUserInfo = useSelector((state: RootState) => state.user.value);
+interface PropsType {
+  memberInfo: MemberInfo;
+}
 
+const UserIntroProfile = (props: PropsType) => {
   // 유저 프로필 section
   return (
     <Box
@@ -21,7 +21,7 @@ const UserIntroProfile = () => {
       }}
     >
       {/* 유저 정보 및 팔로우 버튼 */}
-      <CommonUserProfile userInfo={storedUserInfo} avatarSize={80} />
+      <CommonUserProfile memberInfo={props.memberInfo} avatarSize={80} />
 
       {/* 자기소개 영역 */}
       <Box
@@ -33,7 +33,7 @@ const UserIntroProfile = () => {
         }}
       >
         <CommonTypography
-          value={storedUserInfo.userIntroduction}
+          value={props.memberInfo.introduction}
           variant="body1"
           bold={true}
         />

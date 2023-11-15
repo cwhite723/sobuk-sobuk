@@ -5,7 +5,7 @@ import CommonTitle from "components/common/CommonTitle";
 import CommonTypography from "components/common/CommonTypography";
 
 interface PropsType {
-  userName: string;
+  nickname: string;
   userPostList: PostItem[];
   isPreview?: boolean;
 }
@@ -24,7 +24,7 @@ const UserPostList: React.FC<PropsType> = (props) => {
         <CommonTitle
           value={
             "📓 " +
-            props.userName +
+            props.nickname +
             "님의 독서기록은 총 " +
             props.userPostList.length +
             "개가 있어요"

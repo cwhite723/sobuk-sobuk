@@ -1,4 +1,5 @@
-import { Box, Input } from "@mui/material";
+import { Alert, Box, Input } from "@mui/material";
+import { postSignUp } from "apis/members";
 import CommonAvaratImage from "components/common/CommonAvatarImage";
 import CommonBigButton from "components/common/CommonBigButton";
 import CommonLink from "components/common/CommonLink";
@@ -7,13 +8,16 @@ import CommonTextField from "components/common/CommonTextField";
 import CommonTypography from "components/common/CommonTypography";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useMutation } from "react-query";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { setLoading } from "store/auth";
 
 interface FormValue {
   id: string;
   password: string;
   passwordCheck: string;
-  nickName: string;
+  nickname: string;
   email: string;
   introduce: string;
   img?: string;
@@ -22,8 +26,12 @@ interface FormValue {
 const JoinPage = () => {
   // 에러메세지
   const [errorMessage, setErrorMessage] = useState("");
+  // 스낵바 상태값
   const [snackBarOpen, setSnackBarOpen] = useState(false);
+  // 프로필 이미지
+  const [profileImg, setProfileImg] = useState("");
 
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   // react hook form
@@ -32,7 +40,7 @@ const JoinPage = () => {
       id: "",
       password: "",
       passwordCheck: "",
-      nickName: "",
+      nickname: "",
       email: "",
       introduce: "",
       img: "",
@@ -40,8 +48,16 @@ const JoinPage = () => {
     mode: "onChange",
   });
 
-  // 프로필 이미지
-  const [profileImg, setProfileImg] = useState("");
+  // react-query - POST signup
+  const { mutate, isLoading, isError } = useMutation(postSignUp, {
+    onSuccess: () => {
+      // 성공
+      setSnackBarOpen(true);
+    },
+    onError: (error) => {
+      console.log("isError:" + isError, error);
+    },
+  });
 
   // 프로필 이미지 변경 함수
   const handleChangeImg = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,8 +69,18 @@ const JoinPage = () => {
   // 회원가입 버튼 함수
   const handleJoin = (data: FormValue) => {
     data.img = profileImg;
-    console.log(data);
-    setSnackBarOpen(true);
+    mutate({
+      userName: data.id,
+      password: data.passwordCheck,
+      nickname: data.nickname,
+      email: data.email,
+      introduction: data.introduce,
+    });
+    if (isLoading) {
+      dispatch(setLoading(true));
+    } else {
+      dispatch(setLoading(false));
+    }
   };
 
   const handleClose = () => {
@@ -72,7 +98,7 @@ const JoinPage = () => {
       );
     } else if (formState.errors.passwordCheck) {
       setErrorMessage("위와 동일한 Password를 입력해주세요.");
-    } else if (formState.errors.nickName) {
+    } else if (formState.errors.nickname) {
       setErrorMessage("닉네임은 필수 입력입니다.(2~10자)");
     } else if (formState.errors.email) {
       setErrorMessage("형식에 맞는 Email을 입력해주세요.");
@@ -91,20 +117,25 @@ const JoinPage = () => {
         maxWidth: 500,
       }}
     >
-      {/* HOME 버튼 */}
+      {/* 구경하기 버튼 */}
       <Box sx={{ position: "fixed", top: "30px", right: "30px" }}>
-        <CommonLink to="../main">
-          <CommonTypography value="🏠HOME" variant="body1" bold={true} />
+        <CommonLink to="../search">
+          <CommonTypography value="🔍구경하기" variant="body1" bold={true} />
         </CommonLink>
       </Box>
 
-      {/* snackbar */}
+      {/* 회원가입 완료 */}
       <CommonSnackBar
         value="회원가입이 완료되었습니다."
         severity="success"
         open={snackBarOpen}
         handleClose={handleClose}
       />
+
+      {/* 에러발생 */}
+      {isError && (
+        <Alert severity="error">회원가입 중 오류가 발생했습니다.</Alert>
+      )}
 
       {/* 회원가입 폼 */}
       <form>
@@ -148,7 +179,7 @@ const JoinPage = () => {
           }}
         />
         <CommonTextField
-          name="nickName"
+          name="nickname"
           control={control}
           rules={{ required: true, minLength: 2, maxLength: 10 }}
           textFieldProps={{

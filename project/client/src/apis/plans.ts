@@ -1,72 +1,90 @@
 import Api from "./api";
 
 /**
- * 독서 정보 등록
- * @param startDate
- * @param endDate
- * @param readPageNumber
- * @param status
- * @param bookId
- * @returns
+ * 독서 정보 등록 토큰O - 완료
+ * @param data
+ * @returns body{ success: boolean }
  */
 
-export const postPlan = async (
-  startDate: string,
-  endDate: string,
-  readPageNumber: number,
+export const postPlan = async (data: PlanInfo) => {
+  try {
+    return Api.post(`/plans/${data.bookId}`, {
+      startDate: data.startDate,
+      endDate: data.endDate,
+      totalPage: data.totalPage,
+      readPageNumber: data.readPageNumber,
+    });
+  } catch (error) {
+    console.error("Error in Post Plan:", error);
+    throw new Error("Failed to Register Plan");
+  }
+};
+
+/**
+ * 독서 정보 수정 토큰O - 완료
+ * @param patchPlanVariables
+ * @returns body{ success: boolean }
+ */
+
+export const patchPlan = async (patchPlanVariables: PlanPatch) => {
+  try {
+    if (patchPlanVariables.accessToken && patchPlanVariables.planId) {
+      return Api.patch(
+        `/plans/${patchPlanVariables.planId}`,
+        {
+          startDate: patchPlanVariables.data.startDate,
+          endDate: patchPlanVariables.data.endDate,
+          totalPage: patchPlanVariables.data.totalPage,
+          readPageNumber: patchPlanVariables.data.readPageNumber,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${patchPlanVariables.accessToken}`,
+          },
+        },
+      );
+    } else {
+      console.log("Access token or PlanId missing");
+    }
+  } catch (error) {
+    console.error("Error in Patch Plan:", error);
+    throw new Error("Failed to Modify Plan");
+  }
+};
+
+/**
+ * 독서 정보 삭제 - 완료
+ * @param planId
+ * @returns body{ success: boolean }
+ */
+export const deletePlan = async (planId: number) => {
+  try {
+    return Api.delete(`/plans/${planId}`);
+  } catch (error) {
+    console.error("Error in Delete Plan:", error);
+    throw new Error("Failed to Delete Plan");
+  }
+};
+
+/**
+ * 독서 정보 조회 토큰O - 완료
+ * @param status
+ * @returns body{ success: boolean, data: PlanInfo[] }
+ */
+export const getPlans = async (
   status: string,
-  bookId: number,
-) => {
-  return Api.post(`/plans/${bookId}`, {
-    startDate,
-    endDate,
-    readPageNumber,
-    status,
-  });
-};
-
-/**
- * 독서 정보 수정
- * @param startDate
- * @param endDate
- * @param readPageNumber
- * @param status
- * @param recordId
- * @returns
- */
-
-export const patchPlan = async (
-  startDate: string,
-  endDate: string,
-  readPageNumber: number,
-  status: string,
-  recordId: number,
-) => {
-  return Api.post(`/plans/${recordId}`, {
-    startDate,
-    endDate,
-    readPageNumber,
-    status,
-  });
-};
-
-/**
- * 독서 정보 삭제
- * @param recordId
- * @returns
- */
-export const deletePlan = async (recordId: number) => {
-  return Api.delete(`/plans/${recordId}`);
-};
-
-/**
- * 독서 정보 조회
- * @param status
- * @returns
- */
-export const getPlans = async (status: string) => {
-  const response = await Api.get("/plans", {
-    params: { status },
-  }).then((response) => response.data);
-  return response.data;
+  accessToken: string | null,
+): Promise<PlanInfo[] | undefined> => {
+  if (accessToken) {
+    try {
+      const response = await Api.get("/plans", {
+        params: { status },
+        headers: { Authorization: `${accessToken}` },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error in Get Plans:", error);
+      throw new Error("Failed to Check Plans Info");
+    }
+  }
 };

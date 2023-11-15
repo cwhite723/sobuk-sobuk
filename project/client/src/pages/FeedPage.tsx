@@ -54,20 +54,20 @@ const userLibrary: BookItem[] = [
 ];
 
 // 피드 주인
-const feedOwners: UserInfo[] = [
+const feedOwners: MemberInfo[] = [
   {
-    token: "test2",
-    userId: "test2",
-    userImg: "",
     userName: "test2",
-    userIntroduction: "hi",
+    nickname: "test2",
+    password: "",
+    email: "email",
+    introduction: "hi",
   },
   {
-    token: "test3",
-    userId: "test3",
-    userImg: "",
-    userName: "test3",
-    userIntroduction: "hello",
+    userName: "test4",
+    nickname: "test4",
+    password: "",
+    email: "email",
+    introduction: "hi",
   },
 ];
 

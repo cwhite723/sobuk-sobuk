@@ -25,7 +25,7 @@ const FeedPostCard: React.FC<PropsType> = (props) => {
       >
         {/* user profile */}
         <CommonUserProfile
-          userInfo={props.postItem.postOwner}
+          memberInfo={props.postItem.postOwner}
           avatarSize={50}
         />
 

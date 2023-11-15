@@ -11,12 +11,12 @@ import PostReaction from "components/post/PostReaction";
 
 // 더미 데이터
 // 포스트 주인
-const dummyOwner: UserInfo = {
-  token: "test2",
-  userId: "test2",
-  userImg: "",
+const dummyOwner: MemberInfo = {
   userName: "test2",
-  userIntroduction: "hi",
+  nickname: "test2",
+  password: "",
+  email: "email",
+  introduction: "hi",
 };
 
 const PostPage = () => {
@@ -46,7 +46,7 @@ const PostPage = () => {
       <CommonTitle value="독서기록 제목" />
 
       {/* user profile */}
-      <CommonUserProfile userInfo={dummyOwner} avatarSize={50} />
+      <CommonUserProfile memberInfo={dummyOwner} avatarSize={50} />
 
       {/* 책 정보 */}
       <PostBookInfo />

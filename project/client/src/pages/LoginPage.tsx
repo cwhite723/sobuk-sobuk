@@ -5,31 +5,30 @@ import CommonLink from "components/common/CommonLink";
 import CommonTypography from "components/common/CommonTypography";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { login } from "store/user";
+import { useDispatch, useSelector } from "react-redux";
+import { setMember, setToken } from "store/auth";
 import { useNavigate } from "react-router-dom";
 import CommonSnackBar from "components/common/CommonSnackBar";
+import { useMutation, useQuery } from "react-query";
+import { getMyPage, postLogIn } from "apis/members";
+import { RootState } from "store/store";
 
 interface FormValue {
   id: string;
   password: string;
 }
 
-// 더미데이터
-const users: FormValue[] = [
-  { id: "test1", password: "123456a!" },
-  { id: "test2", password: "123456" },
-  { id: "test3", password: "123456" },
-];
-
 const LoginPage = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  // redux에 저장된 토큰 가져오기
+  const token = useSelector((state: RootState) => state.auth.token);
+
   // 에러메세지
   const [errorMessage, setErrorMessage] = useState("");
+  // 스낵바 상태값
   const [snackBarOpen, setSnackBarOpen] = useState(false);
-
-  const dispatch = useDispatch();
-
-  const navigate = useNavigate();
 
   // react hook form
   const { control, handleSubmit, formState } = useForm<FormValue>({
@@ -41,29 +40,31 @@ const LoginPage = () => {
     mode: "onChange",
   });
 
-  // 로그인 버튼 함수
-  const handleLogin = (data: FormValue) => {
-    if (
-      users.find(
-        (element) =>
-          element.id === data.id && element.password === data.password,
-      )
-    ) {
-      // 로그인 성공 로직
-      dispatch(
-        login({
-          token: data.id,
-          userId: data.id,
-          userName: data.id,
-          userImg: "",
-          userIntroduction: "안녕하세요",
-        }),
-      );
+  // react-query - post log-in
+  const { mutate, isError } = useMutation(postLogIn, {
+    onSuccess: async (data) => {
+      // 로그인 성공 시, 받아온 받아온 토큰을 redux에 저장
+      dispatch(setToken(data.headers.authorization));
+      // 메인으로 이동
       navigate("../main");
-    } else {
-      // 로그인 실패 로직
+    },
+    onError: (error) => {
+      // 로그인 실패 시, 로그인 실패 SnackBar를 보여줌
+      console.log("isError:" + isError, error);
       setSnackBarOpen(true);
-    }
+    },
+  });
+
+  // react-query - get myInfo
+  const { data: myInfo } = useQuery(
+    ["getMyInfo", token],
+    () => getMyPage(token),
+    { enabled: !!token },
+  );
+
+  // 로그인 동작 함수
+  const handleLogin = async (formData: FormValue) => {
+    await mutate({ userName: formData.id, password: formData.password });
   };
 
   const handleClose = () => {
@@ -93,6 +94,15 @@ const LoginPage = () => {
     }
   }, [formState]);
 
+  useEffect(() => {
+    if (myInfo) {
+      console.log("dispatch myinfo");
+      // dispatch(setMember(myInfo));
+    } else {
+      console.log("no myInfo value");
+    }
+  }, [dispatch, myInfo]);
+
   return (
     <Box
       sx={{
@@ -110,7 +120,7 @@ const LoginPage = () => {
         </CommonLink>
       </Box>
 
-      {/* snackbar */}
+      {/* 로그인 실패 */}
       <CommonSnackBar
         value="아이디 또는 비밀번호가 틀립니다."
         severity="error"
