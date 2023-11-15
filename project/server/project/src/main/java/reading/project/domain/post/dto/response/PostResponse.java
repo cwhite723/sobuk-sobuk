@@ -18,7 +18,6 @@ public class PostResponse {
     private Long memberId;
     private String userName;
     private String nickname;
-    //    private Boolean isFollowing;
     private String bookTitle;
     private String bookAuthor;
     private Long postId;

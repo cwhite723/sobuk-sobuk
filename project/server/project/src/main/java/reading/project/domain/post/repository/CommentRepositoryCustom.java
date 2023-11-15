@@ -5,5 +5,5 @@ import reading.project.domain.post.dto.response.CommentResponse;
 import java.util.List;
 
 public interface CommentRepositoryCustom {
-    List<CommentResponse> getComments(Long postId);
+    List<CommentResponse> getComments(Long loginId, Long postId);
 }

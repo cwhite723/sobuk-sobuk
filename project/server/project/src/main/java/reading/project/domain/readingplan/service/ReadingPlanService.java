@@ -95,11 +95,6 @@ public class ReadingPlanService {
     }
 
     @Transactional
-    public void changeStatus(ReadingPlan plan, Status status) {
-        plan.changeStatus(status);
-    }
-
-    @Transactional
     private void changeStatus(ReadingPlan plan) {
         if (plan.getStartDate().isAfter(LocalDate.now())) {
             plan.changeStatus(NOT_STARTED);

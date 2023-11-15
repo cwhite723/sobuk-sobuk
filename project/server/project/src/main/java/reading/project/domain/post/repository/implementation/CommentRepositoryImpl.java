@@ -17,7 +17,7 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<CommentResponse> getComments(Long postId) {
+    public List<CommentResponse> getComments(Long loginId, Long postId) {
         return queryFactory
                 .select(new QCommentResponse(
                         comment.id,
@@ -30,7 +30,7 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
                         Expressions.asBoolean(queryFactory
                                 .selectFrom(comment)
                                 .where(comment.post.id.eq(postId),
-                                        comment.member.id.eq(1L))
+                                        comment.member.id.eq(loginId))
                                 .limit(1)
                                 .fetchOne() != null)
                 ))

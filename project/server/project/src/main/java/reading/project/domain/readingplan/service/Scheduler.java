@@ -16,8 +16,8 @@ public class Scheduler {
     @Scheduled(cron = "0 0 0 * * *")
     public void readingPlanScheduler() {
         log.info("스케줄러 작동 시작");
-        readingPlanService.calculatePagesPerDay();
         readingPlanService.changeStatus();
+        readingPlanService.calculatePagesPerDay();
         log.info("스케줄러 작동 종료");
     }
 }

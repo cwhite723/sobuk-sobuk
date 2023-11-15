@@ -20,6 +20,7 @@ import reading.project.domain.post.repository.PostRepositoryCustom;
 import java.util.List;
 
 import static reading.project.domain.book.entity.QBook.book;
+import static reading.project.domain.member.entity.QFollow.follow;
 import static reading.project.domain.member.entity.QMember.member;
 import static reading.project.domain.post.entity.QComment.comment;
 import static reading.project.domain.post.entity.QLike.like;
@@ -87,7 +88,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                         post.updatedAt
                 ))
                 .from(post)
-                .innerJoin(post.member, member)
+                .innerJoin(post.member, member).fetchJoin()
                 .innerJoin(post.book, book)
                 .orderBy(postSort(sortType))
                 .offset(pageable.getOffset())

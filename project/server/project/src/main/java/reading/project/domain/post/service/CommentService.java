@@ -61,6 +61,6 @@ public class CommentService {
     }
 
     public List<CommentResponse> getCommentsByPostId(Long loginId, Long postId) {
-        return commentRepository.getComments(postId);
+        return commentRepository.getComments(loginId, postId);
     }
 }
