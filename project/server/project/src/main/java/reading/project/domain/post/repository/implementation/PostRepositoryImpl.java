@@ -88,7 +88,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                         post.updatedAt
                 ))
                 .from(post)
-                .innerJoin(post.member, member).fetchJoin()
+                .innerJoin(post.member, member)
                 .innerJoin(post.book, book)
                 .orderBy(postSort(sortType))
                 .offset(pageable.getOffset())
