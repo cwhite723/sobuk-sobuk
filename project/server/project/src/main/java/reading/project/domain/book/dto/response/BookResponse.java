@@ -8,11 +8,13 @@ public class BookResponse {
     private Long bookId;
     private String title;
     private String author;
+    private String publisher;
 
     @QueryProjection
-    public BookResponse(Long bookId, String title, String author) {
+    public BookResponse(Long bookId, String title, String author, String publisher) {
         this.bookId = bookId;
         this.title = title;
         this.author = author;
+        this.publisher = publisher;
     }
 }

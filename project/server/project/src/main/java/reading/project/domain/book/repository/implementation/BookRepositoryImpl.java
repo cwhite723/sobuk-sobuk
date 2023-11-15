@@ -43,25 +43,13 @@ public class BookRepositoryImpl implements BookRepositoryCustom {
     }
 
     @Override
-    public BookResponse getBook(Long bookId) {
-        return queryFactory
-                .select(new QBookResponse(
-                        book.id,
-                        book.title,
-                        book.author
-                ))
-                .from(book)
-                .where(book.id.eq(bookId))
-                .fetchOne();
-    }
-
-    @Override
     public Page<BookResponse> findBooksByFilterCondition(FilterCondition filterCondition, Pageable pageable) {
         List<BookResponse> responses = queryFactory
                 .select(new QBookResponse(
                         book.id,
                         book.title,
-                        book.author
+                        book.author,
+                        book.publisher
                 ))
                 .from(book)
                 .where(searchFilter(filterCondition))
