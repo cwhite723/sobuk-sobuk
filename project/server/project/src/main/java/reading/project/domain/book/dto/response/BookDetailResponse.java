@@ -14,18 +14,16 @@ public class BookDetailResponse {
     private String author;
     private LocalDate publicationDate;
     private LocalDateTime createdAt;
-    private int pageNumber;
     private boolean isUserInput;
 
     @QueryProjection
-    public BookDetailResponse(Long bookId, String title, String publisher, String author, LocalDate publicationDate, LocalDateTime createdAt, int pageNumber, boolean isUserInput) {
+    public BookDetailResponse(Long bookId, String title, String publisher, String author, LocalDate publicationDate, LocalDateTime createdAt, boolean isUserInput) {
         this.bookId = bookId;
         this.title = title;
         this.publisher = publisher;
         this.author = author;
         this.publicationDate = publicationDate;
         this.createdAt = createdAt;
-        this.pageNumber = pageNumber;
         this.isUserInput = isUserInput;
     }
 }

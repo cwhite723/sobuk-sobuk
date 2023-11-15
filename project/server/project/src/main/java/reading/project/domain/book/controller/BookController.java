@@ -3,6 +3,7 @@ package reading.project.domain.book.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
+import reading.project.domain.auth.interceptor.JwtParseInterceptor;
 import reading.project.domain.book.dto.request.BookRequest;
 import reading.project.domain.book.dto.request.FilterCondition;
 import reading.project.domain.book.dto.response.BookDetailResponse;
@@ -65,7 +66,7 @@ public class BookController {
     @ResponseStatus(OK)
     public ApplicationResponse<Void> toggleBookmark(@PathVariable("book-id") Long bookId) {
         //TODO: 토큰 받아와서 사용하도록 변경
-        Long loginId = 1L;
+        Long loginId = JwtParseInterceptor.getAuthenticatedUserId();
         bookService.toggleBookmark(loginId, bookId);
 
         return ApplicationResponse.noData();
