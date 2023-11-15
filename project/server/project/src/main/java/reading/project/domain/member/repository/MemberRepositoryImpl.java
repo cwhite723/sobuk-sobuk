@@ -15,6 +15,8 @@ import reading.project.domain.member.entity.QMember;
 
 import java.util.List;
 
+import static reading.project.domain.post.entity.QPost.post;
+import static reading.project.domain.book.entity.QBookmark.bookmark;
 import static reading.project.domain.member.entity.QFollow.follow;
 import static reading.project.domain.member.entity.QMember.member;
 
@@ -34,37 +36,31 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom{
                 .fetch();
     }
 
-//    //내가 팔로우하고 있는 사람수
-//
-//    public Long countByFollowers(Long id) {
-//
-//        QMember m = new QMember("m");
-//
-//        return jpaQueryFactory
-//                .selectFrom(m)
-//                .innerJoin(m.followers, follow)
-//                .innerJoin(follow.followingId, member)
-//                .where(m.id.eq(id))
-//                .fetch()
-//                .stream()
-//                .count();
-//    }
-//
-//    //나를 팔로우 하는 사람수
-//
-//    public Long countByFollowings(Long id) {
-//
-//        QMember m = new QMember("m");
-//
-//        return jpaQueryFactory
-//                .selectFrom(m)
-//                .innerJoin(m.followings, follow)
-//                .innerJoin(follow.followerId, member)
-//                .where(m.id.eq(id))
-//                .fetch()
-//                .stream()
-//                .count();
-//    }
+    //내가 팔로우하고 있는 사람수
+    @Override
+    public Long countByFollowers(Long id) {
+
+        QMember m = new QMember("m");
+
+        return jpaQueryFactory
+                .select(follow.count())
+                .from(follow)
+                .where(follow.followerId.id.eq(id))
+                .fetchOne();
+    }
+
+    //나를 팔로우 하는 사람수
+    @Override
+    public Long countByFollowings(Long id) {
+
+        QMember m = new QMember("m");
+
+        return jpaQueryFactory
+                .select(follow.count())
+                .from(follow)
+                .where(follow.followingId.id.eq(id))
+                .fetchOne();
+    }
 
     //내가 팔로우한 사람들
     @Override

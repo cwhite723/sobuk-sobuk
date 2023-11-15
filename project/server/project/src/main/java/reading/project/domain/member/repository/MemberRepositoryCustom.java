@@ -13,4 +13,7 @@ public interface MemberRepositoryCustom {
     List<Follow> findByFollowing(Long id, Member member);
     Slice<SearchFollow> findByFollowingList(Long id, Long cursorId, Pageable pageable);
     Slice<SearchFollow> findByFollowerList(Long id, Long cursorId, Pageable pageable);
+    Long countByFollowers(Long id);
+    Long countByFollowings(Long id);
+
 }

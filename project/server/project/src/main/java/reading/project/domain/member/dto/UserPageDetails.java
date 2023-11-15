@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class MyPageDetails {
+public class UserPageDetails {
 
     private String nickname;
 
@@ -14,23 +14,20 @@ public class MyPageDetails {
 
     private String image;
 
-    private Long countFollower;
-
-    private Long countFollowing;
-
     private Long countBookMark;
 
     private Long countPost;
 
+    private boolean isFollowing;
+
     @Builder
-    public MyPageDetails(String nickname, String userName, String introduction, String image, Long countFollower, Long countFollowing , Long countBookMark , Long countPost) {
+    public UserPageDetails(String nickname, String userName, String introduction, String image, Long countBookMark, Long countPost, boolean isFollowing) {
         this.nickname = nickname;
         this.userName = userName;
         this.introduction = introduction;
         this.image = image;
-        this.countFollower = countFollower;
-        this.countFollowing = countFollowing;
         this.countBookMark = countBookMark;
         this.countPost = countPost;
+        this.isFollowing = isFollowing;
     }
 }
