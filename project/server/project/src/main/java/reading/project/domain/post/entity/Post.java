@@ -5,9 +5,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
+import reading.project.domain.book.entity.Book;
+import reading.project.domain.member.entity.Member;
 import reading.project.domain.readingplan.entity.ReadingPlan;
 import reading.project.global.base.BaseEntity;
-import reading.project.domain.member.entity.Member;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static jakarta.persistence.CascadeType.PERSIST;
 import static jakarta.persistence.FetchType.*;
@@ -21,8 +25,7 @@ import static org.hibernate.annotations.OnDeleteAction.CASCADE;
 @Entity
 public class Post extends BaseEntity {
     @Id
-    @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "post_id", nullable = false, updatable = false)
+    @Column(name = "post_id")
     private Long id;
 
     @Column(name = "title")
@@ -31,20 +34,33 @@ public class Post extends BaseEntity {
     @Column(name = "content")
     private String content;
 
-    @OnDelete(action = CASCADE)
-    @OneToOne(mappedBy = "post", cascade = PERSIST)
+    @MapsId
+    @OneToOne(fetch = LAZY)
     private ReadingPlan readingPlan;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "book_id", nullable = false)
+    private Book book;
+
+    @OnDelete(action = CASCADE)
+    @OneToMany(mappedBy = "post", cascade = PERSIST)
+    private List<Comment> comments = new ArrayList<>();
+
+    @OnDelete(action = CASCADE)
+    @OneToMany(mappedBy = "post", cascade = PERSIST)
+    private List<Like> likes = new ArrayList<>();
+
     @Builder
-    public Post(String title, String content, ReadingPlan readingPlan, Member member) {
+    public Post(String title, String content, ReadingPlan readingPlan, Member member, Book book) {
         this.title = title;
         this.content = content;
         this.readingPlan = readingPlan;
         this.member = member;
+        this.book = book;
     }
 
     public void update(String title, String content) {

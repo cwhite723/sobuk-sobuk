@@ -6,16 +6,21 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
 import reading.project.domain.book.entity.Book;
+import reading.project.domain.member.entity.Member;
 import reading.project.domain.post.entity.Post;
 import reading.project.global.base.BaseEntity;
-import reading.project.domain.member.entity.Member;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
+import static jakarta.persistence.CascadeType.PERSIST;
 import static jakarta.persistence.FetchType.LAZY;
-import static jakarta.persistence.GenerationType.*;
-import static lombok.AccessLevel.*;
+import static jakarta.persistence.GenerationType.IDENTITY;
+import static lombok.AccessLevel.PROTECTED;
+import static org.hibernate.annotations.OnDeleteAction.CASCADE;
 
 @Getter
 @NoArgsConstructor(access = PROTECTED)
@@ -32,6 +37,9 @@ public class ReadingPlan extends BaseEntity {
 
     @Column(name = "end_date")
     private LocalDate endDate;
+
+    @Column(name = "total_page")
+    private int totalPage;
 
     @Column(name = "read_page_number")
     private int readPageNumber;
@@ -52,10 +60,6 @@ public class ReadingPlan extends BaseEntity {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
-
-    @OneToOne(fetch = LAZY)
-    @JoinColumn(name = "post_id")
-    private Post post;
 
     public enum Status {
         READING("reading"),
@@ -88,20 +92,21 @@ public class ReadingPlan extends BaseEntity {
     }
 
     @Builder
-    public ReadingPlan(LocalDate startDate, LocalDate endDate, int readPageNumber, Status status, Book book, Member member) {
+    public ReadingPlan(LocalDate startDate, LocalDate endDate, int totalPage, int readPageNumber, Status status, Book book, Member member) {
         this.startDate = startDate;
         this.endDate = endDate;
+        this.totalPage = totalPage;
         this.readPageNumber = readPageNumber;
         this.status = status;
         this.book = book;
         this.member = member;
     }
 
-    public void update(LocalDate startDate, LocalDate endDate, int readPageNumber, Status status) {
+    public void update(LocalDate startDate, LocalDate endDate, int totalPage, int readPageNumber) {
         this.startDate = startDate;
         this.endDate = endDate;
+        this.totalPage = totalPage;
         this.readPageNumber = readPageNumber;
-        this.status = status;
     }
 
     public void changeStatus(Status status) {
@@ -114,6 +119,6 @@ public class ReadingPlan extends BaseEntity {
     }
 
     private void updateTodayReadPage(int todayReadPage) {
-        this.todayPage = todayReadPage > this.book.getPageNumber() ? this.book.getPageNumber() : todayReadPage;
+        this.todayPage = todayReadPage > this.totalPage ? this.totalPage: todayReadPage;
     }
 }

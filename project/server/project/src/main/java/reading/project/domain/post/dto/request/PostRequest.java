@@ -20,6 +20,7 @@ public class PostRequest {
                 .content(content)
                 .readingPlan(readingPlan)
                 .member(member)
+                .book(readingPlan.getBook())
                 .build();
     }
 }

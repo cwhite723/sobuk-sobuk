@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
+import reading.project.domain.post.entity.Post;
 import reading.project.domain.readingplan.entity.ReadingPlan;
 import reading.project.global.base.BaseEntity;
 
@@ -40,11 +41,12 @@ public class Book extends BaseEntity {
     @Column(name = "publication_date")
     private LocalDate publicationDate;
 
-    @Column(name = "page_number")
-    private int pageNumber;
-
     @Column(name = "is_user_input")
     private boolean isUserInput;
+
+    @OnDelete(action = CASCADE)
+    @OneToMany(mappedBy = "book", cascade = PERSIST)
+    private List<Post> posts = new ArrayList<>();
 
     @OnDelete(action = CASCADE)
     @OneToMany(mappedBy = "book", cascade = PERSIST)
@@ -55,21 +57,19 @@ public class Book extends BaseEntity {
     private List<Bookmark> bookmarks = new ArrayList<>();
 
     @Builder
-    public Book(String title, String publisher, String author, LocalDate publicationDate, int pageNumber, boolean isUserInput) {
+    public Book(String title, String publisher, String author, LocalDate publicationDate, boolean isUserInput) {
         this.title = title;
         this.publisher = publisher;
         this.author = author;
         this.publicationDate = publicationDate;
-        this.pageNumber = pageNumber;
         this.isUserInput = isUserInput;
     }
 
-    public void update(String title, String publisher, String author, LocalDate publicationDate, int pageNumber, boolean isUserInput) {
+    public void update(String title, String publisher, String author, LocalDate publicationDate, boolean isUserInput) {
         this.title = title;
         this.publisher = publisher;
         this.author = author;
         this.publicationDate = publicationDate;
-        this.pageNumber = pageNumber;
         this.isUserInput = isUserInput;
     }
 }

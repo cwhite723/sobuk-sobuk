@@ -1,5 +1,6 @@
 package reading.project.domain.readingplan.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import reading.project.domain.readingplan.dto.request.ReadingPlanRequest;
@@ -23,7 +24,7 @@ public class ReadingPlanController {
 
     @PostMapping("/{book-id}")
     @ResponseStatus(CREATED)
-    public ApplicationResponse<Void> registerPlan(@PathVariable("book-id") Long bookId, @RequestBody ReadingPlanRequest request) {
+    public ApplicationResponse<Void> registerPlan(@PathVariable("book-id") Long bookId, @Valid @RequestBody ReadingPlanRequest request) {
         //TODO: memberId 토큰 받아와서 사용하도록 수정
         Long loginId = 1L;
         readingPlanService.registerPlan(loginId, bookId, request);
@@ -33,7 +34,7 @@ public class ReadingPlanController {
 
     @PatchMapping("/{plan-id}")
     @ResponseStatus(OK)
-    public ApplicationResponse<Void> updatePlan(@PathVariable("plan-id") Long planId, @RequestBody ReadingPlanRequest request) {
+    public ApplicationResponse<Void> updatePlan(@PathVariable("plan-id") Long planId, @Valid @RequestBody ReadingPlanRequest request) {
         //TODO: memberId 토큰 받아와서 사용하도록 수정
         Long loginId = 1L;
         readingPlanService.updatePlan(loginId, planId, request);
@@ -51,7 +52,7 @@ public class ReadingPlanController {
         return ApplicationResponse.noData();
     }
 
-    @GetMapping("/currents")
+    @GetMapping
     @ResponseStatus(OK)
     public ApplicationResponse<List<ReadingPlanResponse>> getReadingPlans(@RequestParam(value = "status") List<Status> statuses) {
         //TODO: memberId 토큰 받아와서 사용하도록 수정

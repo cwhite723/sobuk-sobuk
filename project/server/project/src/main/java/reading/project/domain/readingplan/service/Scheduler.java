@@ -17,7 +17,7 @@ public class Scheduler {
     public void readingPlanScheduler() {
         log.info("스케줄러 작동 시작");
         readingPlanService.calculatePagesPerDay();
-        readingPlanService.checkStatus();
+        readingPlanService.changeStatus();
         log.info("스케줄러 작동 종료");
     }
 }

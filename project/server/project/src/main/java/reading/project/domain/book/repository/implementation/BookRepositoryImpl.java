@@ -14,6 +14,7 @@ import reading.project.domain.book.dto.response.BookDetailResponse;
 import reading.project.domain.book.dto.response.BookResponse;
 import reading.project.domain.book.dto.response.QBookDetailResponse;
 import reading.project.domain.book.dto.response.QBookResponse;
+import reading.project.domain.book.entity.Book;
 import reading.project.domain.book.repository.BookRepositoryCustom;
 
 import java.util.List;
@@ -34,7 +35,6 @@ public class BookRepositoryImpl implements BookRepositoryCustom {
                         book.author,
                         book.publicationDate,
                         book.createdAt,
-                        book.pageNumber,
                         book.isUserInput
                 ))
                 .from(book)
