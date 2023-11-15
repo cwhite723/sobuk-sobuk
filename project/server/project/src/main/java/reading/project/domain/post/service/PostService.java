@@ -1,9 +1,16 @@
 package reading.project.domain.post.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reading.project.domain.post.dto.request.PostRequest;
+import reading.project.domain.post.dto.request.SortType;
+import reading.project.domain.post.dto.response.GetPostDetailResponse;
+import reading.project.domain.post.dto.response.PostDetailResponse;
+import reading.project.domain.post.dto.response.PostResponse;
 import reading.project.domain.post.entity.Like;
 import reading.project.domain.post.entity.Post;
 import reading.project.domain.post.repository.LikeRepository;
@@ -33,9 +40,10 @@ public class PostService {
     public Long createPost(Long loginId, Long planId, PostRequest request) {
         Member member = memberService.findExistsMember(loginId);
         ReadingPlan plan = planService.findReadingPlanById(planId);
-        Post post = request.toEntity(plan, member);
+        planService.checkFinishReading(plan);
 
-        planService.changeStatus(plan, COMPLETED);
+        Post post = request.toEntity(plan, member);
+        plan.changeStatus(COMPLETED);
 
         return postRepository.save(post).getId();
     }
@@ -53,9 +61,19 @@ public class PostService {
         Post post = findPostById(postId);
         validateCreator(loginId, post.getMember().getId());
 
-        planService.changeStatus(post.getReadingPlan(), NOT_CREATED_POST);
+        post.getReadingPlan().changeStatus(NOT_CREATED_POST);
 
         postRepository.delete(post);
+    }
+
+    public PostDetailResponse getPostById(Long loginId, Long postId) {
+
+        return postRepository.getPostById(loginId, postId);
+    }
+
+    public Page<PostResponse> getPosts(Long loginId, Pageable pageable, SortType sortType) {
+
+        return postRepository.getPosts(loginId, pageable, sortType);
     }
 
     @Transactional

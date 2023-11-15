@@ -18,7 +18,6 @@ public class BookRequest {
     private String author;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDate publicationDate;
-    private int pageNumber;
     private boolean isUserInput;
 
     public Book toEntity() {
@@ -27,7 +26,6 @@ public class BookRequest {
                 .publisher(publisher)
                 .author(author)
                 .publicationDate(publicationDate)
-                .pageNumber(pageNumber)
                 .isUserInput(isUserInput)
                 .build();
     }

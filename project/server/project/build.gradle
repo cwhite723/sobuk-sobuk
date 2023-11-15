@@ -69,9 +69,13 @@ tasks.withType(Test) {
 
 def querydslSrcDir = "$buildDir/generated/querydsl"
 
+sourceSets {
+	main.java.srcDirs += [ querydslSrcDir ]
+}
+
 clean {
 	delete file(querydslSrcDir)
 }
 tasks.withType(JavaCompile) {
-	options.generatedSourceOutputDirectory = file(querydslSrcDir)
+	options.getGeneratedSourceOutputDirectory().set(file(querydslSrcDir))
 }

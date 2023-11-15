@@ -2,16 +2,21 @@ package reading.project.domain.member.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
 import reading.project.domain.book.entity.Bookmark;
 import reading.project.domain.member.dto.MemberDto;
+import reading.project.domain.post.entity.Post;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static jakarta.persistence.CascadeType.PERSIST;
+import static org.hibernate.annotations.OnDeleteAction.CASCADE;
+
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED) //아무런 값도 갖지 않는 의미 없는 객체 생성 방지
 @Getter
-@Table(name = "Member")
+@Table(name = "members")
 public class Member {
     // 생성자에만 builder 사용
     @Id
@@ -43,6 +48,11 @@ public class Member {
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles = new ArrayList<>();
 
+    @OnDelete(action = CASCADE)
+    @OneToMany(mappedBy = "member", cascade = PERSIST)
+    private List<Post> posts = new ArrayList<>();
+
+    @OnDelete(action = CASCADE)
     @OneToMany(mappedBy = "member")
     private List<Bookmark> bookmarks = new ArrayList<>();
 

@@ -4,12 +4,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reading.project.domain.post.dto.request.CommentRequest;
+import reading.project.domain.post.dto.response.CommentResponse;
 import reading.project.domain.post.entity.Comment;
 import reading.project.domain.post.entity.Post;
 import reading.project.domain.post.repository.CommentRepository;
 import reading.project.global.exception.CustomException;
 import reading.project.domain.member.entity.Member;
 import reading.project.domain.member.service.MemberService;
+
+import java.util.List;
 
 import static reading.project.global.exception.ErrorCode.*;
 import static reading.project.global.exception.ErrorCode.NOT_CREATOR;
@@ -55,5 +58,9 @@ public class CommentService {
         if (!loginId.equals(creatorId)) {
             throw new CustomException(NOT_CREATOR);
         }
+    }
+
+    public List<CommentResponse> getCommentsByPostId(Long loginId, Long postId) {
+        return commentRepository.getComments(loginId, postId);
     }
 }

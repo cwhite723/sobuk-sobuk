@@ -6,7 +6,7 @@ spring:
     password: 1234
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
       dialect: org.hibernate.dialect.MySQL57Dialect
     properties:
       hibernate:
@@ -26,8 +26,6 @@ spring:
     port: 6379
     host: 127.0.0.1
     password: 'abcde'
-
-
 
 logging.level:
   org.hibernate.SQL: debug

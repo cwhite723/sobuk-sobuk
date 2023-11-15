@@ -3,6 +3,7 @@ package reading.project.domain.post.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import reading.project.domain.auth.interceptor.JwtParseInterceptor;
 import reading.project.domain.post.dto.request.CommentRequest;
 import reading.project.domain.post.service.CommentService;
 import reading.project.global.response.ApplicationResponse;
@@ -19,8 +20,7 @@ public class CommentController {
     @ResponseStatus(CREATED)
     public ApplicationResponse<Long> createComment(@PathVariable("post-id") Long postId,
                                                    @RequestBody CommentRequest request) {
-        //TODO: 토큰 받아와서 사용하도록 수정
-        Long loginId = 1L;
+        Long loginId = JwtParseInterceptor.getAuthenticatedUserId();
         commentService.createComment(loginId, postId, request);
 
         return ApplicationResponse.ok(postId);
@@ -30,8 +30,7 @@ public class CommentController {
     @ResponseStatus(OK)
     public ApplicationResponse<Long> updateComment(@PathVariable("comment-id") Long commentId,
                                                    @RequestBody CommentRequest request) {
-        //TODO: 토큰 받아와서 사용하도록 수정
-        Long loginId = 1L;
+        Long loginId = JwtParseInterceptor.getAuthenticatedUserId();
         commentService.updateComment(loginId, commentId, request);
 
         return ApplicationResponse.ok(commentId);
@@ -40,8 +39,7 @@ public class CommentController {
     @DeleteMapping("/{comment-id}")
     @ResponseStatus(OK)
     public ApplicationResponse<Void> deleteComment(@PathVariable("comment-id") Long commentId) {
-        //TODO: 토큰 받아와서 사용하도록 수정
-        Long loginId = 1L;
+        Long loginId = JwtParseInterceptor.getAuthenticatedUserId();
         commentService.deleteComment(loginId, commentId);
 
         return ApplicationResponse.noData();
