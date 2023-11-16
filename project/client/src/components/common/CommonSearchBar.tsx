@@ -1,11 +1,14 @@
 import { Box, InputBase } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import CommonButton from "./CommonButton";
 
-const CommonSearchBar = () => {
-  // 검색 버튼 함수
-  const handleSearch = () => {
-    console.log("검색");
+interface PropsType {
+  setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
+}
+
+const CommonSearchBar = (props: PropsType) => {
+  // 입력값이 바뀔 때마다 searchQuery를 전달
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    props.setSearchQuery(event.target.value);
   };
 
   return (
@@ -46,11 +49,10 @@ const CommonSearchBar = () => {
             },
           }}
           placeholder="검색어를 입력하세요"
+          type="text"
+          onChange={handleChange}
         />
       </Box>
-
-      {/* 검색버튼 */}
-      <CommonButton value="검색" outline={false} onClick={handleSearch} />
     </Box>
   );
 };

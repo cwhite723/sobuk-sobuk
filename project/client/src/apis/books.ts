@@ -1,4 +1,5 @@
 import Api from "./api";
+import KakaoApi from "./kakaoApi";
 
 /**
  * 도서 등록 - 완료
@@ -72,10 +73,10 @@ export const getBook = async (bookId: number): Promise<BookInfo> => {
 
 export const getAllBooks = async (
   params: BookParams,
-): Promise<BookInfoSimple> => {
+): Promise<BookResponse> => {
   try {
     const response = await Api.get("/books", {
-      params: { params },
+      params,
     });
     return response.data;
   } catch (error) {
@@ -87,13 +88,31 @@ export const getAllBooks = async (
 /**
  * 도서 북마크 토큰O 토글 - 완료
  * @param bookId
+ * @param accessToken
  * @returns body{ success: boolean }
  */
-export const postBookMark = async (bookId: number) => {
+export const postBookmark = async (params: BookmarkParams) => {
+  if (params.accessToken) {
+    try {
+      return Api.post(`/books/${params.bookId}/bookmark`, {
+        headers: { Authorization: `${params.accessToken}` },
+      });
+    } catch (error) {
+      console.error("Error in Post Bookmark:", error);
+      throw new Error("Failed to Bookmark");
+    }
+  }
+};
+
+// kakao api 도서 정보 조회
+export const getKakaoBooks = async (params: KakaoBookParams) => {
   try {
-    return Api.post(`/books/${bookId}/bookmark`);
+    const response = await KakaoApi.get("book", {
+      params,
+    });
+    return response.data;
   } catch (error) {
-    console.error("Error in Post BookMark:", error);
-    throw new Error("Failed to BookMark");
+    console.error("Error in Get Kakao Books:", error);
+    throw new Error("Failed to Check Kakao Books Info");
   }
 };

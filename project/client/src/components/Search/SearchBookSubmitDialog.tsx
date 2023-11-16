@@ -10,7 +10,6 @@ import {
 } from "@mui/material";
 import { postBook } from "apis/books";
 import CommonTextField from "components/common/CommonTextField";
-import React from "react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
 import theme from "styles/theme";
@@ -28,7 +27,7 @@ interface FormValue {
   isUserInput: true;
 }
 
-const SearchBookSubmitDialog: React.FC<PropsType> = (props) => {
+const SearchBookSubmitDialog = (props: PropsType) => {
   // 화면 크기가 md보다 작아지면 Dialog를 fullscreen으로 띄움
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
@@ -42,9 +41,19 @@ const SearchBookSubmitDialog: React.FC<PropsType> = (props) => {
     },
   });
 
-  // react-query
-  const { mutate, isLoading, isError, error, isSuccess } =
-    useMutation(postBook);
+  // react-query - post book
+  const { mutate, isError } = useMutation(postBook, {
+    onSuccess: () => {
+      // 도서 등록 성공
+      reset();
+      props.handleClose();
+      console.log("등록 성공");
+    },
+    onError: (error) => {
+      // 도서 등록 실패
+      console.log("isError:" + isError, error);
+    },
+  });
 
   const handleDialogData = (data: FormValue) => {
     mutate({
@@ -54,15 +63,6 @@ const SearchBookSubmitDialog: React.FC<PropsType> = (props) => {
       publicationDate: data.bookPublicationDate,
       isUserInput: true,
     });
-    if (isError) {
-      console.log("isError:" + isError, error);
-    }
-    if (isSuccess) {
-      // 성공
-      reset();
-      props.handleClose();
-      console.log("등록 성공");
-    }
   };
 
   return (

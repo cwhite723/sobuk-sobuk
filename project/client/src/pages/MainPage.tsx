@@ -28,27 +28,27 @@ const MainPage = () => {
 
   // react-query - get plans
   const { data: readingPlans } = useQuery(
-    ["getPlans", token],
+    ["getPlans", { status: "READING", token }],
     () => getPlans("READING", token),
     { enabled: !!token },
   );
   const { data: completedPlans } = useQuery(
-    ["getPlans", token],
+    ["getPlans", { status: "COMPLETED", token }],
     () => getPlans("COMPLETED", token),
     { enabled: !!token },
   );
   const { data: notCreatedPostPlans } = useQuery(
-    ["getPlans", token],
+    ["getPlans", { status: "NOT_CREATED_POST", token }],
     () => getPlans("NOT_CREATED_POST", token),
     { enabled: !!token },
   );
   const { data: notStartedPlans } = useQuery(
-    ["getPlans", token],
+    ["getPlans", { status: "NOT_STARTED", token }],
     () => getPlans("NOT_STARTED", token),
     { enabled: !!token },
   );
   const { data: overduePlans } = useQuery(
-    ["getPlans", token],
+    ["getPlans", { status: "OVERDUE", token }],
     () => getPlans("OVERDUE", token),
     { enabled: !!token },
   );

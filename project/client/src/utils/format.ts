@@ -28,3 +28,16 @@ export const getDateObject = (stringDate: string) => {
     return null;
   }
 };
+
+// KakaoDocument 타입의 객체를 BookInfoSimple 타입의 객체로 변환
+export const convertBookResponse = (
+  document: KakaoDocument,
+): BookInfoSimple => {
+  return {
+    bookId: new Date().getTime(),
+    title: document.title,
+    author: document.authors[0],
+    publisher: document.publisher,
+    src: document.thumbnail,
+  };
+};

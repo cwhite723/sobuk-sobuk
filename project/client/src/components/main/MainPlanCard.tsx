@@ -13,8 +13,9 @@ const MainPlanCard = (props: PropsType) => {
   const [bookItem, setBookItem] = useState<BookInfo>();
 
   // react-query - get book info
-  const { data: bookItemQuery } = useQuery("getBook", () =>
-    getBook(props.planItem.bookId),
+  const { data: bookItemQuery } = useQuery(
+    ["getBook", props.planItem.bookId],
+    () => getBook(props.planItem.bookId),
   );
 
   useEffect(() => {

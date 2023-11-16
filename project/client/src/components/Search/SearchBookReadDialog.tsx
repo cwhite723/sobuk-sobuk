@@ -8,15 +8,20 @@ import {
   DialogTitle,
   useMediaQuery,
 } from "@mui/material";
+import { postPlan } from "apis/plans";
 import CommonTextField from "components/common/CommonTextField";
 import CommonTypography from "components/common/CommonTypography";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { useMutation } from "react-query";
+import { useSelector } from "react-redux";
+import { RootState } from "store/store";
 import theme from "styles/theme";
+import { getStringDate } from "utils/format";
 
 interface PropsType {
   isOpen: boolean;
-  selectedBook: BookInfo;
+  selectedBook: BookInfoSimple;
   handleClose: () => void;
 }
 
@@ -26,9 +31,12 @@ interface FormValue {
   endDate: Date;
 }
 
-const SearchBookReadDialog: React.FC<PropsType> = (props) => {
+const SearchBookReadDialog = (props: PropsType) => {
   // 화면 크기가 md보다 작아지면 Dialog를 fullscreen으로 띄움
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
+
+  // redux에 저장된 토큰 가져오기 - post plan 요청에 필요
+  const token = useSelector((state: RootState) => state.auth.token);
 
   // react hook form
   const { control, handleSubmit, reset } = useForm<FormValue>({
@@ -39,10 +47,30 @@ const SearchBookReadDialog: React.FC<PropsType> = (props) => {
     },
   });
 
+  // react-query - post plan
+  const { mutate, isError } = useMutation(postPlan, {
+    onSuccess: () => {
+      // 독서 정보 등록 성공
+      reset();
+      props.handleClose();
+      console.log("등록 성공");
+    },
+    onError: (error) => {
+      // 독서 정보 등록 실패
+      console.log("isError:" + isError, error);
+    },
+  });
+
   const handleDialogData = (data: FormValue) => {
-    reset();
-    props.handleClose();
-    console.log(data);
+    mutate({
+      data: {
+        bookId: props.selectedBook.bookId,
+        startDate: getStringDate(data.startDate),
+        endDate: getStringDate(data.endDate),
+        totalPage: data.totalPages,
+      },
+      accessToken: token,
+    });
   };
 
   return (

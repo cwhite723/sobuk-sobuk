@@ -56,8 +56,8 @@ const LoginPage = () => {
   });
 
   // react-query - get myInfo
-  const { data: myInfo } = useQuery(
-    ["getMyInfo", token],
+  const { data: myPage } = useQuery(
+    ["getMyPage", token],
     () => getMyPage(token),
     { enabled: !!token },
   );
@@ -95,13 +95,12 @@ const LoginPage = () => {
   }, [formState]);
 
   useEffect(() => {
-    if (myInfo) {
-      console.log("dispatch myinfo");
-      // dispatch(setMember(myInfo));
+    if (myPage) {
+      dispatch(setMember(myPage));
     } else {
-      console.log("no myInfo value");
+      console.log("no myPage value");
     }
-  }, [dispatch, myInfo]);
+  }, [dispatch, myPage]);
 
   return (
     <Box

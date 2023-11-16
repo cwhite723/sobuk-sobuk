@@ -6,17 +6,31 @@ import Api from "./api";
  * @returns body{ success: boolean }
  */
 
-export const postPlan = async (data: PlanInfo) => {
-  try {
-    return Api.post(`/plans/${data.bookId}`, {
-      startDate: data.startDate,
-      endDate: data.endDate,
-      totalPage: data.totalPage,
-      readPageNumber: data.readPageNumber,
-    });
-  } catch (error) {
-    console.error("Error in Post Plan:", error);
-    throw new Error("Failed to Register Plan");
+export const postPlan = async ({
+  data,
+  accessToken,
+}: {
+  data: PlanInfo;
+  accessToken: string | null;
+}) => {
+  if (accessToken) {
+    try {
+      return Api.post(
+        `/plans/${data.bookId}`,
+        {
+          startDate: data.startDate,
+          endDate: data.endDate,
+          totalPage: data.totalPage,
+          readPageNumber: data.readPageNumber,
+        },
+        {
+          headers: { Authorization: `${accessToken}` },
+        },
+      );
+    } catch (error) {
+      console.error("Error in Post Plan:", error);
+      throw new Error("Failed to Register Plan");
+    }
   }
 };
 
@@ -27,8 +41,8 @@ export const postPlan = async (data: PlanInfo) => {
  */
 
 export const patchPlan = async (patchPlanVariables: PlanPatch) => {
-  try {
-    if (patchPlanVariables.accessToken && patchPlanVariables.planId) {
+  if (patchPlanVariables.accessToken && patchPlanVariables.planId) {
+    try {
       return Api.patch(
         `/plans/${patchPlanVariables.planId}`,
         {
@@ -43,12 +57,10 @@ export const patchPlan = async (patchPlanVariables: PlanPatch) => {
           },
         },
       );
-    } else {
-      console.log("Access token or PlanId missing");
+    } catch (error) {
+      console.error("Error in Patch Plan:", error);
+      throw new Error("Failed to Modify Plan");
     }
-  } catch (error) {
-    console.error("Error in Patch Plan:", error);
-    throw new Error("Failed to Modify Plan");
   }
 };
 
@@ -69,6 +81,7 @@ export const deletePlan = async (planId: number) => {
 /**
  * 독서 정보 조회 토큰O - 완료
  * @param status
+ * @param accessToken
  * @returns body{ success: boolean, data: PlanInfo[] }
  */
 export const getPlans = async (

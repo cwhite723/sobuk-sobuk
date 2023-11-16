@@ -4,7 +4,7 @@ import CommonBookImage from "components/common/CommonBookImage";
 import CommonTypography from "components/common/CommonTypography";
 
 interface PropsType {
-  bookItem: BookItem;
+  bookItem: BookInfoSimple;
 }
 
 const SearchBookRankCard: React.FC<PropsType> = (props) => {
@@ -23,29 +23,21 @@ const SearchBookRankCard: React.FC<PropsType> = (props) => {
           m: 1,
         }}
       >
-        <CommonBookImage
-          width={100}
-          height={150}
-          src={props.bookItem.bookImg}
-        />
+        <CommonBookImage width={100} height={150} src={props.bookItem.src} />
 
         <Box sx={{ ml: 2, borderTop: "1px solid" }}>
           <CommonTypography
-            value={props.bookItem.bookName}
+            value={props.bookItem.title}
             variant="h6"
             bold={true}
           />
           <CommonTypography
-            value={props.bookItem.bookWriter}
+            value={props.bookItem.author}
             variant="body2"
             bold={false}
           />
           <CommonTypography
-            value={
-              props.bookItem.bookIntroduction
-                ? props.bookItem.bookIntroduction
-                : "한줄 소개가 없어요"
-            }
+            value={props.bookItem.publisher}
             variant="body2"
             bold={false}
           />

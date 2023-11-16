@@ -52,6 +52,8 @@ declare global {
     bookId: number;
     title: string;
     author: string;
+    publisher: string;
+    src?: string;
   }
 
   interface BookPatch {
@@ -62,9 +64,14 @@ declare global {
   interface BookParams {
     page: number;
     size: number;
-    sortType?: string;
+    sortType?: "bookmarkCount" | "publicationDate" | "recordCount";
     title?: string;
     author?: string;
+  }
+
+  interface BookmarkParams {
+    bookId: number;
+    accessToken: string;
   }
 
   // api 데이터 타입 - plans
@@ -107,6 +114,12 @@ declare global {
   }
 
   // response type
+  interface BookResponse {
+    content: BookInfoSimple[];
+    totalPages: number;
+    totalElements: number;
+  }
+
   interface PostResponse {
     memberId: number;
     userName: string;
@@ -141,5 +154,36 @@ declare global {
   interface Response {
     postResponse: PostResponse;
     commentResponses: CommentResponse;
+  }
+
+  // kakao api types
+  interface KakaoBookParams {
+    query: string;
+    sort?: "accuracy" | "latest";
+    page?: number;
+    size?: number;
+    target?: "title" | "isbn" | "publisher" | "person";
+  }
+
+  interface KakaoMeta {
+    total_count: number;
+    // 전체 문서 수
+    pageable_count: number;
+    is_end: boolean;
+  }
+
+  interface KakaoDocument {
+    title: string;
+    contents: string;
+    isbn: string;
+    datetime: string;
+    authors: string[];
+    publisher: string;
+    thumbnail: string;
+  }
+
+  interface KakaoBookResponse {
+    meta: KakaoMeta;
+    documents: KakaoDocument[];
   }
 }
