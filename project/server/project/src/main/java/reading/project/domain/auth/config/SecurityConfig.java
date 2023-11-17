@@ -56,11 +56,11 @@ public class SecurityConfig implements WebMvcConfigurer {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authorizeHttpRequests(req -> req
-                        .requestMatchers(new AntPathRequestMatcher("/member/**", "PATCH")).hasRole("USER")
-                        .requestMatchers(new AntPathRequestMatcher("/member/**", "DELETE")).hasRole("USER")
-                        .requestMatchers(new AntPathRequestMatcher("api/posts/**","POST")).hasRole("USER")
-                        .requestMatchers(new AntPathRequestMatcher("api/posts/**","DELETE")).hasRole("USER")
-                        .requestMatchers(new AntPathRequestMatcher("api/posts/**","PATCH")).hasRole("USER")
+                        .requestMatchers(new AntPathRequestMatcher("/api/member/**", "PATCH")).hasRole("USER")
+                        .requestMatchers(new AntPathRequestMatcher("/api/member/**", "DELETE")).hasRole("USER")
+                        .requestMatchers(new AntPathRequestMatcher("/api/posts/**","POST")).hasRole("USER")
+                        .requestMatchers(new AntPathRequestMatcher("/api/posts/**","DELETE")).hasRole("USER")
+                        .requestMatchers(new AntPathRequestMatcher("/api/posts/**","PATCH")).hasRole("USER")
                         .anyRequest().permitAll())
                 .httpBasic(AbstractHttpConfigurer::disable) //uri가아닌 토큰인증을 한다.
                 .formLogin(AbstractHttpConfigurer::disable)
@@ -79,7 +79,7 @@ public class SecurityConfig implements WebMvcConfigurer {
             AuthenticationManager authenticationManager = builder.getSharedObject(AuthenticationManager.class);
 
             JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager,jwtTokenizer,redisDao);
-            jwtAuthenticationFilter.setFilterProcessesUrl("/user/log-in");
+            jwtAuthenticationFilter.setFilterProcessesUrl("/api/user/log-in");
             jwtAuthenticationFilter.setAuthenticationSuccessHandler(new MemberAuthenticationSuccessHandler());
             jwtAuthenticationFilter.setAuthenticationFailureHandler(new MemberAuthenticationFailureHandler());
 

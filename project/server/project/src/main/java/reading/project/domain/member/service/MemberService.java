@@ -8,8 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reading.project.domain.auth.utils.HeaderUtil;
-import reading.project.domain.member.dto.SearchFollow;
-import reading.project.domain.member.dto.SliceResponse;
+import reading.project.domain.member.dto.*;
 import reading.project.domain.member.entity.Follow;
 import reading.project.domain.member.repository.FollowRepository;
 import reading.project.domain.member.repository.MemberRepository;
@@ -18,7 +17,6 @@ import reading.project.domain.auth.user.MemberCustomAuthorityUtils;
 import reading.project.global.config.redis.util.RedisDao;
 import reading.project.global.exception.CustomException;
 import reading.project.global.exception.ErrorCode;
-import reading.project.domain.member.dto.MemberDto;
 import reading.project.domain.member.entity.Member;
 import reading.project.domain.member.mapper.MemberMapper;
 
@@ -39,6 +37,7 @@ public class MemberService {
 
     public void createMember(MemberDto.Post requestBody) {
         verifyExistUserName(requestBody.getUserName());
+        verifyExistsNickname(requestBody.getNickname());
         Member member =mapper.memberDtoPostToMember(requestBody);
         member.changePassword(passwordEncoder.encode(member.getPassword()));
         //역할 부여 필요
@@ -69,8 +68,12 @@ public class MemberService {
 
     public void verifyExistUserName(String userName){
         if(memberRepository.findByUserName(userName).isPresent()){
-            throw new CustomException(ErrorCode.MEMBER_EXISTS);
+                throw new CustomException(ErrorCode.MEMBER_EXISTS);
         }
+    }
+
+    public void verifyExistUserName(MemberDto.PostUN requestBody) {
+        verifyExistUserName(requestBody.getUserName());
     }
 
     public void logout(HttpServletRequest request) {
@@ -85,8 +88,21 @@ public class MemberService {
         if(jwtParseInterceptor.getAuthenticatedUserId() != memberId) throw new CustomException(ErrorCode.MEMBER_NOT_AUTHORIZED);
     }
 
-    public MemberDto.Response myPageInfo() {
-        return this.mapper.memberToMemberDtoResponse(this.findExistsMember(jwtParseInterceptor.getAuthenticatedUserId()));
+    public MyPageDetails myPageInfo() {
+        Long userId = jwtParseInterceptor.getAuthenticatedUserId();
+        Member member = this.findExistsMember(userId);
+        Long follower = memberRepository.countByFollowings(userId);
+        Long following = memberRepository.countByFollowers(userId);
+
+        MyPageDetails memberInfo = MyPageDetails.builder()
+                .userName(member.getUserName())
+                .nickname(member.getNickname())
+                .introduction(member.getIntroduction())
+                .image(member.getImage())
+                .countFollower(follower)
+                .countFollowing(following)
+                .build();
+        return memberInfo;
     }
 
     public void followMember(long followId) {
@@ -133,4 +149,74 @@ public class MemberService {
 
     }
 
+    public void verifyExistsNickname (String nickname) {
+        if(memberRepository.findByNickname(nickname).isPresent()){
+            throw new CustomException(ErrorCode.MEMBER_NICKNAME_EXISTS);
+        }
+    }
+
+    public void verifyExistsNickname (MemberDto.PostNN request) {
+        verifyExistsNickname(request.getNickname());
+    }
+
+    public UserPageDetails userPage(long memberId) {
+        Long userId = jwtParseInterceptor.getAuthenticatedUserId();
+        if(userId == memberId) throw new CustomException(ErrorCode.REQUEST_VALIDATION_FAIL);
+        Member member = findExistsMember(memberId);
+
+        boolean isFollowing = checkFollowing(userId, member).size() > 0;
+        long countBookMark = 0L;
+        long countPost = 0L;
+        UserPageDetails userInfo = UserPageDetails.builder()
+                .userName(member.getUserName())
+                .nickname(member.getNickname())
+                .introduction(member.getIntroduction())
+                .isFollowing(isFollowing)
+                .countBookMark(countBookMark)
+                .countPost(countPost)
+                .build();
+
+        return userInfo;
+    }
+
+    public SliceResponse<InfoPagePostList> postList(Long memberId, Long cursorId, Pageable pageable) {
+        findExistsMember(memberId);
+        Slice<InfoPagePostList> postLists = memberRepository.findByPostList(memberId, cursorId, pageable);
+        List<InfoPagePostList> lists = postLists.getContent();
+        boolean hashNext = postLists.hasNext();
+        int size = pageable.getPageSize();
+
+        return new SliceResponse<>(lists, hashNext, size);
+    }
+
+    public SliceResponse<InfoPagePostList> postList(Long cursorId, Pageable pageable) {
+        Long userId = jwtParseInterceptor.getAuthenticatedUserId();
+        findExistsMember(userId);
+        Slice<InfoPagePostList> postLists = memberRepository.findByPostList(userId, cursorId, pageable);
+        List<InfoPagePostList> lists = postLists.getContent();
+        boolean hashNext = postLists.hasNext();
+        int size = pageable.getPageSize();
+
+        return new SliceResponse<>(lists, hashNext, size);
+    }
+
+    public SliceResponse<InfoPageBookmarkList> bookmarkList(Long memberId, Long cursorId, Pageable pageable) {
+        findExistsMember(memberId);
+        Slice<InfoPageBookmarkList> bookmarkLists = memberRepository.findByReadingPlanList(memberId, cursorId, pageable);
+        List<InfoPageBookmarkList> lists = bookmarkLists.getContent();
+        boolean hashNext = bookmarkLists.hasNext();
+        int size = pageable.getPageSize();
+
+        return new SliceResponse<>(lists, hashNext, size);
+    }
+    public SliceResponse<InfoPageBookmarkList> bookmarkList(Long cursorId, Pageable pageable) {
+        Long userId = jwtParseInterceptor.getAuthenticatedUserId();
+        findExistsMember(userId);
+        Slice<InfoPageBookmarkList> bookmarkLists = memberRepository.findByReadingPlanList(userId, cursorId, pageable);
+        List<InfoPageBookmarkList> lists = bookmarkLists.getContent();
+        boolean hashNext = bookmarkLists.hasNext();
+        int size = pageable.getPageSize();
+
+        return new SliceResponse<>(lists, hashNext, size);
+    }
 }
