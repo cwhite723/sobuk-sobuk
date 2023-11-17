@@ -14,6 +14,7 @@ import reading.project.domain.book.dto.response.BookDetailResponse;
 import reading.project.domain.book.dto.response.BookResponse;
 import reading.project.domain.book.dto.response.QBookDetailResponse;
 import reading.project.domain.book.dto.response.QBookResponse;
+import reading.project.domain.book.entity.Book;
 import reading.project.domain.book.repository.BookRepositoryCustom;
 
 import java.util.List;
@@ -34,21 +35,7 @@ public class BookRepositoryImpl implements BookRepositoryCustom {
                         book.author,
                         book.publicationDate,
                         book.createdAt,
-                        book.pageNumber,
                         book.isUserInput
-                ))
-                .from(book)
-                .where(book.id.eq(bookId))
-                .fetchOne();
-    }
-
-    @Override
-    public BookResponse getBook(Long bookId) {
-        return queryFactory
-                .select(new QBookResponse(
-                        book.id,
-                        book.title,
-                        book.author
                 ))
                 .from(book)
                 .where(book.id.eq(bookId))
@@ -61,7 +48,8 @@ public class BookRepositoryImpl implements BookRepositoryCustom {
                 .select(new QBookResponse(
                         book.id,
                         book.title,
-                        book.author
+                        book.author,
+                        book.publisher
                 ))
                 .from(book)
                 .where(searchFilter(filterCondition))

@@ -21,7 +21,18 @@ public abstract class MemberDto {
         private String email;
         private String introduction;
     }
-
+    @Getter
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class PostUN {
+        @NotBlank(message = "공백이 아니어야 합니다.")
+        private String userName;
+    }
+    @Getter
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class PostNN {
+        @NotBlank(message = "공백이 아니어야 합니다.")
+        private String nickname;
+    }
     @Getter
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class Patch {

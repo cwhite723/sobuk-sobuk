@@ -10,17 +10,15 @@ import org.apache.tomcat.util.http.HeaderUtil;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
-import reading.project.domain.member.dto.SearchFollow;
-import reading.project.domain.member.dto.SliceResponse;
+import reading.project.domain.member.dto.*;
 import reading.project.domain.member.service.MemberService;
-import reading.project.domain.member.dto.MemberDto;
 import reading.project.global.response.ApplicationResponse;
 
 import static org.springframework.http.HttpStatus.*;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/members")
+@RequestMapping("/api/members")
 public class MemberController {
     private final MemberService memberService;
 
@@ -46,11 +44,11 @@ public class MemberController {
     ) {
         return ApplicationResponse.ok(this.memberService.updateMember(memberId, requestBody));
     }
-
+    // 유저 정보 상세 페이지 api
     @GetMapping("/{member-id}")
     @ResponseStatus(OK)
-    public ApplicationResponse<MemberDto.Response> getMember(@PathVariable("member-id") long memberId) {
-        MemberDto.Response response = this.memberService.findMember(memberId);
+    public ApplicationResponse getMemberInfo(@PathVariable("member-id") long memberId) {
+        UserPageDetails response = this.memberService.userPage(memberId);
         return ApplicationResponse.ok(response);
     }
 
@@ -89,6 +87,59 @@ public class MemberController {
                                                                             @PageableDefault(size = 2) Pageable pageable){
 
         SliceResponse<SearchFollow> response = memberService.followerList(cursorId, pageable);
+        return ApplicationResponse.ok(response);
+    }
+
+    // 아이디 중복 api
+    @GetMapping("/id-check")
+    @ResponseStatus(OK)
+    public ApplicationResponse<Void> checkUserName(@RequestBody @Valid MemberDto.PostUN requestBody) {
+        memberService.verifyExistUserName(requestBody);
+        return ApplicationResponse.noData();
+    }
+
+    // 닉네임 중복 api
+    @GetMapping("/nickname-check")
+    public ApplicationResponse<Void> checkNickname(@RequestBody @Valid MemberDto.PostNN requestBody) {
+        memberService.verifyExistsNickname(requestBody);
+        return ApplicationResponse.noData();
+    }
+
+    // member 독서기록 api
+    @GetMapping("/{member-id}/postInfo")
+    @ResponseStatus(OK)
+    public ApplicationResponse<SliceResponse<InfoPagePostList>> postInfo(@PathVariable(value = "member-id") Long memberId,
+                                                                         @RequestParam(value ="id", required = false) Long cursorId,
+                                                                         @PageableDefault(size = 3) Pageable pageable) {
+        SliceResponse<InfoPagePostList> response = memberService.postList(memberId,cursorId,pageable);
+        return ApplicationResponse.ok(response);
+    }
+
+    // member 서재기록 api
+    @GetMapping("/{member-id}/bookmarkInfo")
+    @ResponseStatus(OK)
+    public ApplicationResponse<SliceResponse<InfoPageBookmarkList>> bookmarkInfo(@PathVariable(value = "member-id") Long memberId,
+                                                                                 @RequestParam(value ="id", required = false) Long cursorId,
+                                                                                 @PageableDefault(size = 3) Pageable pageable) {
+        SliceResponse<InfoPageBookmarkList> response = memberService.bookmarkList(memberId,cursorId,pageable);
+        return ApplicationResponse.ok(response);
+    }
+
+    // mypage 독서기록 api
+    @GetMapping("/my-page/postInfo")
+    @ResponseStatus(OK)
+    public ApplicationResponse<SliceResponse<InfoPagePostList>> postInfo(@RequestParam(value ="id", required = false) Long cursorId,
+                                                                         @PageableDefault(size = 3) Pageable pageable) {
+        SliceResponse<InfoPagePostList> response = memberService.postList(cursorId,pageable);
+        return ApplicationResponse.ok(response);
+    }
+
+    // mypage 서재기록 api
+    @GetMapping("/my-page/bookmarkInfo")
+    @ResponseStatus(OK)
+    public ApplicationResponse<SliceResponse<InfoPageBookmarkList>> bookmarkInfo(@RequestParam(value ="id", required = false) Long cursorId,
+                                                                                 @PageableDefault(size = 3) Pageable pageable) {
+        SliceResponse<InfoPageBookmarkList> response = memberService.bookmarkList(cursorId,pageable);
         return ApplicationResponse.ok(response);
     }
 }

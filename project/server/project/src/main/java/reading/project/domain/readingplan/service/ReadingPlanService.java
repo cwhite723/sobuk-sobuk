@@ -37,6 +37,8 @@ public class ReadingPlanService {
 
         ReadingPlan readingPlan = request.toEntity(member, book);
         readingPlanRepository.save(readingPlan);
+        changeStatus(readingPlan);
+        updateReadPage(readingPlan);
     }
 
     @Transactional
@@ -44,7 +46,8 @@ public class ReadingPlanService {
         ReadingPlan readingPlan = findReadingPlanById(planId);
         validateCreator(loginId, readingPlan.getMember().getId());
 
-        readingPlan.update(request.getStartDate(), request.getEndDate(), request.getReadPageNumber(), request.getStatus());
+        readingPlan.update(request.getStartDate(), request.getEndDate(), request.getTotalPage(), request.getReadPageNumber());
+        changeStatus(readingPlan);
     }
 
     @Transactional
@@ -72,26 +75,39 @@ public class ReadingPlanService {
                 .orElseThrow(() -> new CustomException(NOT_FOUND_READING_PLAN));
     }
 
-    public void changeStatus(ReadingPlan plan, Status status) {
-        plan.changeStatus(status);
-    }
-
     @Transactional
     public void calculatePagesPerDay() {
         List<ReadingPlan> plans = readingPlanRepository.findByStatus(READING);
 
         for (ReadingPlan plan : plans) {
-            LocalDateTime start = LocalDateTime.now();
-            LocalDateTime end = plan.getEndDate().atStartOfDay();
-            int betweenDays = (int) Duration.between(start, end).toDays();
-
-            int remainPage = plan.getBook().getPageNumber() - plan.getReadPageNumber();
-            plan.updatePagesPerDay(remainPage / betweenDays);
+            updateReadPage(plan);
         }
     }
 
     @Transactional
-    public void checkStatus() {
+    private static void updateReadPage(ReadingPlan plan) {
+        LocalDateTime start = LocalDateTime.now();
+        LocalDateTime end = plan.getEndDate().atStartOfDay();
+        int betweenDays = (int) Duration.between(start, end).toDays() + 1;
+
+        int remainPage = plan.getTotalPage() - plan.getReadPageNumber();
+        plan.updatePagesPerDay(remainPage / betweenDays);
+    }
+
+    @Transactional
+    private void changeStatus(ReadingPlan plan) {
+        if (plan.getStartDate().isAfter(LocalDate.now())) {
+            plan.changeStatus(NOT_STARTED);
+        } else if (plan.getReadPageNumber() >= plan.getTotalPage()) {
+            plan.changeStatus(NOT_CREATED_POST);
+        } else if (plan.getEndDate().isBefore(LocalDate.now())) {
+            plan.changeStatus(OVERDUE);
+        } else {
+            plan.changeStatus(READING);
+        }
+    }
+    @Transactional
+    public void changeStatus() {
         List<ReadingPlan> readingPlans = readingPlanRepository.findByStatus(READING);
         List<ReadingPlan> notStartedPlans = readingPlanRepository.findByStatus(NOT_STARTED);
 
@@ -105,6 +121,14 @@ public class ReadingPlanService {
             if (plan.getStartDate().isEqual(LocalDate.now())) {
                 plan.changeStatus(READING);
             }
+        }
+    }
+
+    public void checkFinishReading(ReadingPlan plan) {
+        if (plan.getStatus().equals(COMPLETED)) {
+            throw new CustomException(POST_EXISTS);
+        } else if (!plan.getStatus().equals(NOT_CREATED_POST)) {
+            throw new CustomException(NOT_FINISH_READING);
         }
     }
 }

@@ -40,7 +40,7 @@ public class BookService {
     @Transactional
     public void updateBook(Long bookId, BookRequest request) {
         Book findBook = findBookById(bookId);
-        findBook.update(request.getTitle(), request.getPublisher(), request.getAuthor(), request.getPublicationDate(), request.getPageNumber(), request.isUserInput());
+        findBook.update(request.getTitle(), request.getPublisher(), request.getAuthor(), request.getPublicationDate(), request.isUserInput());
     }
 
     @Transactional
@@ -79,5 +79,4 @@ public class BookService {
         return bookRepository.findById(bookId)
                 .orElseThrow(() -> new CustomException(NOT_FOUND_BOOK));
     }
-
 }
