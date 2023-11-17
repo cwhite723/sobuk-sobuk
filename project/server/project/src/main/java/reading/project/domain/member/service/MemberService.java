@@ -178,4 +178,45 @@ public class MemberService {
 
         return userInfo;
     }
+
+    public SliceResponse<InfoPagePostList> postList(Long memberId, Long cursorId, Pageable pageable) {
+        findExistsMember(memberId);
+        Slice<InfoPagePostList> postLists = memberRepository.findByPostList(memberId, cursorId, pageable);
+        List<InfoPagePostList> lists = postLists.getContent();
+        boolean hashNext = postLists.hasNext();
+        int size = pageable.getPageSize();
+
+        return new SliceResponse<>(lists, hashNext, size);
+    }
+
+    public SliceResponse<InfoPagePostList> postList(Long cursorId, Pageable pageable) {
+        Long userId = jwtParseInterceptor.getAuthenticatedUserId();
+        findExistsMember(userId);
+        Slice<InfoPagePostList> postLists = memberRepository.findByPostList(userId, cursorId, pageable);
+        List<InfoPagePostList> lists = postLists.getContent();
+        boolean hashNext = postLists.hasNext();
+        int size = pageable.getPageSize();
+
+        return new SliceResponse<>(lists, hashNext, size);
+    }
+
+    public SliceResponse<InfoPageBookmarkList> bookmarkList(Long memberId, Long cursorId, Pageable pageable) {
+        findExistsMember(memberId);
+        Slice<InfoPageBookmarkList> bookmarkLists = memberRepository.findByReadingPlanList(memberId, cursorId, pageable);
+        List<InfoPageBookmarkList> lists = bookmarkLists.getContent();
+        boolean hashNext = bookmarkLists.hasNext();
+        int size = pageable.getPageSize();
+
+        return new SliceResponse<>(lists, hashNext, size);
+    }
+    public SliceResponse<InfoPageBookmarkList> bookmarkList(Long cursorId, Pageable pageable) {
+        Long userId = jwtParseInterceptor.getAuthenticatedUserId();
+        findExistsMember(userId);
+        Slice<InfoPageBookmarkList> bookmarkLists = memberRepository.findByReadingPlanList(userId, cursorId, pageable);
+        List<InfoPageBookmarkList> lists = bookmarkLists.getContent();
+        boolean hashNext = bookmarkLists.hasNext();
+        int size = pageable.getPageSize();
+
+        return new SliceResponse<>(lists, hashNext, size);
+    }
 }

@@ -10,11 +10,8 @@ import org.apache.tomcat.util.http.HeaderUtil;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
-import reading.project.domain.member.dto.SearchFollow;
-import reading.project.domain.member.dto.SliceResponse;
-import reading.project.domain.member.dto.UserPageDetails;
+import reading.project.domain.member.dto.*;
 import reading.project.domain.member.service.MemberService;
-import reading.project.domain.member.dto.MemberDto;
 import reading.project.global.response.ApplicationResponse;
 
 import static org.springframework.http.HttpStatus.*;
@@ -47,7 +44,7 @@ public class MemberController {
     ) {
         return ApplicationResponse.ok(this.memberService.updateMember(memberId, requestBody));
     }
-
+    // 유저 정보 상세 페이지 api
     @GetMapping("/{member-id}")
     @ResponseStatus(OK)
     public ApplicationResponse getMemberInfo(@PathVariable("member-id") long memberId) {
@@ -108,4 +105,41 @@ public class MemberController {
         return ApplicationResponse.noData();
     }
 
+    // member 독서기록 api
+    @GetMapping("/{member-id}/postInfo")
+    @ResponseStatus(OK)
+    public ApplicationResponse<SliceResponse<InfoPagePostList>> postInfo(@PathVariable(value = "member-id") Long memberId,
+                                                                         @RequestParam(value ="id", required = false) Long cursorId,
+                                                                         @PageableDefault(size = 3) Pageable pageable) {
+        SliceResponse<InfoPagePostList> response = memberService.postList(memberId,cursorId,pageable);
+        return ApplicationResponse.ok(response);
+    }
+
+    // member 서재기록 api
+    @GetMapping("/{member-id}/bookmarkInfo")
+    @ResponseStatus(OK)
+    public ApplicationResponse<SliceResponse<InfoPageBookmarkList>> bookmarkInfo(@PathVariable(value = "member-id") Long memberId,
+                                                                                 @RequestParam(value ="id", required = false) Long cursorId,
+                                                                                 @PageableDefault(size = 3) Pageable pageable) {
+        SliceResponse<InfoPageBookmarkList> response = memberService.bookmarkList(memberId,cursorId,pageable);
+        return ApplicationResponse.ok(response);
+    }
+
+    // mypage 독서기록 api
+    @GetMapping("/my-page/postInfo")
+    @ResponseStatus(OK)
+    public ApplicationResponse<SliceResponse<InfoPagePostList>> postInfo(@RequestParam(value ="id", required = false) Long cursorId,
+                                                                         @PageableDefault(size = 3) Pageable pageable) {
+        SliceResponse<InfoPagePostList> response = memberService.postList(cursorId,pageable);
+        return ApplicationResponse.ok(response);
+    }
+
+    // mypage 서재기록 api
+    @GetMapping("/my-page/bookmarkInfo")
+    @ResponseStatus(OK)
+    public ApplicationResponse<SliceResponse<InfoPageBookmarkList>> bookmarkInfo(@RequestParam(value ="id", required = false) Long cursorId,
+                                                                                 @PageableDefault(size = 3) Pageable pageable) {
+        SliceResponse<InfoPageBookmarkList> response = memberService.bookmarkList(cursorId,pageable);
+        return ApplicationResponse.ok(response);
+    }
 }

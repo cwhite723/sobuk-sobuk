@@ -7,8 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Repository;
-import reading.project.domain.member.dto.QSearchFollow;
-import reading.project.domain.member.dto.SearchFollow;
+import reading.project.domain.member.dto.*;
 import reading.project.domain.member.entity.Follow;
 import reading.project.domain.member.entity.Member;
 import reading.project.domain.member.entity.QMember;
@@ -16,9 +15,11 @@ import reading.project.domain.member.entity.QMember;
 import java.util.List;
 
 import static reading.project.domain.post.entity.QPost.post;
-import static reading.project.domain.book.entity.QBookmark.bookmark;
+import static reading.project.domain.book.entity.QBook.book;
+import static reading.project.domain.readingplan.entity.QReadingPlan.readingPlan;
 import static reading.project.domain.member.entity.QFollow.follow;
 import static reading.project.domain.member.entity.QMember.member;
+import static reading.project.domain.readingplan.entity.ReadingPlan.Status.*;
 
 @Repository
 @RequiredArgsConstructor
@@ -100,12 +101,77 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom{
 
     }
 
+    @Override
+    public Slice<InfoPagePostList> findByPostList(Long id, Long cursorId, Pageable pageable) {
+        List<InfoPagePostList> postLists = jpaQueryFactory
+                .select(new QInfoPagePostList(
+                        post.id,
+                        book.title,
+                        book.author,
+                        post.title,
+                        post.content,
+                        post.comments.size(),
+                        post.likes.size()
+                        ))
+                .from(post)
+                .innerJoin(post.member,member)
+                .innerJoin(post.book,book)
+                .where(member.id.eq(id),postIdLtCursorId(cursorId))
+                .orderBy(post.id.desc())
+                .limit(pageable.getPageSize()+1)
+                .fetch();
+
+        return checkLastPage(postLists, pageable);
+    }
+    @Override
+    public Slice<InfoPageBookmarkList> findByReadingPlanList(Long id, Long cursorId, Pageable pageable) {
+
+        List<InfoPageBookmarkList> bookmarkLists = jpaQueryFactory
+                .select(new QInfoPageBookmarkList(
+                        readingPlan.id,
+                        readingPlan.book.title,
+                        readingPlan.book.author,
+                        readingPlan.totalPage,
+                        readingPlan.todayPage,
+                        readingPlan.status
+                ))
+                .from(readingPlan)
+                .innerJoin(readingPlan.member,member)
+                .innerJoin(readingPlan.book,book)
+                .where(readingPlan.member.id.eq(id),readingPlan.status.in(null,
+                        READING,
+                        COMPLETED,
+                        NOT_CREATED_POST,
+                        NOT_STARTED,
+                        OVERDUE),readingPlanLtCursorId(cursorId))
+                .orderBy(readingPlan.id.desc())
+                .limit(pageable.getPageSize()+1)
+                .fetch();
+
+        return checkLastPage(bookmarkLists, pageable);
+    }
+
     private BooleanExpression followLtCursorId(Long cursorId) {
         if(cursorId == null) {
             return null;
         }
         return follow.id.lt(cursorId);
     }
+
+    private BooleanExpression postIdLtCursorId(Long cursorId) {
+        if(cursorId == null) {
+            return null;
+        }
+        return post.id.lt(cursorId);
+    }
+
+    private BooleanExpression readingPlanLtCursorId(Long cursorId) {
+        if(cursorId == null) {
+            return null;
+        }
+        return readingPlan.id.lt(cursorId);
+    }
+
 
     private <T> Slice<T> checkLastPage(List<T> results, Pageable pageable) {
 
