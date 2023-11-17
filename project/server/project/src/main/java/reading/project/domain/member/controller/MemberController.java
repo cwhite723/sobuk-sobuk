@@ -91,7 +91,7 @@ public class MemberController {
     }
 
     // 아이디 중복 api
-    @GetMapping("/id-check")
+    @PostMapping("/id-check")
     @ResponseStatus(OK)
     public ApplicationResponse<Void> checkUserName(@RequestBody @Valid MemberDto.PostUN requestBody) {
         memberService.verifyExistUserName(requestBody);
@@ -99,7 +99,8 @@ public class MemberController {
     }
 
     // 닉네임 중복 api
-    @GetMapping("/nickname-check")
+    @PostMapping("/nickname-check")
+    @ResponseStatus(OK)
     public ApplicationResponse<Void> checkNickname(@RequestBody @Valid MemberDto.PostNN requestBody) {
         memberService.verifyExistsNickname(requestBody);
         return ApplicationResponse.noData();
