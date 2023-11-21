@@ -16,21 +16,21 @@ const MainPlanProgressBar = (props: PropsType) => {
   const [percent, setPercent] = useState<number | null>(null);
 
   useEffect(() => {
-    if (props.planItem.readPageNumber) {
+    if (props.planItem.todayPage) {
       setDayDiff(getDaysDiff(props.planItem.endDate));
       setPercent(
-        getPercent(props.planItem.readPageNumber, props.planItem.totalPage),
+        getPercent(props.planItem.todayPage, props.planItem.totalPage),
       );
       if (dayDiff) {
         setTodayPage(
           getTodayPage(
-            props.planItem.totalPage - props.planItem.readPageNumber,
+            props.planItem.totalPage - props.planItem.todayPage,
             dayDiff,
           ),
         );
       }
     }
-  }, [props.planItem.readPageNumber, dayDiff, todayPage]);
+  }, [props.planItem.todayPage, dayDiff, todayPage]);
 
   // READING: 저장된 페이지 수를 기반으로 그래프 표시, 오늘부터 endDate까지 읽어야하는 페이지를 안내
   // OVERDUE: 저장된 페이지 수를 기반으로 그래프 표시, 날짜 수정 유도
@@ -44,7 +44,7 @@ const MainPlanProgressBar = (props: PropsType) => {
           <CommonTypography
             value={
               "오늘은 " +
-              props.planItem.readPageNumber +
+              props.planItem.todayPage +
               todayPage +
               "쪽까지 읽어야 해요"
             }

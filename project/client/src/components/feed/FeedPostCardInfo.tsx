@@ -4,7 +4,7 @@ import CommonLink from "components/common/CommonLink";
 import CommonTypography from "components/common/CommonTypography";
 
 interface PropsType {
-  postItem: PostItem;
+  postItem: PostInfo;
 }
 
 const FeedPostCardInfo = (props: PropsType) => {
@@ -20,20 +20,17 @@ const FeedPostCardInfo = (props: PropsType) => {
           py: 2,
         }}
       >
-        <CommonBookImage
-          width={100}
-          height={150}
-          src={props.postItem.postBookInfo.bookImg}
-        />
+        {/* 책 이미지 - 수정 필요 */}
+        {/* <CommonBookImage width={100} height={150} src={props.postItem} /> */}
         <Box>
           <Box sx={{ display: "flex", alignItems: "baseline", my: 2 }}>
             <CommonTypography
-              value={props.postItem.postBookInfo.bookName}
+              value={props.postItem.bookTitle}
               variant="h6"
               bold={true}
             />
             <CommonTypography
-              value={props.postItem.postBookInfo.bookWriter}
+              value={props.postItem.bookAuthor}
               variant="body2"
               bold={true}
             />
@@ -45,7 +42,7 @@ const FeedPostCardInfo = (props: PropsType) => {
               bold={true}
             />
             <CommonTypography
-              value={props.postItem.postContents}
+              value={props.postItem.content}
               variant="body2"
               bold={false}
             />

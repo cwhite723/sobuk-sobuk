@@ -38,6 +38,7 @@ export const convertBookResponse = (
     title: document.title,
     author: document.authors[0],
     publisher: document.publisher,
-    src: document.thumbnail,
+    publicationDate: getStringDate(new Date(document.datetime)),
+    image: document.thumbnail,
   };
 };

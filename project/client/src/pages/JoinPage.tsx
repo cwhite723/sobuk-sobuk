@@ -1,5 +1,5 @@
 import { Alert, Box, Input } from "@mui/material";
-import { postSignUp } from "apis/members";
+import { postIdCheck, postNicknameCheck, postSignUp } from "apis/members";
 import CommonAvaratImage from "components/common/CommonAvatarImage";
 import CommonBigButton from "components/common/CommonBigButton";
 import CommonLink from "components/common/CommonLink";
@@ -24,29 +24,33 @@ interface FormValue {
 }
 
 const JoinPage = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   // 에러메세지
   const [errorMessage, setErrorMessage] = useState("");
   // 스낵바 상태값
   const [snackBarOpen, setSnackBarOpen] = useState(false);
   // 프로필 이미지
   const [profileImg, setProfileImg] = useState("");
-
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  // 아이디 중복확인
+  const [idChecked, setIdChecked] = useState(false);
+  // 닉네임 중복확인
+  const [nicknameChecked, setNicknameChecked] = useState(false);
 
   // react hook form
-  const { getValues, control, handleSubmit, formState } = useForm<FormValue>({
-    defaultValues: {
-      id: "",
-      password: "",
-      passwordCheck: "",
-      nickname: "",
-      email: "",
-      introduce: "",
-      img: "",
-    },
-    mode: "onChange",
-  });
+  const { getValues, control, handleSubmit, formState, trigger } =
+    useForm<FormValue>({
+      defaultValues: {
+        id: "",
+        password: "",
+        passwordCheck: "",
+        nickname: "",
+        email: "",
+        introduce: "",
+        img: "",
+      },
+      mode: "onChange",
+    });
 
   // react-query - POST signup
   const { mutate, isLoading, isError } = useMutation(postSignUp, {
@@ -59,6 +63,30 @@ const JoinPage = () => {
     },
   });
 
+  // react-query - POST id check
+  const { mutate: idCheckMutate } = useMutation(postIdCheck, {
+    onSuccess: () => {
+      // 성공
+      setIdChecked(true);
+    },
+    onError: (error) => {
+      console.log(error);
+      setIdChecked(false);
+    },
+  });
+
+  // react-query - POST nickname check
+  const { mutate: nicknameCheckMutate } = useMutation(postNicknameCheck, {
+    onSuccess: () => {
+      // 성공
+      setNicknameChecked(true);
+    },
+    onError: (error) => {
+      console.log(error);
+      setNicknameChecked(false);
+    },
+  });
+
   // 프로필 이미지 변경 함수
   const handleChangeImg = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -66,16 +94,44 @@ const JoinPage = () => {
     }
   };
 
+  // 아이디 중복확인 함수
+  const handleIdCheck = async (
+    userName: string,
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    event.preventDefault();
+    const isValid = await trigger("id");
+    if (isValid) {
+      idCheckMutate({ userName });
+    }
+  };
+
+  // 닉네임 중복확인 함수
+  const handleNicknameCheck = async (
+    nickname: string,
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    event.preventDefault();
+    const isValid = await trigger("id");
+    if (isValid) {
+      nicknameCheckMutate({ nickname });
+    }
+  };
+
   // 회원가입 버튼 함수
   const handleJoin = (data: FormValue) => {
     data.img = profileImg;
-    mutate({
-      userName: data.id,
-      password: data.passwordCheck,
-      nickname: data.nickname,
-      email: data.email,
-      introduction: data.introduce,
-    });
+    if (idChecked && nicknameChecked) {
+      mutate({
+        userName: data.id,
+        password: data.passwordCheck,
+        nickname: data.nickname,
+        email: data.email,
+        introduction: data.introduce,
+      });
+    } else {
+      setErrorMessage("아이디 또는 닉네임의 중복확인이 되지 않았습니다.");
+    }
     if (isLoading) {
       dispatch(setLoading(true));
     } else {
@@ -83,6 +139,7 @@ const JoinPage = () => {
     }
   };
 
+  // SnackBar 닫기 함수
   const handleClose = () => {
     setSnackBarOpen(false);
     navigate("../login");
@@ -149,6 +206,30 @@ const JoinPage = () => {
             placeholder: "아이디를 입력하세요.",
           }}
         />
+
+        <CommonBigButton
+          value="아이디 중복확인"
+          onClick={(event) => handleIdCheck(getValues("id"), event)}
+        />
+
+        {!idChecked && (
+          <CommonTypography
+            value="중복된 아이디이거나 중복확인이 되지 않았습니다."
+            variant="body2"
+            bold={true}
+            error={true}
+          />
+        )}
+
+        {idChecked && (
+          <CommonTypography
+            value="아이디 중복확인이 완료되었습니다."
+            variant="body2"
+            bold={true}
+            error={false}
+          />
+        )}
+
         <CommonTextField
           name="password"
           control={control}
@@ -188,6 +269,30 @@ const JoinPage = () => {
             placeholder: "닉네임을 입력하세요.",
           }}
         />
+
+        <CommonBigButton
+          value="닉네임 중복확인"
+          onClick={(event) => handleNicknameCheck(getValues("nickname"), event)}
+        />
+
+        {!nicknameChecked && (
+          <CommonTypography
+            value="중복된 닉네임이거나 중복확인이 되지 않았습니다."
+            variant="body2"
+            bold={true}
+            error={true}
+          />
+        )}
+
+        {nicknameChecked && (
+          <CommonTypography
+            value="닉네임 중복확인이 완료되었습니다."
+            variant="body2"
+            bold={true}
+            error={false}
+          />
+        )}
+
         <CommonTextField
           name="email"
           control={control}
@@ -219,6 +324,7 @@ const JoinPage = () => {
           bold={true}
           error={true}
         />
+
         {/* 프로필 사진 업로드 */}
         <Box
           sx={{

@@ -8,7 +8,8 @@ import MainPlanProgressBar from "./MainPlanProgressBar";
 
 interface PropsType {
   planItem: PlanInfo;
-  bookItem: BookInfo;
+  bookTitle: string;
+  bookAuthor: string;
 }
 
 const MainPlanProgressCard = (props: PropsType) => {
@@ -29,6 +30,7 @@ const MainPlanProgressCard = (props: PropsType) => {
   return (
     <Box
       sx={{
+        width: "100%",
         position: "relative",
         display: "flex",
         flexDirection: { xs: "column", md: "row" },
@@ -43,10 +45,9 @@ const MainPlanProgressCard = (props: PropsType) => {
       }}
     >
       {/* 독서 진행률 수정을 위한 Dialog */}
-      {/* Status가 READING이면서 bookItem정보가 정상적으로 왔을 때 */}
-      {props.planItem.status === "READING" && props.bookItem && (
+      {/* Status가 READING */}
+      {props.planItem.status === "reading" && (
         <MainPlanProgressDialog
-          selectedBook={props.bookItem}
           selectedPlan={props.planItem}
           isOpen={openDialog}
           handleClose={handleClose}
@@ -54,13 +55,14 @@ const MainPlanProgressCard = (props: PropsType) => {
       )}
 
       {/* COMPLETED 및 NOT_CREATED_POST 상태일때 커버 표출 */}
-      {(props.planItem.status === "COMPLETED" ||
-        props.planItem.status === "NOT_CREATED_POST") && (
+      {(props.planItem.status === "completed" ||
+        props.planItem.status === "not_created_post") && (
         <MainPlanProgressCover status={props.planItem.status} />
       )}
 
       {/* 상태에 상관없이 공통으로 표출되는 책 정보 */}
-      <CommonBookImage width={100} height={150} src={props.bookItem.src} />
+      {/* 아직 이미지 정보 없음 */}
+      <CommonBookImage width={100} height={150} />
       <Box
         sx={{
           width: { xs: "100%", md: "auto" },
@@ -82,12 +84,12 @@ const MainPlanProgressCard = (props: PropsType) => {
             }}
           >
             <CommonTypography
-              value={props.bookItem.title + " |"}
+              value={props.planItem.title + " |"}
               variant="h5"
               bold={true}
             />
             <CommonTypography
-              value={props.bookItem.author}
+              value={props.planItem.author}
               variant="h6"
               bold={true}
             />
@@ -104,30 +106,30 @@ const MainPlanProgressCard = (props: PropsType) => {
               }}
               onClick={handleEditPlan}
             >
-              {(props.planItem.status === "COMPLETED" ||
-                props.planItem.status === "NOT_CREATED_POST") &&
+              {(props.planItem.status === "completed" ||
+                props.planItem.status === "not_created_post") &&
                 "완독"}
-              {props.planItem.status === "READING" && "읽는 중"}
-              {props.planItem.status === "OVERDUE" && "기간 설정"}
+              {props.planItem.status === "reading" && "읽는 중"}
+              {props.planItem.status === "overdue" && "기간 설정"}
             </Button>
           </Box>
 
           {/* 설정된 독서 기간 표출 */}
-          {props.planItem.status === "NOT_STARTED" && (
+          {props.planItem.status === "not_started" && (
             <CommonTypography
               value={props.planItem.startDate + "부터 읽을 예정이에요"}
               variant="body2"
               bold={true}
             />
           )}
-          {props.planItem.status === "OVERDUE" && (
+          {props.planItem.status === "overdue" && (
             <CommonTypography
               value={"설정한 기간이 지났어요. 다시 기간을 설정해주세요"}
               variant="body2"
               bold={true}
             />
           )}
-          {props.planItem.status === "READING" && (
+          {props.planItem.status === "reading" && (
             <CommonTypography
               value={props.planItem.startDate + " ~ " + props.planItem.endDate}
               variant="body2"

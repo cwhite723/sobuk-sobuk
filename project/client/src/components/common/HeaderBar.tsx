@@ -18,28 +18,49 @@ import { useNavigate } from "react-router-dom";
 import { logout } from "store/auth";
 import CommonSnackBar from "./CommonSnackBar";
 import { RootState } from "store/store";
+import CommonTypography from "./CommonTypography";
+import { useMutation } from "react-query";
+import { postLogOut } from "apis/members";
+
+const pages = [
+  { name: "홈", link: "../main" },
+  { name: "도서 탐색", link: "../search" },
+  { name: "피드", link: "../feed" },
+  { name: "독서 모임", link: "../group" },
+  { name: "내 서재", link: `../my` },
+];
 
 const HeaderBar = () => {
-  const pages = [
-    { name: "홈", link: "../main" },
-    { name: "도서 탐색", link: "../search" },
-    { name: "피드", link: "../feed" },
-    { name: "독서 모임", link: "../group" },
-    { name: "내 서재", link: "../user/1" },
-  ];
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   // 네비게이션 메뉴 엘리먼트 셋팅
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
 
   // 로그인 여부 토큰으로 확인
   const memberToken = useSelector((state: RootState) => state.auth.token);
+  // redux에 저장된 유저정보 확인
+  const memberInfo: MemberInfo =
+    memberToken &&
+    JSON.parse(useSelector((state: RootState) => state.auth.member));
 
-  // snackbar 오픈
+  // snackbar 오픈 여부
   const [snackBarOpen, setSnackBarOpen] = useState(false);
 
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  // react-query - POST logout
+  const { mutate } = useMutation(postLogOut, {
+    onSuccess: () => {
+      // 로그아웃 성공
+      dispatch(logout());
+      setSnackBarOpen(true);
+    },
+    onError: (error) => {
+      // 로그아웃 실패
+      console.log(error);
+    },
+  });
 
+  // snackbar 닫기 함수
   const handleClose = () => {
     setSnackBarOpen(false);
   };
@@ -55,12 +76,10 @@ const HeaderBar = () => {
   };
 
   // 로그인 상태에 따라 로그인 또는 로그아웃 작동
-  // 로그아웃은 token 삭제하는 것으로 구현
   const handleUserStatus = () => {
     if (memberToken) {
       // 로그아웃 작동
-      dispatch(logout());
-      setSnackBarOpen(true);
+      mutate(memberToken);
     } else {
       // 로그인 페이지로 이동
       navigate("../login");
@@ -156,12 +175,26 @@ const HeaderBar = () => {
           />
 
           {/* 로그인, 로그아웃 버튼 */}
-          <Box sx={{ flexGrow: 0, display: "flex" }}>
+          <Box
+            sx={{
+              flexGrow: 0,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
             <CommonButton
               value={memberToken ? "LOGOUT" : "LOGIN"}
               outline={true}
               onClick={handleUserStatus}
             />
+            {memberInfo && (
+              <CommonTypography
+                value={memberInfo.nickname + "님"}
+                bold={true}
+                variant="body1"
+              />
+            )}
           </Box>
         </Toolbar>
       </Container>

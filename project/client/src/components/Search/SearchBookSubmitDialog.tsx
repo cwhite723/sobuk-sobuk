@@ -13,6 +13,7 @@ import CommonTextField from "components/common/CommonTextField";
 import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
 import theme from "styles/theme";
+import { getStringDate } from "utils/format";
 
 interface PropsType {
   isOpen: boolean;
@@ -37,21 +38,20 @@ const SearchBookSubmitDialog = (props: PropsType) => {
       bookTitle: "",
       bookWriter: "",
       bookPublish: "",
-      bookPublicationDate: "",
+      bookPublicationDate: getStringDate(new Date()),
     },
   });
 
   // react-query - post book
-  const { mutate, isError } = useMutation(postBook, {
+  const { mutate, isError, isSuccess } = useMutation(postBook, {
     onSuccess: () => {
       // 도서 등록 성공
       reset();
       props.handleClose();
-      console.log("등록 성공");
     },
     onError: (error) => {
       // 도서 등록 실패
-      console.log("isError:" + isError, error);
+      console.log(error);
     },
   });
 

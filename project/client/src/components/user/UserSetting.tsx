@@ -10,16 +10,17 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
 import { useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { RootState } from "store/store";
 
 interface FormValue {
-  nickName: string;
+  nickname: string;
   introduction: string;
   img?: string;
 }
 
 const UserSetting = () => {
+  const navigate = useNavigate();
   // 에러메세지
   const [errorMessage, setErrorMessage] = useState("");
   // 스낵바 상태값
@@ -27,37 +28,56 @@ const UserSetting = () => {
   // 로그인한 유저의 프로필 이미지
   const [profileImg, setProfileImg] = useState("");
 
-  const navigate = useNavigate();
+  // store 토큰 값 가져오기
+  const memberToken = useSelector((state: RootState) => state.auth.token);
   // store 값 가져오기
-  const storedMemberInfo = useSelector((state: RootState) => state.auth.member);
-
-  // url에서 userID 값 가져오기
-  const { userid } = useParams() as { userid: string };
+  const storedMemberInfo: MemberInfo = JSON.parse(
+    useSelector((state: RootState) => state.auth.member),
+  );
 
   // react hook form
   const { control, handleSubmit, formState } = useForm<FormValue>({
     defaultValues: {
-      nickName: storedMemberInfo.nickname,
+      nickname: storedMemberInfo.nickname,
       introduction: storedMemberInfo.introduction,
-      img: storedMemberInfo.img,
+      img: "",
     },
     mode: "onSubmit",
   });
 
-  // react-query
-  // 회원탈퇴
-  const {
-    mutate: deleteMutate,
-    isLoading: deleteIsLoading,
-    isError: deleteIsError,
-  } = useMutation(deleteMember);
+  // react-query DELETE member
+  const { mutate: deleteMutate, isLoading: deleteIsLoading } = useMutation(
+    deleteMember,
+    {
+      onSuccess: () => {
+        // 탈퇴 성공
+        sessionStorage.clear();
+        console.log("회원탈퇴");
+        navigate("../login");
+      },
+      onError: (error) => {
+        // 탈퇴 실패
+        console.log(error);
+      },
+    },
+  );
 
   // 회원정보수정
-  const {
-    mutate: patchMutate,
-    isLoading: patchIsLoading,
-    isError: patchIsError,
-  } = useMutation(patchMember);
+  const { mutate: patchMutate, isLoading: patchIsLoading } = useMutation(
+    patchMember,
+    {
+      onSuccess: () => {
+        // 수정 성공
+        // 수정된 데이터로 redux 업데이트 필요
+        console.log("수정 성공");
+        setSnackBarOpen(true);
+      },
+      onError: (error) => {
+        // 수정 실패
+        console.log(error);
+      },
+    },
+  );
 
   // 로그인한 유저의 프로필 이미지 변경 함수
   const handleChangeImg = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,56 +87,33 @@ const UserSetting = () => {
   };
 
   // 정보 수정 완료 버튼 함수
-  const handleSetting = (data: FormValue) => {
-    data.img = profileImg;
-    patchMutate(
-      {
-        memberId: parseInt(userid),
-        data: {
-          userName: "기존id",
-          password: "기존password",
-          nickname: data.nickName,
-          email: "기존email",
-          introduction: data.introduction,
-        },
-      },
-      {
-        onSuccess: () => {
-          // 수정 성공
-          // 수정된 데이터로 redux 업데이트 필요
-          console.log("수정 성공");
-          setSnackBarOpen(true);
-        },
-        onError: (error) => {
-          // 수정 실패
-          console.log("isError:" + patchIsError, error);
-        },
-      },
-    );
-  };
+  // const handleSetting = (data: FormValue) => {
+  //   data.img = profileImg;
+  //   patchMutate({
+  //     memberId: storedMemberInfo.memberId,
+  //     data: {
+  //       userName: storedMemberInfo.userName,
+  //       password: storedMemberInfo.password,
+  //       nickname: data.nickname,
+  //       email: storedMemberInfo.email,
+  //       introduction: data.introduction,
+  //     },
+  //     accessToken: memberToken,
+  //   });
+  // };
 
   // 회원탈퇴 버튼 함수
-  const handleDropOut = () => {
-    deleteMutate(parseInt(userid), {
-      onSuccess: () => {
-        // 탈퇴 성공
-        localStorage.clear();
-        console.log("회원탈퇴");
-        navigate("../login");
-      },
-      onError: (error) => {
-        // 탈퇴 실패
-        console.log("isError:" + deleteIsError, error);
-      },
-    });
-  };
+  // const handleDropOut = () => {
+  //   deleteMutate(storedMemberInfo.memberId);
+  // };
 
   const handleClose = () => {
     setSnackBarOpen(false);
+    navigate("../user/" + storedMemberInfo.memberId);
   };
 
   useEffect(() => {
-    if (formState.errors.nickName) {
+    if (formState.errors.nickname) {
       setErrorMessage("닉네임은 필수 입력입니다.(2~10자)");
     } else {
       setErrorMessage("");
@@ -149,12 +146,12 @@ const UserSetting = () => {
         {deleteIsLoading || (patchIsLoading && <CircularProgress />)}
 
         {/* 에러발생 */}
-        {deleteIsError && (
+        {/* {deleteIsError && (
           <Alert severity="error">회원탈퇴 중 오류가 발생했습니다.</Alert>
         )}
         {patchIsError && (
           <Alert severity="error">회원정보 수정 중 오류가 발생했습니다.</Alert>
-        )}
+        )} */}
 
         <CommonTitle value="😊 계정 정보 수정하기" />
 
@@ -174,7 +171,7 @@ const UserSetting = () => {
           </Box>
 
           <CommonTextField
-            name="nickName"
+            name="nickname"
             control={control}
             rules={{ required: true, minLength: 2, maxLength: 10 }}
             textFieldProps={{
@@ -199,11 +196,11 @@ const UserSetting = () => {
             error={true}
           />
 
-          <CommonBigButton
+          {/* <CommonBigButton
             value="수정완료"
             onClick={handleSubmit(handleSetting)}
           />
-          <CommonBigButton value="회원탈퇴" onClick={handleDropOut} />
+          <CommonBigButton value="회원탈퇴" onClick={handleDropOut} /> */}
         </form>
       </Box>
     </Box>

@@ -1,12 +1,14 @@
 import { Box } from "@mui/material";
 import CommonButton from "components/common/CommonButton";
 import CommonTypography from "components/common/CommonTypography";
-import React from "react";
+import { useState } from "react";
 
-const PostReaction = () => {
-  // 로그인 한 정보와 포스트 작성자가 일치 하는지
-  const [isOwner, setIsOwner] = React.useState(true);
+interface PropsType {
+  myPost: boolean;
+  myLike: boolean;
+}
 
+const PostReaction = (props: PropsType) => {
   // 포스트 삭제 버튼 함수
   const handlePostDelete = () => {
     console.log("post delete");
@@ -41,7 +43,7 @@ const PostReaction = () => {
 
       {/* buttons */}
       <Box sx={{ display: "flex" }}>
-        {isOwner && (
+        {props.myPost && (
           <Box sx={{ display: "flex" }}>
             <CommonButton
               value="삭제"

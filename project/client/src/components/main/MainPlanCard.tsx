@@ -1,29 +1,11 @@
 import { Box } from "@mui/material";
-import { getBook } from "apis/books";
-import { useEffect, useState } from "react";
-import { useQuery } from "react-query";
 import MainPlanProgressCard from "./MainPlanProgressCard";
 
 interface PropsType {
-  // plan 정보로 book정보 조회
   planItem: PlanInfo;
 }
 
 const MainPlanCard = (props: PropsType) => {
-  const [bookItem, setBookItem] = useState<BookInfo>();
-
-  // react-query - get book info
-  const { data: bookItemQuery } = useQuery(
-    ["getBook", props.planItem.bookId],
-    () => getBook(props.planItem.bookId),
-  );
-
-  useEffect(() => {
-    if (bookItemQuery) {
-      setBookItem(bookItemQuery);
-    }
-  }, [bookItemQuery]);
-
   return (
     <Box
       sx={{
@@ -38,8 +20,12 @@ const MainPlanCard = (props: PropsType) => {
         mb: 2,
       }}
     >
-      {bookItem && (
-        <MainPlanProgressCard planItem={props.planItem} bookItem={bookItem} />
+      {props.planItem && (
+        <MainPlanProgressCard
+          planItem={props.planItem}
+          bookTitle={props.planItem.title}
+          bookAuthor={props.planItem.author}
+        />
       )}
     </Box>
   );

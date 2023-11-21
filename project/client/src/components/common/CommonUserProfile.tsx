@@ -1,66 +1,70 @@
 import { Box } from "@mui/material";
+import { patchMemberFollow } from "apis/members";
 import CommonAvaratImage from "components/common/CommonAvatarImage";
 import CommonButton from "components/common/CommonButton";
 import CommonLink from "components/common/CommonLink";
 import CommonTypography from "components/common/CommonTypography";
 import React, { useEffect, useState } from "react";
+import { useMutation } from "react-query";
+import { useSelector } from "react-redux";
+import { RootState } from "store/store";
 
 interface PropsType {
   avatarSize: number;
-  memberInfo: MemberInfo;
+  memberInfo: MemberInfo | OtherMemberInfo;
+  memberId: number | null;
 }
 
 // 사용 위치에 따라 로그인한 사용자의 정보 or
 // 다른 사용자의 정보가 필요하기 때문에 props로 받음
 
-// 더미데이터
-const test1Follow = ["test2", "test4"];
-
-const CommonUserProfile: React.FC<PropsType> = (props) => {
+const CommonUserProfile = (props: PropsType) => {
+  // 로그인 여부 확인 token
+  const memberToken = useSelector((state: RootState) => state.auth.token);
   // 팔로우 여부
   const [isFollow, setIsFollow] = useState(false);
-
   // 팔로우 버튼 보여주기
   const [showFollow, setShowFollow] = useState(true);
+  // profile 주인
+  const memberId = props.memberId;
 
-  const followUsers = {
-    // 프로필의 주인
-    userTo: props.memberInfo.userName,
-    // 현재 로그인한 유저
-    userFrom: localStorage.getItem("token"),
-  };
+  // react-query PATCH member follow
+  const { mutate } = useMutation(patchMemberFollow, {
+    onSuccess: (data) => {
+      console.log(data);
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
 
   // 팔로우 상태 변경 함수
   const handleUserFollow = () => {
-    if (followCheck(followUsers.userTo, followUsers.userFrom)) {
+    if (followCheck(props.memberInfo as OtherMemberInfo) && memberId) {
+      mutate({ memberId, accessToken: memberToken });
       // 팔로우 된 상태에서 한번 더 누르면 팔로우 취소
-      test1Follow.splice(test1Follow.indexOf(followUsers.userTo), 1);
       setIsFollow(false);
     } else {
       // 팔로우 되어 있지 않으면 팔로우 실행
-      test1Follow.push(followUsers.userTo);
       setIsFollow(true);
     }
   };
 
   // 팔로우 여부를 확인하는 함수
-  const followCheck = (userTo: string, userFrom: string | null) => {
-    if (test1Follow.find((element) => element === userTo)) {
-      // 팔로우 목록에 있으면
-      // test1Follow => userFrom의 팔로우 목록
+  const followCheck = (otherMemberInfo: OtherMemberInfo) => {
+    if (otherMemberInfo.following) {
+      // 팔로우 상태면
       return true;
     } else {
+      // 팔로우 상태가 아니면
       return false;
     }
   };
 
-  // 가장 처음 팔로우 상태를 확인
   useEffect(() => {
-    // 프로필 주인이 자신이면 팔로우 버튼 감춤
-    if (followUsers.userTo === followUsers.userFrom) {
+    if (memberId === null) {
+      // memberId 값이 null면 즉, 자신의 프로필이면 팔로우버튼을 감춤
       setShowFollow(false);
-    } else {
-      setIsFollow(followCheck(followUsers.userTo, followUsers.userFrom));
     }
   }, []);
 
@@ -72,11 +76,13 @@ const CommonUserProfile: React.FC<PropsType> = (props) => {
         justifyContent: "space-between",
       }}
     >
-      <CommonLink to="../user/1">
+      {/* memberId 값이 있으면 해당 유저의 user페이지로 이동 */}
+      {/* 없으면 자기 자신의 프로필 이므로 my페이지로 이동 */}
+      <CommonLink to={memberId ? "../user/" + memberId : "../my"}>
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <CommonAvaratImage
             size={props.avatarSize}
-            src={props.memberInfo.img}
+            src={props.memberInfo.image}
           />
           <Box sx={{ m: 1 }}>
             <CommonTypography

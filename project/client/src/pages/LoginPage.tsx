@@ -45,8 +45,6 @@ const LoginPage = () => {
     onSuccess: async (data) => {
       // 로그인 성공 시, 받아온 받아온 토큰을 redux에 저장
       dispatch(setToken(data.headers.authorization));
-      // 메인으로 이동
-      navigate("../main");
     },
     onError: (error) => {
       // 로그인 실패 시, 로그인 실패 SnackBar를 보여줌
@@ -59,7 +57,19 @@ const LoginPage = () => {
   const { data: myPage } = useQuery(
     ["getMyPage", token],
     () => getMyPage(token),
-    { enabled: !!token },
+    {
+      onSuccess(data) {
+        if (data) {
+          dispatch(setMember(data.data));
+          // 메인으로 이동
+          navigate("../main");
+        }
+      },
+      onError(error) {
+        console.log("getMyPage Error", error);
+      },
+      enabled: !!token,
+    },
   );
 
   // 로그인 동작 함수
@@ -93,14 +103,6 @@ const LoginPage = () => {
       setErrorMessage("");
     }
   }, [formState]);
-
-  useEffect(() => {
-    if (myPage) {
-      dispatch(setMember(myPage));
-    } else {
-      console.log("no myPage value");
-    }
-  }, [dispatch, myPage]);
 
   return (
     <Box

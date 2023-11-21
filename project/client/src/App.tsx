@@ -35,6 +35,7 @@ function App() {
             <Route path="main" element={<MainPage />} />
             <Route path="post/:postid" element={<PostPage />} />
             <Route path="write" element={<WritePage />} />
+            <Route path="my" element={<UserPage />} />
             <Route path="user/:userid" element={<UserPage />} />
           </Route>
         </Route>

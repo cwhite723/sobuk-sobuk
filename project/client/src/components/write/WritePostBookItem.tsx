@@ -1,16 +1,26 @@
 import { Box } from "@mui/material";
+import { getBook } from "apis/books";
 import CommonButton from "components/common/CommonButton";
 import CommonTypography from "components/common/CommonTypography";
+import { useQuery } from "react-query";
 
 type PropsType = {
-  handleSelectBook: (item: BookItem | null) => void;
-  book: BookItem;
+  handleSelectBook: (bookId: number) => void;
+  bookId: number;
 };
 
-const WritePostBookItem: React.FC<PropsType> = (props) => {
+const WritePostBookItem = (props: PropsType) => {
+  // react-query 책 정보
+  const { data: bookInfo } = useQuery(
+    ["getBook", props.bookId],
+    () => getBook(props.bookId),
+    {
+      enabled: !!props.bookId,
+    },
+  );
+
   return (
     <Box
-      key={props.book.bookId}
       sx={{
         display: "flex",
         justifyContent: "space-between",
@@ -22,28 +32,30 @@ const WritePostBookItem: React.FC<PropsType> = (props) => {
         },
       }}
     >
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: { xs: "column", md: "row" },
-        }}
-      >
-        <CommonTypography
-          value={props.book.bookName}
-          variant="body1"
-          bold={true}
-        />
-        <CommonTypography
-          value={props.book.bookWriter}
-          variant="body1"
-          bold={false}
-        />
-        <CommonTypography
-          value={props.book.bookPublish}
-          variant="body1"
-          bold={false}
-        />
-      </Box>
+      {bookInfo && (
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: { xs: "column", md: "row" },
+          }}
+        >
+          <CommonTypography
+            value={bookInfo.title}
+            variant="body1"
+            bold={true}
+          />
+          <CommonTypography
+            value={bookInfo.author}
+            variant="body1"
+            bold={false}
+          />
+          <CommonTypography
+            value={bookInfo.publisher}
+            variant="body1"
+            bold={false}
+          />
+        </Box>
+      )}
 
       <Box
         sx={{
@@ -56,7 +68,7 @@ const WritePostBookItem: React.FC<PropsType> = (props) => {
           value="✔선택하기"
           outline={false}
           onClick={() => {
-            props.handleSelectBook(props.book);
+            props.handleSelectBook(props.bookId);
           }}
         />
       </Box>

@@ -2,7 +2,11 @@ import { Box } from "@mui/material";
 import CommonAvaratImage from "components/common/CommonAvatarImage";
 import CommonTypography from "components/common/CommonTypography";
 
-const PostCommentItem = () => {
+interface PropsType {
+  commentItem: CommentResponse;
+}
+
+const PostCommentItem = (props: PropsType) => {
   return (
     <Box
       sx={{
@@ -24,15 +28,23 @@ const PostCommentItem = () => {
             flexShrink: 0,
           }}
         >
-          <CommonTypography value="닉네임" variant="body2" bold={true} />
-          <CommonTypography value="아이디" variant="body2" bold={false} />
+          <CommonTypography
+            value={props.commentItem.nickname}
+            variant="body2"
+            bold={true}
+          />
+          <CommonTypography
+            value={props.commentItem.userName}
+            variant="body2"
+            bold={false}
+          />
         </Box>
       </Box>
 
       {/* 댓글 내용 */}
       <Box sx={{ ml: 1, p: 2 }}>
         <CommonTypography
-          value="댓글 내용댓글 내용댓글 내용댓글 내용댓글 내용댓글 내용댓글 내용댓글 내용댓글 내용"
+          value={props.commentItem.content}
           variant="body1"
           bold={true}
         />

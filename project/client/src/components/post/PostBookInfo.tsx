@@ -2,7 +2,13 @@ import { Box } from "@mui/material";
 import CommonBookImage from "components/common/CommonBookImage";
 import CommonTypography from "components/common/CommonTypography";
 
-const PostBookInfo = () => {
+interface PropsType {
+  bookTitle: string;
+  bookAuthor: string;
+  src?: string;
+}
+
+const PostBookInfo = (props: PropsType) => {
   return (
     <Box
       sx={{
@@ -15,7 +21,7 @@ const PostBookInfo = () => {
         my: 4,
       }}
     >
-      <CommonBookImage width={150} height={180} />
+      <CommonBookImage width={150} height={180} src={props.src} />
       <Box
         sx={{
           width: "100%",
@@ -31,16 +37,20 @@ const PostBookInfo = () => {
             mr: 2,
           }}
         >
-          <CommonTypography value="책 제목" variant="h6" bold={true} />
-          <CommonTypography value="작가" variant="body1" bold={true} />
+          <CommonTypography value={props.bookTitle} variant="h6" bold={true} />
+          <CommonTypography
+            value={props.bookAuthor}
+            variant="body1"
+            bold={true}
+          />
         </Box>
-        <Box sx={{ my: 1 }}>
+        {/* <Box sx={{ my: 1 }}>
           <CommonTypography
             value="책 줄거리 한줄 소개"
             variant="body1"
             bold={false}
           />
-        </Box>
+        </Box> */}
       </Box>
     </Box>
   );

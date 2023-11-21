@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 
 interface PropsType {
   children: React.ReactNode;
-  maxHight: number;
+  maxHight?: number;
 }
 
 const CommonSection: React.FC<PropsType> = (props) => {
@@ -12,7 +12,7 @@ const CommonSection: React.FC<PropsType> = (props) => {
         display: "flex",
         flexDirection: "column",
         justifyContent: "start",
-        maxHeight: props.maxHight,
+        maxHeight: props.maxHight ? props.maxHight : "100%",
         overflowY: "auto",
         "::-webkit-scrollbar": {
           display: "none",

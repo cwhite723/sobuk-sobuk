@@ -1,15 +1,23 @@
 import { Box, InputBase } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
+import { useDebounce } from "hooks/useDebounce";
+import { useEffect, useState } from "react";
 
 interface PropsType {
   setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const CommonSearchBar = (props: PropsType) => {
-  // 입력값이 바뀔 때마다 searchQuery를 전달
+  const [searchValue, setSearchValue] = useState("");
+  const debouncedValue = useDebounce(searchValue, 1500);
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    props.setSearchQuery(event.target.value);
+    setSearchValue(event.target.value);
   };
+
+  useEffect(() => {
+    props.setSearchQuery(debouncedValue);
+  }, [debouncedValue]);
 
   return (
     <Box sx={{ display: "flex", alignItems: "center", mb: 4, mt: 2 }}>

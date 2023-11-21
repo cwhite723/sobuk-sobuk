@@ -1,32 +1,24 @@
 import Api from "./api";
 
 /**
- * 독서 정보 등록 토큰O - 완료
- * @param data
- * @returns body{ success: boolean }
+ * 독서 정보 등록 - 완료
+ * @param { bookId: number, data: PlanData, accessToken: string | null }
+ * @returns
  */
-
 export const postPlan = async ({
+  bookId,
   data,
   accessToken,
 }: {
-  data: PlanInfo;
+  bookId: number;
+  data: PlanData;
   accessToken: string | null;
 }) => {
   if (accessToken) {
     try {
-      return Api.post(
-        `/plans/${data.bookId}`,
-        {
-          startDate: data.startDate,
-          endDate: data.endDate,
-          totalPage: data.totalPage,
-          readPageNumber: data.readPageNumber,
-        },
-        {
-          headers: { Authorization: `${accessToken}` },
-        },
-      );
+      return await Api.post(`/plans/${bookId}`, data, {
+        headers: { Authorization: `${accessToken}` },
+      });
     } catch (error) {
       console.error("Error in Post Plan:", error);
       throw new Error("Failed to Register Plan");
@@ -35,28 +27,26 @@ export const postPlan = async ({
 };
 
 /**
- * 독서 정보 수정 토큰O - 완료
- * @param patchPlanVariables
- * @returns body{ success: boolean }
+ * 독서 정보 수정 - 완료
+ * @param { planId:number, data:PlanData, accessToken: string | null }
+ * @returns
  */
-
-export const patchPlan = async (patchPlanVariables: PlanPatch) => {
-  if (patchPlanVariables.accessToken && patchPlanVariables.planId) {
+export const patchPlan = async ({
+  planId,
+  data,
+  accessToken,
+}: {
+  planId: number;
+  data: PlanData;
+  accessToken: string | null;
+}) => {
+  if (accessToken) {
     try {
-      return Api.patch(
-        `/plans/${patchPlanVariables.planId}`,
-        {
-          startDate: patchPlanVariables.data.startDate,
-          endDate: patchPlanVariables.data.endDate,
-          totalPage: patchPlanVariables.data.totalPage,
-          readPageNumber: patchPlanVariables.data.readPageNumber,
+      return await Api.patch(`/plans/${planId}`, data, {
+        headers: {
+          Authorization: `${accessToken}`,
         },
-        {
-          headers: {
-            Authorization: `Bearer ${patchPlanVariables.accessToken}`,
-          },
-        },
-      );
+      });
     } catch (error) {
       console.error("Error in Patch Plan:", error);
       throw new Error("Failed to Modify Plan");
@@ -67,11 +57,11 @@ export const patchPlan = async (patchPlanVariables: PlanPatch) => {
 /**
  * 독서 정보 삭제 - 완료
  * @param planId
- * @returns body{ success: boolean }
+ * @returns { success: boolean }
  */
 export const deletePlan = async (planId: number) => {
   try {
-    return Api.delete(`/plans/${planId}`);
+    return await Api.delete(`/plans/${planId}`);
   } catch (error) {
     console.error("Error in Delete Plan:", error);
     throw new Error("Failed to Delete Plan");
@@ -79,15 +69,15 @@ export const deletePlan = async (planId: number) => {
 };
 
 /**
- * 독서 정보 조회 토큰O - 완료
+ * 독서 정보 조회 - 완료
  * @param status
  * @param accessToken
- * @returns body{ success: boolean, data: PlanInfo[] }
+ * @returns { success: boolean, data: PlanInfo[] }
  */
 export const getPlans = async (
   status: string,
   accessToken: string | null,
-): Promise<PlanInfo[] | undefined> => {
+): Promise<PlansResponse | undefined> => {
   if (accessToken) {
     try {
       const response = await Api.get("/plans", {

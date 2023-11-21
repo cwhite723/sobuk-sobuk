@@ -3,7 +3,8 @@ import CommonTypography from "components/common/CommonTypography";
 import CommonUserProfile from "components/common/CommonUserProfile";
 
 interface PropsType {
-  memberInfo: MemberInfo;
+  memberInfo: MemberInfo | OtherMemberInfo;
+  memberId: number | null;
 }
 
 const UserIntroProfile = (props: PropsType) => {
@@ -21,7 +22,11 @@ const UserIntroProfile = (props: PropsType) => {
       }}
     >
       {/* 유저 정보 및 팔로우 버튼 */}
-      <CommonUserProfile memberInfo={props.memberInfo} avatarSize={80} />
+      <CommonUserProfile
+        memberInfo={props.memberInfo}
+        avatarSize={80}
+        memberId={props.memberId}
+      />
 
       {/* 자기소개 영역 */}
       <Box

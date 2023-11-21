@@ -19,7 +19,6 @@ import theme from "styles/theme";
 import { getDateObject, getStringDate } from "utils/format";
 
 interface PropsType {
-  selectedBook: BookInfo;
   selectedPlan: PlanInfo;
   isOpen: boolean;
   handleClose: () => void;
@@ -70,12 +69,11 @@ const MainPlanProgressDialog = (props: PropsType) => {
     const numbericTodayPage = Number(formData.todayPage);
     // 입력받은 formData로 plan patch 요청
     // props가 정상적으로 넘어왔을 때만 mutate 실행
-    if (props.selectedPlan.planId && props.selectedBook.bookId) {
+    if (props.selectedPlan.planId) {
       await mutate({
         planId: props.selectedPlan.planId,
         accessToken: token,
         data: {
-          bookId: props.selectedBook.bookId,
           startDate: getStringDate(formData.startDate),
           endDate: getStringDate(formData.endDate),
           totalPage: props.selectedPlan.totalPage,
@@ -123,16 +121,12 @@ const MainPlanProgressDialog = (props: PropsType) => {
             >
               {/* 선택한 plan의 정보 */}
               <CommonTypography
-                value={props.selectedBook.title}
+                value={props.selectedPlan.title}
                 variant="h6"
                 bold={true}
               />
               <CommonTypography
-                value={
-                  props.selectedBook.author +
-                  " | " +
-                  props.selectedBook.publisher
-                }
+                value={props.selectedPlan.author}
                 variant="body1"
                 bold={false}
               />
@@ -140,7 +134,7 @@ const MainPlanProgressDialog = (props: PropsType) => {
                 value={
                   props.selectedPlan.totalPage +
                   "쪽 중에 " +
-                  props.selectedPlan.readPageNumber +
+                  props.selectedPlan.todayPage +
                   " 쪽 까지 읽었어요."
                 }
                 variant="body1"
@@ -155,9 +149,9 @@ const MainPlanProgressDialog = (props: PropsType) => {
               rules={{
                 required: true,
                 validate: (value) =>
-                  props.selectedPlan.readPageNumber === undefined
+                  props.selectedPlan.todayPage
                     ? value > 0
-                    : value > props.selectedPlan.readPageNumber,
+                    : value > props.selectedPlan.todayPage,
               }}
               textFieldProps={{
                 id: "today-page",

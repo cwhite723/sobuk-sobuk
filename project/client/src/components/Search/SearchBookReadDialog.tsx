@@ -11,7 +11,6 @@ import {
 import { postPlan } from "apis/plans";
 import CommonTextField from "components/common/CommonTextField";
 import CommonTypography from "components/common/CommonTypography";
-import React from "react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
 import { useSelector } from "react-redux";
@@ -27,8 +26,8 @@ interface PropsType {
 
 interface FormValue {
   totalPages: number;
-  startDate: Date;
-  endDate: Date;
+  startDate: string;
+  endDate: string;
 }
 
 const SearchBookReadDialog = (props: PropsType) => {
@@ -63,11 +62,12 @@ const SearchBookReadDialog = (props: PropsType) => {
 
   const handleDialogData = (data: FormValue) => {
     mutate({
+      bookId: props.selectedBook.bookId,
       data: {
-        bookId: props.selectedBook.bookId,
-        startDate: getStringDate(data.startDate),
-        endDate: getStringDate(data.endDate),
+        startDate: data.startDate,
+        endDate: data.endDate,
         totalPage: data.totalPages,
+        readPageNumber: 0,
       },
       accessToken: token,
     });

@@ -1,139 +1,110 @@
 import { Box } from "@mui/material";
-import { getMember } from "apis/members";
+import { getMember, getMyPlans, getMyPosts } from "apis/members";
 import CommonTabMenu from "components/common/CommonTabMenu";
-import UserBookList from "components/user/UserBookList";
+import UserPlanList from "components/user/UserPlanList";
 import UserIntroProfile from "components/user/UserIntroProfile";
 import UserPostList from "components/user/UserPostList";
 import UserSetting from "components/user/UserSetting";
 import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { RootState } from "store/store";
 
 // 내 서재 서브 탭 메뉴 데이터
-const userTabMenus = [
-  { label: "⛄소개", value: "intro" },
-  { label: "📚서재", value: "lib" },
-  { label: "📓독서기록", value: "post" },
-  { label: "🔐계정정보/탈퇴", value: "setting" },
-];
-
-// 더미 데이터
-const userLibrary: BookItem[] = [
-  {
-    bookId: 1,
-    bookName: "제목1",
-    bookWriter: "작가1",
-    bookPublish: "출판사1",
-    bookPages: 365,
-    bookState: "reading",
-    bookProgress: 278,
-    bookDate: [new Date("2023-10-25"), new Date("2023-11-25")],
-  },
-  {
-    bookId: 2,
-    bookName: "제목2",
-    bookWriter: "작가2",
-    bookPublish: "출판사2",
-    bookPages: 563,
-    bookState: "after",
-    bookProgress: 550,
-  },
-  {
-    bookId: 3,
-    bookName: "제목3",
-    bookWriter: "작가3",
-    bookPublish: "출판사3",
-    bookPages: 156,
-    bookState: "before",
-    bookProgress: 0,
-    bookDate: [new Date("2023-10-25"), new Date("2023-11-25")],
-  },
-  {
-    bookId: 4,
-    bookName: "제목4",
-    bookWriter: "작가4",
-    bookPublish: "출판사4",
-    bookPages: 298,
-    bookState: "complete",
-    bookProgress: 298,
-  },
-];
-
-// 피드 주인
-const feedOwners: MemberInfo[] = [
-  {
-    userName: "test2",
-    nickname: "test2",
-    password: "",
-    email: "email",
-    introduction: "hi",
-  },
-  {
-    userName: "test4",
-    nickname: "test4",
-    password: "",
-    email: "email",
-    introduction: "hi",
-  },
-];
-
-const allPost: PostItem[] = [
-  {
-    postId: 1,
-    postBookInfo: userLibrary[3],
-    postTitle: "제목입니다.",
-    postOwner: feedOwners[0],
-    postContents: "내용입니다.",
-    postCommentsCount: 3,
-    postLikeCount: 10,
-  },
-  {
-    postId: 2,
-    postBookInfo: userLibrary[3],
-    postTitle: "제목입니다.",
-    postOwner: feedOwners[1],
-    postContents: "내용입니다.",
-    postCommentsCount: 3,
-    postLikeCount: 10,
-  },
-  {
-    postId: 3,
-    postBookInfo: userLibrary[3],
-    postTitle: "제목입니다.",
-    postOwner: feedOwners[0],
-    postContents: "내용입니다.",
-    postCommentsCount: 3,
-    postLikeCount: 10,
-  },
-  {
-    postId: 4,
-    postBookInfo: userLibrary[3],
-    postTitle: "제목입니다.",
-    postOwner: feedOwners[1],
-    postContents: "내용입니다.",
-    postCommentsCount: 3,
-    postLikeCount: 10,
-  },
+const userTabMenus: TabMenuType[] = [
+  { label: "⛄소개", value: "INTRO" },
+  { label: "📚서재", value: "LIB" },
+  { label: "📓독서기록", value: "POST" },
+  { label: "🔐계정정보/탈퇴", value: "SETTING" },
 ];
 
 const UserPage = () => {
+  // 해당 UserPage의 path값 가져오기(my 페이지 인지 확인)
+  const { pathname } = useLocation();
+
   // 해당 UserPage의 주인 정보 가져오기
-  const { memberId } = useParams() as { memberId: string };
+  const { userId } = useParams() as { userId: string };
 
   // 해당 UserPage의 주인 정보가 담긴 state
-  const [memberInfo, setMemberInfo] = useState<MemberInfo>({
-    memberId: 0,
-    userName: "",
-    password: "",
-    nickname: "",
-    email: "",
-    introduction: "",
-  });
+  const [owner, setOwner] = useState<OtherMemberInfo | MemberInfo>();
+  const [memberId, setMemberId] = useState<number>(0);
+
+  // 로그인 여부 확인 token
+  const memberToken = useSelector((state: RootState) => state.auth.token);
+  const storedMemberInfo = JSON.parse(
+    useSelector((state: RootState) => state.auth.member),
+  );
+
+  // my 페이지 확인
+  const isMyPage = pathname === "/my";
 
   // 현재 선택된 탭 메뉴
   const [nowTab, setNowTab] = useState(userTabMenus[0]);
+
+  // 데이터 요청에 필요한 params
+  const [params, setParams] = useState<MemberPostsAndBooksParams>({
+    id: null,
+    size: 10,
+  });
+
+  // 데이터가 담길 state
+  const [memberPosts, setMemberPosts] = useState<MemberPostsInfo[]>();
+  const [memberPlans, setMemberPlans] = useState<MemberPlansInfo[]>();
+
+  // react-query - GET member info - myPage가 아닐 경우
+  const { data: memberInfoData } = useQuery(
+    ["getMemberInfo", memberId, memberToken],
+    () => getMember({ memberId, accessToken: memberToken }),
+    {
+      onSuccess: (data) => {
+        // 성공했을 때
+        if (data) {
+          setOwner(data.data);
+        }
+      },
+      onError: (error) => {
+        console.log(error);
+      },
+      enabled: !!memberId && !!memberToken,
+    },
+  );
+
+  // react-query - GET my posts
+  const { data: myPostsData } = useQuery(
+    ["getMyPosts", params, memberToken],
+    () => getMyPosts({ params, accessToken: memberToken }),
+    {
+      onSuccess: (data) => {
+        // 성공했을 때
+        if (data) {
+          setMemberPosts(data.data.data);
+        }
+      },
+      onError: (error) => {
+        console.log(error);
+      },
+      enabled: !!params && !!isMyPage,
+    },
+  );
+
+  // react-query - GET my plans
+  const { data: myPlnasData } = useQuery(
+    ["getMyPlans", params, memberToken],
+    () => getMyPlans({ params, accessToken: memberToken }),
+    {
+      onSuccess: (data) => {
+        // 성공했을 때
+        if (data) {
+          setMemberPlans(data.data.data);
+        }
+      },
+      onError: (error) => {
+        console.log(error);
+      },
+      enabled: !!params && !!isMyPage,
+    },
+  );
 
   // 선택된 탭 메뉴를 변경하는 함수
   const handelTabFocus = (newSelectMenu: TabMenuType) => {
@@ -141,34 +112,12 @@ const UserPage = () => {
   };
 
   useEffect(() => {
-    // 현재 로그인한 유저의 정보 가져오기
-    const storedMemberInfo = useSelector(
-      (state: RootState) => state.auth.member,
-    );
-
-    if (storedMemberInfo.memberId === parseInt(memberId)) {
-      // 자기 자신의 페이지에 접속했을때
-      setMemberInfo(storedMemberInfo);
+    if (isMyPage) {
+      // my 페이지 인 경우 - redux에 저장된 정보 가져오기
+      setOwner(storedMemberInfo);
     } else {
-      // 다른 유저의 페이지로 접속했을 경우 get해온 데이터 사용
-      const { isError } = useQuery(
-        "getMemberInfo",
-        () => getMember(parseInt(memberId)),
-        {
-          onError: (error) => {
-            console.log("isError:" + isError, error);
-          },
-          onSuccess: (data) => {
-            // 성공했을 때
-            setMemberInfo(data);
-          },
-        },
-      );
+      setMemberId(parseInt(userId));
     }
-
-    // memberinfo 정보에 따라 postlist, booklist 가져오기
-    // 여기서 받아서 props로 넘겨주는게 나은지?
-    // 하위 컴포넌트에서 요청을 하는게 나은지?
   }, []);
 
   return (
@@ -184,46 +133,53 @@ const UserPage = () => {
       {/* 상단 메뉴 선택에 따라 바뀌어야 하는 영역 */}
 
       {/* 유저페이지 소개 선택시 표출 영역 */}
-      {nowTab.value === "intro" && (
+      {owner && nowTab.value === "INTRO" && (
         <Box>
           {/* 소개(intro) 선택시 */}
-          <UserIntroProfile memberInfo={memberInfo} />
+          <UserIntroProfile
+            memberInfo={owner}
+            memberId={memberId === 0 ? null : memberId}
+          />
 
           {/* 유저 서재 도서 미리보기 */}
           {/* 최신순 3개만 보여줌 */}
-          <UserBookList
-            nickname={memberInfo.nickname}
-            userBookList={userLibrary}
-            isPreview={true}
-          />
+          {memberPlans && (
+            <UserPlanList
+              memberInfo={owner}
+              planList={memberPlans}
+              isPreview={true}
+            />
+          )}
 
           {/* 유저 독서 기록 미리보기 */}
           {/* 최신순 3개만 보여줌 */}
-          <UserPostList
-            nickname={memberInfo.nickname}
-            userPostList={allPost}
-            isPreview={true}
-          />
+          {memberPosts && (
+            <UserPostList
+              memberInfo={owner}
+              postList={memberPosts}
+              isPreview={true}
+            />
+          )}
         </Box>
       )}
 
       {/* 유저페이지 서재 선택시 표출 영역 */}
       {/* 전체도서 표출 */}
-      {nowTab.value === "lib" && (
+      {/* {owner && nowTab.value === "LIB" && (
         <UserBookList
-          nickname={memberInfo.nickname}
+          nickname={owner.nickname}
           userBookList={userLibrary}
           isPreview={false}
         />
-      )}
+      )} */}
 
       {/* 유저페이지 독서기록 선택시 표출 영역 */}
-      {nowTab.value === "post" && (
-        <UserPostList nickname={memberInfo.nickname} userPostList={allPost} />
-      )}
+      {/* {owner && nowTab.value === "POST" && (
+        <UserPostList nickname={owner.nickname} userPostList={allPost} />
+      )} */}
 
       {/* 유저페이지 수정 선택시 표출 영역 */}
-      {nowTab.value === "setting" && <UserSetting />}
+      {isMyPage && nowTab.value === "SETTING" && <UserSetting />}
     </Box>
   );
 };

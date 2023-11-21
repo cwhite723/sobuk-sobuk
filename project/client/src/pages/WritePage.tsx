@@ -1,62 +1,36 @@
 import { Box } from "@mui/material";
+import { getPlans } from "apis/plans";
 import CommonTitle from "components/common/CommonTitle";
 import CommonTypography from "components/common/CommonTypography";
 import WritePostBookItem from "components/write/WritePostBookItem";
 import WritePostForm from "components/write/WritePostForm";
 import { useState } from "react";
+import { useQuery } from "react-query";
+import { useSelector } from "react-redux";
+import { RootState } from "store/store";
 
-// 더미 데이터
-const userLibrary: BookItem[] = [
-  {
-    bookId: 1,
-    bookName: "제목1",
-    bookWriter: "작가1",
-    bookPublish: "출판사1",
-    bookPages: 365,
-    bookState: "reading",
-    bookProgress: 278,
-    bookDate: [new Date("2023-10-25"), new Date("2023-11-25")],
-  },
-  {
-    bookId: 2,
-    bookName: "제목2",
-    bookWriter: "작가2",
-    bookPublish: "출판사2",
-    bookPages: 563,
-    bookState: "after",
-    bookProgress: 550,
-  },
-  {
-    bookId: 3,
-    bookName: "제목3",
-    bookWriter: "작가3",
-    bookPublish: "출판사3",
-    bookPages: 156,
-    bookState: "before",
-    bookProgress: 0,
-  },
-  {
-    bookId: 4,
-    bookName: "제목4",
-    bookWriter: "작가4",
-    bookPublish: "출판사4",
-    bookPages: 298,
-    bookState: "complete",
-    bookProgress: 298,
-  },
-];
 const WritePage = () => {
+  // redux에 저장된 토큰 가져오기
+  const token = useSelector((state: RootState) => state.auth.token);
   // 선택된 책
-  const [selectBook, setSelectBook] = useState<BookItem | null>(null);
+  const [selectBookId, setSelectBookId] = useState<number | null>(null);
 
   // 선택된 책을 컨트롤 하는 함수
-  const handleSelectBook = (item: BookItem | null) => {
-    setSelectBook(item);
+  const handleSelectBook = (bookId: number) => {
+    setSelectBookId(bookId);
   };
+
+  const { data: notCreatedPostPlans } = useQuery(
+    ["getPlans", { status: "NOT_CREATED_POST", token }],
+    () => getPlans("NOT_CREATED_POST", token),
+    {
+      enabled: !!token,
+    },
+  );
 
   // 선택된 책 초기화 함수
   const handleChangeBook = () => {
-    setSelectBook(null);
+    setSelectBookId(null);
   };
 
   return (
@@ -77,7 +51,7 @@ const WritePage = () => {
         bold={true}
       />
       {/* 완독 도서 리스트 */}
-      {selectBook === null && (
+      {selectBookId === null && (
         <Box
           sx={{
             display: "flex",
@@ -93,22 +67,22 @@ const WritePage = () => {
           }}
         >
           {/* 도서 아이템 */}
-          {userLibrary.map((bookItem) =>
-            bookItem.bookState === "complete" ? (
+          {notCreatedPostPlans &&
+            notCreatedPostPlans.data.map((planInfo) => (
               <WritePostBookItem
-                key={bookItem.bookId}
+                key={planInfo.planId}
                 handleSelectBook={handleSelectBook}
-                book={bookItem}
+                bookId={planInfo.bookId}
               />
-            ) : (
-              <></>
-            ),
-          )}
+            ))}
         </Box>
       )}
       {/* 독서기록 작성 폼 */}
-      {selectBook && (
-        <WritePostForm handleChangeBook={handleChangeBook} book={selectBook} />
+      {selectBookId && (
+        <WritePostForm
+          handleChangeBook={handleChangeBook}
+          bookId={selectBookId}
+        />
       )}
     </Box>
   );

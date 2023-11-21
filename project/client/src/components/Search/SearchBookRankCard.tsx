@@ -7,7 +7,7 @@ interface PropsType {
   bookItem: BookInfoSimple;
 }
 
-const SearchBookRankCard: React.FC<PropsType> = (props) => {
+const SearchBookRankCard = (props: PropsType) => {
   return (
     <Grid xs="auto" md={5} sx={{ width: "100%" }}>
       <Box
@@ -23,7 +23,7 @@ const SearchBookRankCard: React.FC<PropsType> = (props) => {
           m: 1,
         }}
       >
-        <CommonBookImage width={100} height={150} src={props.bookItem.src} />
+        <CommonBookImage width={100} height={150} src={props.bookItem.image} />
 
         <Box sx={{ ml: 2, borderTop: "1px solid" }}>
           <CommonTypography

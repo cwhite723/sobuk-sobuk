@@ -8,7 +8,7 @@ interface InitialStateType {
 }
 
 const initialState: InitialStateType = {
-  token: "Bearer aldkjghaihdg",
+  token: "",
   member: JSON.stringify({
     memberId: 0,
     userName: "",

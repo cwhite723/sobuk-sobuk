@@ -1,29 +1,59 @@
 export {};
 
 declare global {
+  type TabMenuTypeValues =
+    | "DATE"
+    | "COMMENT"
+    | "LIKE"
+    | "ALL"
+    | "FOLLOWING"
+    | "INTRO"
+    | "LIB"
+    | "POST"
+    | "SETTING";
+
+  // type DataFilterType = "DATE" | "COMMENT" | "LIKE" | "ALL" | "FOLLOWING";
+  // type UserTabType = "INTRO" | "LIB" | "POST" | "SETTING";
+
   interface TabMenuType {
     label: string;
-    value: string;
+    value: TabMenuTypeValues;
   }
+
+  // interface TabMenuType {
+  //   label: string;
+  //   value: DataFilterType;
+  // }
+
+  // interface UserTabMenuType {
+  //   label: string;
+  //   value: UserTabType;
+  // }
 
   type DialogType = "read" | "progress" | "submit";
 
-  type BookState =
-    | "READING"
-    | "COMPLETED"
-    | "NOT_CREATED_POST"
-    | "NOT_STARTED"
-    | "OVERDUE";
+  type BookStatus =
+    | "reading"
+    | "completed"
+    | "not_created_post"
+    | "not_started"
+    | "overdue";
 
-  // api 데이터 타입 - members
-  interface MemberInfo {
-    memberId?: number;
+  type BookSortType =
+    | "bookmarksCount "
+    | "publicationDate"
+    | "readingPlansCount";
+
+  // type PostSortType = "DATE" | "COMMENT" | "LIKE";
+
+  // ------ Members API 관련 데이터 타입
+  interface MemberData {
     userName: string;
-    password: string;
+    password?: string;
     nickname: string;
     email: string;
     introduction: string;
-    img?: string;
+    image?: string | null;
   }
 
   interface MemberLogIn {
@@ -31,21 +61,98 @@ declare global {
     password: string;
   }
 
-  interface MemberPatch {
-    memberId: number;
+  interface MemberInfo {
+    memberId?: number;
+    nickname: string;
+    userName: string;
+    introduction: string;
+    image?: string | null;
+    countFollower: number;
+    countFollowing: number;
+    countBookMark: number;
+    countPost: number;
+  }
+
+  interface OtherMemberInfo {
+    nickname: string;
+    userName: string;
+    introduction: string;
+    image?: string | null;
+    countBookMark: number;
+    countPost: number;
+    following: boolean;
+  }
+
+  interface MemberPostsAndBooksParams {
+    id: number | null;
+    size: number;
+  }
+
+  interface MemberPostsInfo {
+    postId: number;
+    bookTitle: string;
+    author: string;
+    title: string;
+    content: string;
+    countComment: number;
+    countLike: number;
+  }
+
+  interface MemberPlansInfo {
+    readingPlanId: number;
+    title: string;
+    author: string;
+    totalPage: number;
+    todayPage: number;
+    status: BookStatus;
+  }
+
+  // ------ Members API Response 데이터 타입
+  interface MemberResponse {
     data: MemberInfo;
   }
 
-  // api 데이터 타입 - books
+  interface OtherMemberResponse {
+    data: OtherMemberInfo;
+  }
+
+  interface MemberPostsResponse {
+    data: {
+      data: MemberPostsInfo[];
+      pageSize: number;
+      // 이 값이 true면 다음 값을 요청
+      hasNext: boolean;
+    };
+  }
+
+  interface MemberPlansResponse {
+    data: {
+      data: MemberPlansInfo[];
+      pageSize: number;
+      // 이 값이 true면 다음 값을 요청
+      hasNext: boolean;
+    };
+  }
+
+  // ------ Books API 관련 데이터 타입
+  interface BookData {
+    title: string;
+    author: string;
+    publisher: string;
+    publicationDate: string;
+    isUserInput: boolean;
+    image?: string;
+  }
+
   interface BookInfo {
-    bookId?: number;
+    bookId: number;
     title: string;
     publisher: string;
     author: string;
     publicationDate: string;
     createdAt?: string;
     isUserInput: boolean;
-    src?: string;
+    image?: string;
   }
 
   interface BookInfoSimple {
@@ -53,91 +160,67 @@ declare global {
     title: string;
     author: string;
     publisher: string;
-    src?: string;
-  }
-
-  interface BookPatch {
-    bookId: number;
-    data: BookInfo;
+    image?: string;
+    publicationDate?: string;
   }
 
   interface BookParams {
     page: number;
     size: number;
-    sortType?: "bookmarkCount" | "publicationDate" | "recordCount";
+    sortType?: BookSortType;
     title?: string;
     author?: string;
   }
 
-  interface BookmarkParams {
-    bookId: number;
-    accessToken: string;
+  // ------ Books API Response 데이터 타입
+  interface BookIdResponse {
+    data: number;
   }
 
-  // api 데이터 타입 - plans
-  interface PlanInfo {
-    bookId: number;
-    planId?: number;
+  interface BookResponse {
+    data: BookInfo;
+  }
+
+  interface BooksResponse {
+    data: {
+      content: BookInfoSimple[];
+      totalPages: number;
+      totalElements: number;
+    };
+  }
+
+  // ------ Plans API 관련 데이터 타입
+  interface PlanData {
     startDate: string;
     endDate: string;
     totalPage: number;
-    readPageNumber?: number;
-    todayPage?: number;
-    status?: string;
+    readPageNumber: number;
   }
 
-  interface PlanPatch {
-    planId: number | null;
-    accessToken: string | null;
-    data: PlanInfo;
-  }
-
-  // api 데이터 타입 - posts
-  interface PostInfo {
-    bookId: number;
-    postId?: number;
+  interface PlanInfo {
+    planId: number;
     title: string;
+    author: string;
+    status: string;
+    startDate: string;
+    endDate: string;
+    totalPage: number;
+    todayPage: number;
+  }
+
+  // ------ Plans API Response 데이터 타입
+  interface PlansResponse {
+    data: PlanInfo[];
+  }
+
+  // ------ Comments API 관련 데이터 타입
+  interface CommentData {
     content: string;
   }
 
-  interface PostParams {
-    page: number;
-    size: number;
-    sortType: string;
-  }
-
-  // api 데이터 타입 - comments
-  interface CommentInfo {
-    postId?: number;
-    commentId?: number;
-    content: string;
-  }
-
-  // response type
-  interface BookResponse {
-    content: BookInfoSimple[];
-    totalPages: number;
-    totalElements: number;
-  }
-
-  interface PostResponse {
-    memberId: number;
-    userName: string;
-    nickname: string;
-    bookId?: number;
-    bookTitle: string;
-    bookAuthor: string;
-    startDate?: string;
-    endDate?: string;
-    postId?: number;
-    postTitle: string;
-    content: string;
-    countComments: number;
-    countLikes: number;
-    createdAt: string;
-    updatedat: string;
-    myPost?: boolean;
-    myLike?: boolean;
+  // ------ Comments API Response 데이터 타입
+  interface CommentIdResponse {
+    data: number;
   }
 
   interface CommentResponse {
@@ -151,12 +234,61 @@ declare global {
     myComment: boolean;
   }
 
-  interface Response {
-    postResponse: PostResponse;
-    commentResponses: CommentResponse;
+  // ------ Posts API 관련 데이터 타입
+  interface PostData {
+    title: string;
+    content: string;
   }
 
-  // kakao api types
+  interface PostInfo {
+    memberId: number;
+    userName: string;
+    nickname: string;
+    bookId: number;
+    bookTitle: string;
+    bookAuthor: string;
+    startDate: string;
+    endDate: string;
+    postId?: number;
+    postTitle: string;
+    content: string;
+    countComments: number;
+    countLikes: number;
+    createdAt: string;
+    updatedat: string;
+    myPost?: boolean;
+    myLike?: boolean;
+  }
+
+  interface PostParams {
+    page: number;
+    size: number;
+    sortType: TabMenuTypeValues;
+  }
+
+  // ------ Posts API Response 데이터 타입
+  interface PostIdResponse {
+    data: number;
+  }
+
+  interface PostResponse {
+    // post 개별 조회
+    data: {
+      postResponse: PostInfo;
+      commentResponses: CommentResponse[];
+    };
+  }
+
+  interface PostsResponse {
+    // post 전체 조회
+    data: {
+      content: PostInfo[];
+      totalPages: number;
+      totalElements: number;
+    };
+  }
+
+  // ------ kakao API 관련 데이터 타입
   interface KakaoBookParams {
     query: string;
     sort?: "accuracy" | "latest";

@@ -6,12 +6,12 @@ import CommonTitle from "components/common/CommonTitle";
 import CommonTypography from "components/common/CommonTypography";
 
 interface PropsType {
-  nickname: string;
-  userBookList: BookItem[];
+  memberInfo: MemberInfo | OtherMemberInfo;
+  planList: MemberPlansInfo[];
   isPreview: boolean;
 }
 
-const UserBookList: React.FC<PropsType> = (props) => {
+const UserPlanList = (props: PropsType) => {
   return (
     <Box>
       {/* tabmenu 서재 title */}
@@ -25,9 +25,9 @@ const UserBookList: React.FC<PropsType> = (props) => {
         <CommonTitle
           value={
             "📚 " +
-            props.nickname +
+            props.memberInfo.nickname +
             "님의 서재에 총 " +
-            props.userBookList.length +
+            props.memberInfo.countBookMark +
             "권의 책이 있어요"
           }
         />
@@ -42,11 +42,11 @@ const UserBookList: React.FC<PropsType> = (props) => {
           boxShadow: "0px 0px 5px rgba(0,0,0,0.5)",
         }}
       >
-        {/* 유저 서재 도서 item */}
-        {props.userBookList
-          .filter((bookItem, index) => (props.isPreview ? index < 3 : bookItem))
-          .map((bookItem) => (
-            <Grid xs={1} md={1} key={bookItem.bookId}>
+        {/* 유저 서재 도서, Plans item */}
+        {props.planList
+          .filter((planItem, index) => (props.isPreview ? index < 3 : planItem))
+          .map((planItem) => (
+            <Grid xs={1} md={1} key={planItem.readingPlanId}>
               <Box
                 sx={{
                   display: "flex",
@@ -60,11 +60,8 @@ const UserBookList: React.FC<PropsType> = (props) => {
                   m: 4,
                 }}
               >
-                <CommonBookImage
-                  width={100}
-                  height={150}
-                  src={bookItem.bookImg}
-                />
+                {/* 이미지 나중에 수정 */}
+                <CommonBookImage width={100} height={150} />
                 <Box
                   sx={{
                     display: "flex",
@@ -74,21 +71,12 @@ const UserBookList: React.FC<PropsType> = (props) => {
                   }}
                 >
                   <CommonTypography
-                    value={bookItem.bookName}
+                    value={planItem.title}
                     variant="h6"
                     bold={true}
                   />
                   <CommonTypography
-                    value={bookItem.bookWriter}
-                    variant="body2"
-                    bold={false}
-                  />
-                  <CommonTypography
-                    value={
-                      bookItem.bookProgress
-                        ? bookItem.bookProgress.toString()
-                        : "진행률 없음"
-                    }
+                    value={planItem.author}
                     variant="body2"
                     bold={false}
                   />
@@ -101,4 +89,4 @@ const UserBookList: React.FC<PropsType> = (props) => {
   );
 };
 
-export default UserBookList;
+export default UserPlanList;

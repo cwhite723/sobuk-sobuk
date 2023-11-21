@@ -7,7 +7,7 @@ interface PropsType {
   tabMenus: TabMenuType[];
 }
 
-const CommonTabMenu: React.FC<PropsType> = (props) => {
+const CommonTabMenu = (props: PropsType) => {
   return (
     <Box
       sx={{

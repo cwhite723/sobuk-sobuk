@@ -5,12 +5,12 @@ import CommonTitle from "components/common/CommonTitle";
 import CommonTypography from "components/common/CommonTypography";
 
 interface PropsType {
-  nickname: string;
-  userPostList: PostItem[];
-  isPreview?: boolean;
+  memberInfo: MemberInfo | OtherMemberInfo;
+  postList: MemberPostsInfo[];
+  isPreview: boolean;
 }
 
-const UserPostList: React.FC<PropsType> = (props) => {
+const UserPostList = (props: PropsType) => {
   return (
     <Box>
       {/* title */}
@@ -24,9 +24,9 @@ const UserPostList: React.FC<PropsType> = (props) => {
         <CommonTitle
           value={
             "📓 " +
-            props.nickname +
+            props.memberInfo.nickname +
             "님의 독서기록은 총 " +
-            props.userPostList.length +
+            props.memberInfo.countPost +
             "개가 있어요"
           }
         />
@@ -44,7 +44,7 @@ const UserPostList: React.FC<PropsType> = (props) => {
         }}
       >
         {/* 유저 독서기록 item */}
-        {props.userPostList
+        {props.postList
           .filter((postItem, index) => (props.isPreview ? index < 3 : postItem))
           .map((postItem) => (
             <Grid xs={1} md={1} key={postItem.postId}>
@@ -61,11 +61,8 @@ const UserPostList: React.FC<PropsType> = (props) => {
                   m: 4,
                 }}
               >
-                <CommonBookImage
-                  width={100}
-                  height={150}
-                  src={postItem.postBookInfo.bookImg}
-                />
+                {/* 이미지 수정 필요 */}
+                <CommonBookImage width={100} height={150} />
                 <Box
                   sx={{
                     display: "flex",
@@ -75,23 +72,23 @@ const UserPostList: React.FC<PropsType> = (props) => {
                   }}
                 >
                   <CommonTypography
-                    value={postItem.postBookInfo.bookName}
+                    value={postItem.bookTitle}
                     variant="h6"
                     bold={true}
                   />
                   <CommonTypography
-                    value={postItem.postTitle}
+                    value={postItem.title}
                     variant="body2"
                     bold={false}
                   />
                   <Box sx={{ display: "flex", mt: 2 }}>
                     <CommonTypography
-                      value={"📄" + postItem.postCommentsCount.toString()}
+                      value={"📄" + postItem.countComment.toString()}
                       variant="body2"
                       bold={true}
                     />
                     <CommonTypography
-                      value={"✨" + postItem.postLikeCount.toString()}
+                      value={"✨" + postItem.countLike.toString()}
                       variant="body2"
                       bold={true}
                     />

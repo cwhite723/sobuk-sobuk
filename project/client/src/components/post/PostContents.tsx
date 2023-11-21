@@ -7,7 +7,7 @@ interface PropsType {
   contents: string;
 }
 
-const PostContents: React.FC<PropsType> = (props) => {
+const PostContents = (props: PropsType) => {
   return (
     <Box sx={{ my: 4 }}>
       <CommonTitle value={props.title} />

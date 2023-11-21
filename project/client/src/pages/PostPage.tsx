@@ -1,4 +1,6 @@
 import { Box } from "@mui/material";
+import { getMember } from "apis/members";
+import { getPost } from "apis/posts";
 import CommonLink from "components/common/CommonLink";
 import CommonTitle from "components/common/CommonTitle";
 import CommonTypography from "components/common/CommonTypography";
@@ -8,18 +10,59 @@ import PostCommentForm from "components/post/PostCommentForm";
 import PostCommentItem from "components/post/PostCommentItem";
 import PostContents from "components/post/PostContents";
 import PostReaction from "components/post/PostReaction";
-
-// 더미 데이터
-// 포스트 주인
-const dummyOwner: MemberInfo = {
-  userName: "test2",
-  nickname: "test2",
-  password: "",
-  email: "email",
-  introduction: "hi",
-};
+import { useState } from "react";
+import { useQuery } from "react-query";
+import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import { RootState } from "store/store";
 
 const PostPage = () => {
+  // 현재 url에서 postId 추출
+  const { postIdParams } = useParams() as { postIdParams: string };
+  // redux에 저장된 토큰 가져오기
+  const token = useSelector((state: RootState) => state.auth.token);
+
+  // 현재 포스트 id
+  const [postId, setPostId] = useState(parseInt(postIdParams));
+  // 현재 포스트 정보
+  const [post, setPost] = useState<PostInfo>();
+  // 현재 포스트 댓글 정보
+  const [comments, setComments] = useState<CommentResponse[]>();
+  // 현재 포스트 유저 정보
+  const [owner, setOwner] = useState<MemberInfo | OtherMemberInfo>();
+
+  // react-query - get post 현재 포스트 정보 요청
+  const { data: postInfo } = useQuery(
+    ["getPost", postId, token],
+    () => getPost({ postId, accessToken: token }),
+    {
+      onSuccess(data) {
+        if (data) {
+          setPost(data.data.postResponse);
+          setComments(data.data.commentResponses);
+        }
+      },
+      enabled: !!postId && !!token,
+    },
+  );
+
+  // react-query get member
+  // 현재 포스트 유저 프로필 get
+  if (post) {
+    const { data: memberInfo } = useQuery(
+      ["getMember", post.memberId, token],
+      () => getMember({ memberId: post.memberId, accessToken: token }),
+      {
+        onSuccess(data) {
+          if (data) {
+            setOwner(data.data);
+          }
+        },
+        enabled: !!post.memberId && !!token,
+      },
+    );
+  }
+
   return (
     <Box
       sx={{
@@ -43,43 +86,54 @@ const PostPage = () => {
         />
       </CommonLink>
 
-      <CommonTitle value="독서기록 제목" />
+      {post && <CommonTitle value={post.postTitle} />}
 
       {/* user profile */}
-      <CommonUserProfile memberInfo={dummyOwner} avatarSize={50} />
+      {owner && <CommonUserProfile memberInfo={owner} avatarSize={50} />}
 
       {/* 책 정보 */}
-      <PostBookInfo />
+      {post && (
+        <PostBookInfo bookTitle={post.bookTitle} bookAuthor={post.bookAuthor} />
+      )}
 
       {/* 독서 기간 */}
-      <PostContents title="독서기간" contents="2023.03.05~2023.08.10" />
+      {post && post.startDate && post.endDate && (
+        <PostContents
+          title="독서기간"
+          contents={post.startDate + " ~ " + post.endDate}
+        />
+      )}
 
       {/* 독서기록 내용 */}
-      <PostContents
-        title="독서기록 내용"
-        contents="내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용"
-      />
+      {post && <PostContents title="독서기록 내용" contents={post.content} />}
 
       {/* 독서기록 reaction and buttons */}
-      <PostReaction />
+      {/* 아래 컴포넌트 수정 필요 */}
+      {post && post.myPost !== undefined && post.myLike !== undefined && (
+        <PostReaction myPost={post.myPost} myLike={post.myLike} />
+      )}
 
       {/* 댓글 container */}
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          "&:nth-of-type(odd)": { backgroundColor: "background.default" },
-        }}
-      >
-        {/* 댓글 item */}
-        <PostCommentItem />
-        <PostCommentItem />
-        <PostCommentItem />
-        <PostCommentItem />
-      </Box>
+      {comments && (
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            "&:nth-of-type(odd)": { backgroundColor: "background.default" },
+          }}
+        >
+          {/* 댓글 item */}
+          {comments.map((commnetItem) => (
+            <PostCommentItem
+              key={commnetItem.commentId}
+              commentItem={commnetItem}
+            />
+          ))}
+        </Box>
+      )}
 
       {/* 댓글 입력하기 */}
-      <PostCommentForm />
+      {post && post.postId && <PostCommentForm postId={post.postId} />}
     </Box>
   );
 };

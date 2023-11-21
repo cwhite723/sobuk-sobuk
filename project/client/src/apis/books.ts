@@ -3,13 +3,16 @@ import KakaoApi from "./kakaoApi";
 
 /**
  * 도서 등록 - 완료
- * @param data
- * @returns body{ success: boolean, data: BookId }
+ * @param data: BookData
+ * @returns { data: BookId }
  */
 
-export const postBook = async (data: BookInfo) => {
+export const postBook = async (
+  data: BookData,
+): Promise<BookIdResponse | undefined> => {
   try {
-    return Api.post("/books", data);
+    const response = await Api.post("/books", data);
+    return response.data;
   } catch (error) {
     console.error("Error in Post Book:", error);
     throw new Error("Failed to Register Book");
@@ -18,16 +21,19 @@ export const postBook = async (data: BookInfo) => {
 
 /**
  * 도서 수정 - 완료
- * @param patchBookVriables
- * @returns body{ success: boolean, data: BookId }
+ * @param { bookId: number, data: BookData }
+ * @returns { data: BookId }
  */
-
-export const patchBook = async (patchBookVriables: BookPatch) => {
+export const patchBook = async ({
+  bookId,
+  data,
+}: {
+  bookId: number;
+  data: BookData;
+}): Promise<BookIdResponse | undefined> => {
   try {
-    return Api.patch(
-      `/books/${patchBookVriables.bookId}`,
-      patchBookVriables.data,
-    );
+    const response = await Api.patch(`/books/${bookId}`, data);
+    return response.data;
   } catch (error) {
     console.error("Error in Patch Book:", error);
     throw new Error("Failed to Modify Book");
@@ -42,7 +48,7 @@ export const patchBook = async (patchBookVriables: BookPatch) => {
 
 export const deleteBook = async (bookId: number) => {
   try {
-    return Api.delete(`/books/${bookId}`);
+    return await Api.delete(`/books/${bookId}`);
   } catch (error) {
     console.error("Error in Delete Book:", error);
     throw new Error("Failed to Delete Book");
@@ -52,9 +58,9 @@ export const deleteBook = async (bookId: number) => {
 /**
  * 도서 개별 조회 - 완료
  * @param bookId
- * @returns body{ success: boolean, data: BookInfo }
+ * @returns { data: BookInfo }
  */
-export const getBook = async (bookId: number): Promise<BookInfo> => {
+export const getBook = async (bookId: number): Promise<BookResponse> => {
   try {
     const response = await Api.get(`/books/${bookId}`);
     return response.data;
@@ -66,14 +72,12 @@ export const getBook = async (bookId: number): Promise<BookInfo> => {
 
 /**
  * 도서 다건 조회 - 완료
- * @param page
- * @param size
- * @returns body{ success: boolean, data: { content: BookInfoSimple }}
+ * @param params: BookParams
+ * @returns { BooksResponse }
  */
-
 export const getAllBooks = async (
   params: BookParams,
-): Promise<BookResponse> => {
+): Promise<BooksResponse> => {
   try {
     const response = await Api.get("/books", {
       params,
@@ -86,16 +90,22 @@ export const getAllBooks = async (
 };
 
 /**
- * 도서 북마크 토큰O 토글 - 완료
+ * 도서 북마크 토글 - 완료
  * @param bookId
  * @param accessToken
  * @returns body{ success: boolean }
  */
-export const postBookmark = async (params: BookmarkParams) => {
-  if (params.accessToken) {
+export const postBookmark = async ({
+  bookId,
+  accessToken,
+}: {
+  bookId: number;
+  accessToken: string | null;
+}) => {
+  if (accessToken) {
     try {
-      return Api.post(`/books/${params.bookId}/bookmark`, {
-        headers: { Authorization: `${params.accessToken}` },
+      return await Api.post(`/books/${bookId}/bookmark`, {
+        headers: { Authorization: `${accessToken}` },
       });
     } catch (error) {
       console.error("Error in Post Bookmark:", error);
@@ -105,9 +115,11 @@ export const postBookmark = async (params: BookmarkParams) => {
 };
 
 // kakao api 도서 정보 조회
-export const getKakaoBooks = async (params: KakaoBookParams) => {
+export const getKakaoBooks = async (
+  params: KakaoBookParams,
+): Promise<KakaoBookResponse> => {
   try {
-    const response = await KakaoApi.get("book", {
+    const response = await KakaoApi.get("/book", {
       params,
     });
     return response.data;
