@@ -129,21 +129,16 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom{
         List<InfoPageBookmarkList> bookmarkLists = jpaQueryFactory
                 .select(new QInfoPageBookmarkList(
                         readingPlan.id,
-                        readingPlan.book.title,
-                        readingPlan.book.author,
+                        book.title,
+                        book.author,
                         readingPlan.totalPage,
                         readingPlan.todayPage,
                         readingPlan.status
                 ))
                 .from(readingPlan)
-                .innerJoin(readingPlan.member,member)
                 .innerJoin(readingPlan.book,book)
-                .where(readingPlan.member.id.eq(id),readingPlan.status.in(null,
-                        READING,
-                        COMPLETED,
-                        NOT_CREATED_POST,
-                        NOT_STARTED,
-                        OVERDUE),readingPlanLtCursorId(cursorId))
+                .where(readingPlan.member.id.eq(id)
+                        ,readingPlanLtCursorId(cursorId))
                 .orderBy(readingPlan.id.desc())
                 .limit(pageable.getPageSize()+1)
                 .fetch();

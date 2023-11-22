@@ -26,6 +26,7 @@ public enum ErrorCode {
     NOT_FOUND_POST(NOT_FOUND, "게시글이 존재하지 않습니다."),
     NOT_FOUND_COMMENT(NOT_FOUND, "댓글이 존재하지 않습니다."),
     MEMBER_NOT_FOUND(NOT_FOUND,"회원이 존재하지 않습니다."),
+    IMAGE_NOT_FOUND(NOT_FOUND, "이미지가 존재하지 않습니다."),
 
     // 409
     NOT_CREATOR(CONFLICT, "작성자가 아닙니다."),
@@ -34,7 +35,8 @@ public enum ErrorCode {
     MEMBER_NICKNAME_EXISTS(CONFLICT,"닉네임이 존재 합니다."),
 
     // 500
-    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 오류입니다. 관리자에게 문의하세요.");
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 오류입니다. 관리자에게 문의하세요."),
+    FILE_UPLOAD_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "파일 업로드에 실패했습니다.");
 
     private final HttpStatus httpStatus;
     private final String message;

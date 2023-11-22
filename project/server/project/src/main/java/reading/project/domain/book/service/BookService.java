@@ -76,6 +76,7 @@ public class BookService {
 
     public Book findBookById(Long bookId) {
 
+
         return bookRepository.findById(bookId)
                 .orElseThrow(() -> new CustomException(NOT_FOUND_BOOK));
     }

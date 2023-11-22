@@ -4,8 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import reading.project.domain.auth.interceptor.JwtParseInterceptor;
-import reading.project.domain.book.dto.response.BookResponse;
-import reading.project.domain.book.service.BookService;
 import reading.project.domain.post.dto.request.PostRequest;
 import reading.project.domain.post.dto.request.SortType;
 import reading.project.domain.post.dto.response.CommentResponse;

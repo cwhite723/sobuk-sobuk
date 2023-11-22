@@ -9,13 +9,13 @@ import reading.project.domain.book.entity.Book;
 import reading.project.domain.member.entity.Member;
 import reading.project.domain.readingplan.entity.ReadingPlan;
 import reading.project.global.base.BaseEntity;
+import reading.project.domain.image.entity.Image;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static jakarta.persistence.CascadeType.PERSIST;
 import static jakarta.persistence.FetchType.*;
-import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
 import static org.hibernate.annotations.OnDeleteAction.CASCADE;
 
@@ -54,13 +54,18 @@ public class Post extends BaseEntity {
     @OneToMany(mappedBy = "post", cascade = PERSIST)
     private List<Like> likes = new ArrayList<>();
 
+    @OneToOne(fetch = LAZY)
+    @JoinColumn(name = "image_id")
+    private Image image;
+
     @Builder
-    public Post(String title, String content, ReadingPlan readingPlan, Member member, Book book) {
+    public Post(String title, String content, ReadingPlan readingPlan, Member member, Book book, Image image) {
         this.title = title;
         this.content = content;
         this.readingPlan = readingPlan;
         this.member = member;
         this.book = book;
+        this.image = image;
     }
 
     public void update(String title, String content) {

@@ -26,8 +26,10 @@ spring:
     port: 6379
     host: 127.0.0.1
     password: 'abcde'
-
-
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
 
 logging.level:
   org.hibernate.SQL: debug
@@ -36,3 +38,15 @@ jwt:
   key: ${JWT_SECRET_KEY}
   access-token-expiration-minutes: 30
   refresh-token-expiration-minutes: 420
+
+cloud:
+  aws:
+    credentials:
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
+    region:
+      static: ap-northeast-2
+    s3:
+      bucket: mainproject
+    stack:
+      auto: false

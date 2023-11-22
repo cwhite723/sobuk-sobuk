@@ -2,13 +2,11 @@ package reading.project.domain.post.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reading.project.domain.post.dto.request.PostRequest;
 import reading.project.domain.post.dto.request.SortType;
-import reading.project.domain.post.dto.response.GetPostDetailResponse;
 import reading.project.domain.post.dto.response.PostDetailResponse;
 import reading.project.domain.post.dto.response.PostResponse;
 import reading.project.domain.post.entity.Like;
@@ -17,6 +15,8 @@ import reading.project.domain.post.repository.LikeRepository;
 import reading.project.domain.post.repository.PostRepository;
 import reading.project.domain.readingplan.entity.ReadingPlan;
 import reading.project.domain.readingplan.service.ReadingPlanService;
+import reading.project.domain.image.entity.Image;
+import reading.project.domain.image.service.ImageService;
 import reading.project.global.exception.CustomException;
 import reading.project.domain.member.entity.Member;
 import reading.project.domain.member.service.MemberService;
@@ -35,14 +35,16 @@ public class PostService {
     private final LikeRepository likeRepository;
     private final MemberService memberService;
     private final ReadingPlanService planService;
+    private final ImageService imageService;
 
     @Transactional
     public Long createPost(Long loginId, Long planId, PostRequest request) {
         Member member = memberService.findExistsMember(loginId);
         ReadingPlan plan = planService.findReadingPlanById(planId);
         planService.checkFinishReading(plan);
+        Image image = imageService.findImageById(request.getImageId());
 
-        Post post = request.toEntity(plan, member);
+        Post post = request.toEntity(image, plan, member);
         plan.changeStatus(COMPLETED);
 
         return postRepository.save(post).getId();
