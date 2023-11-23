@@ -150,6 +150,28 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom{
 
         return checkLastPage(bookmarkLists, pageable);
     }
+    // post 수
+    @Override
+    public Long countByPostList(Long id) {
+        QMember m = new QMember("m");
+
+        return jpaQueryFactory
+                .select(post.count())
+                .from(post)
+                .where(post.member.id.eq(id))
+                .fetchOne();
+    }
+    // 서재 수
+    @Override
+    public Long countByReadingPlanList(Long id) {
+        QMember m = new QMember("m");
+
+        return jpaQueryFactory
+                .select(readingPlan.count())
+                .from(readingPlan)
+                .where(readingPlan.member.id.eq(id))
+                .fetchOne();
+    }
 
     private BooleanExpression followLtCursorId(Long cursorId) {
         if(cursorId == null) {
