@@ -1,23 +1,32 @@
 import { Box } from "@mui/material";
-import { getBook } from "apis/books";
+import { getAllBooks, getBook } from "apis/books";
 import CommonButton from "components/common/CommonButton";
 import CommonTypography from "components/common/CommonTypography";
 import { useQuery } from "react-query";
 
 type PropsType = {
-  handleSelectBook: (bookId: number) => void;
-  bookId: number;
+  handleSelectPlan: (planInfo: PlanInfo) => void;
+  // bookId: number;
+  // bookTitle: string;
+  planInfo: PlanInfo;
 };
 
 const WritePostBookItem = (props: PropsType) => {
   // react-query 책 정보
-  const { data: bookInfo } = useQuery(
-    ["getBook", props.bookId],
-    () => getBook(props.bookId),
-    {
-      enabled: !!props.bookId,
-    },
-  );
+  // const { data: bookInfo } = useQuery(
+  //   ["getBook", props.bookId],
+  //   () => getBook(props.bookId),
+  //   {
+  //     enabled: !!props.bookId,
+  //   },
+  // );
+
+  // 임시 query 책 정보
+  // const { data: bookInfo } = useQuery(
+  //   ["getBook", props.bookTitle],
+  //   () => getAllBooks({ page: 1, size: 1, title: props.bookTitle }),
+  //   { enabled: !!props.bookTitle },
+  // );
 
   return (
     <Box
@@ -32,7 +41,7 @@ const WritePostBookItem = (props: PropsType) => {
         },
       }}
     >
-      {bookInfo && (
+      {props.planInfo && (
         <Box
           sx={{
             display: "flex",
@@ -40,17 +49,12 @@ const WritePostBookItem = (props: PropsType) => {
           }}
         >
           <CommonTypography
-            value={bookInfo.title}
+            value={props.planInfo.title}
             variant="body1"
             bold={true}
           />
           <CommonTypography
-            value={bookInfo.author}
-            variant="body1"
-            bold={false}
-          />
-          <CommonTypography
-            value={bookInfo.publisher}
+            value={props.planInfo.author}
             variant="body1"
             bold={false}
           />
@@ -64,13 +68,16 @@ const WritePostBookItem = (props: PropsType) => {
           alignItems: { xs: "end", md: "center" },
         }}
       >
-        <CommonButton
-          value="✔선택하기"
-          outline={false}
-          onClick={() => {
-            props.handleSelectBook(props.bookId);
-          }}
-        />
+        {/* 임시 */}
+        {props.planInfo && (
+          <CommonButton
+            value="✔선택하기"
+            outline={false}
+            onClick={() => {
+              props.handleSelectPlan(props.planInfo);
+            }}
+          />
+        )}
       </Box>
     </Box>
   );

@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { postBook } from "apis/books";
 import CommonTextField from "components/common/CommonTextField";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
 import theme from "styles/theme";
@@ -17,6 +18,7 @@ import { getStringDate } from "utils/format";
 
 interface PropsType {
   isOpen: boolean;
+  setNewBook: React.Dispatch<React.SetStateAction<number | null>>;
   handleClose: () => void;
 }
 
@@ -44,10 +46,13 @@ const SearchBookSubmitDialog = (props: PropsType) => {
 
   // react-query - post book
   const { mutate, isError, isSuccess } = useMutation(postBook, {
-    onSuccess: () => {
-      // 도서 등록 성공
-      reset();
-      props.handleClose();
+    onSuccess: (data) => {
+      if (data) {
+        // 도서 등록 성공
+        reset();
+        props.setNewBook(data.data);
+        props.handleClose();
+      }
     },
     onError: (error) => {
       // 도서 등록 실패

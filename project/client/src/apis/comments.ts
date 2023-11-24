@@ -16,8 +16,7 @@ export const postComment = async ({
 }): Promise<CommentIdResponse | undefined> => {
   if (accessToken) {
     try {
-      const response = await Api.post(`/comments/${postId}`, {
-        data,
+      const response = await Api.post(`/comments/${postId}`, data, {
         headers: { Authorization: `${accessToken}` },
       });
       return response.data;

@@ -2,21 +2,21 @@ import Api from "./api";
 
 /**
  * 독서 기록(포스트) 작성 - 완료
- * @param { bookId: number, data: PostData, accessToken: string | null }
+ * @param { planId: number, data: PostData, accessToken: string | null }
  * @returns { data: postId }
  */
 export const postPost = async ({
-  bookId,
+  planId,
   data,
   accessToken,
 }: {
-  bookId: number;
+  planId: number;
   data: PostData;
   accessToken: string | null;
 }): Promise<PostIdResponse | undefined> => {
   if (accessToken) {
     try {
-      const response = await Api.post(`/posts/${bookId}`, data, {
+      const response = await Api.post(`/posts/${planId}`, data, {
         headers: { Authorization: `${accessToken}` },
       });
       return response.data;
@@ -53,12 +53,22 @@ export const patchPost = async ({
  * @param postId
  * @returns
  */
-export const deletePost = async (postId: number) => {
-  try {
-    return await Api.delete(`/posts/${postId}`);
-  } catch (error) {
-    console.error("Error in Delete Post:", error);
-    throw new Error("Failed to Delete Post");
+export const deletePost = async ({
+  postId,
+  accessToken,
+}: {
+  postId: number;
+  accessToken: string | null;
+}) => {
+  if (accessToken) {
+    try {
+      return await Api.delete(`/posts/${postId}`, {
+        headers: { Authorization: `${accessToken}` },
+      });
+    } catch (error) {
+      console.error("Error in Delete Post:", error);
+      throw new Error("Failed to Delete Post");
+    }
   }
 };
 
@@ -107,15 +117,25 @@ export const getAllPosts = async (
 };
 
 /**
- * 독서 기록(포스트) 추천 토글 - 토큰?
+ * 독서 기록(포스트) 추천 토글 - 완료
  * @param postId
  * @returns { success: boolean }
  */
-export const postLikePost = async (postId: number) => {
-  try {
-    return await Api.post(`/posts/${postId}/like`);
-  } catch (error) {
-    console.error("Error in Post Like Post:", error);
-    throw new Error("Failed to Post Like");
+export const postLikePost = async ({
+  postId,
+  accessToken,
+}: {
+  postId: number;
+  accessToken: string | null;
+}) => {
+  if (accessToken) {
+    try {
+      return await Api.post(`/posts/${postId}/like`, null, {
+        headers: { Authorization: `${accessToken}` },
+      });
+    } catch (error) {
+      console.error("Error in Post Like Post:", error);
+      throw new Error("Failed to Post Like");
+    }
   }
 };

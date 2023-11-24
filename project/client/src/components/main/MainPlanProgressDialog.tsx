@@ -25,8 +25,8 @@ interface PropsType {
 }
 
 interface FormValue {
-  startDate: Date;
-  endDate: Date;
+  startDate: string;
+  endDate: string;
   todayPage: number;
 }
 
@@ -44,8 +44,8 @@ const MainPlanProgressDialog = (props: PropsType) => {
     defaultValues: {
       // 기본값은 기존 date 정보
       // ?? : null, undefined인 경우 오른쪽 값을 반환
-      startDate: getDateObject(props.selectedPlan.startDate) ?? new Date(),
-      endDate: getDateObject(props.selectedPlan.endDate) ?? new Date(),
+      startDate: props.selectedPlan.startDate ?? getStringDate(new Date()),
+      endDate: props.selectedPlan.endDate ?? getStringDate(new Date()),
       todayPage: 0,
     },
   });
@@ -74,8 +74,8 @@ const MainPlanProgressDialog = (props: PropsType) => {
         planId: props.selectedPlan.planId,
         accessToken: token,
         data: {
-          startDate: getStringDate(formData.startDate),
-          endDate: getStringDate(formData.endDate),
+          startDate: formData.startDate,
+          endDate: formData.endDate,
           totalPage: props.selectedPlan.totalPage,
           readPageNumber: numbericTodayPage,
         },
@@ -166,6 +166,8 @@ const MainPlanProgressDialog = (props: PropsType) => {
               control={control}
               rules={{ required: true }}
               textFieldProps={{
+                disabled:
+                  props.selectedPlan.status === "overdue" ? false : true,
                 id: "start-date",
                 label: "Start",
                 type: "date",
@@ -176,7 +178,7 @@ const MainPlanProgressDialog = (props: PropsType) => {
               control={control}
               rules={{
                 required: true,
-                min: getStringDate(getValues("startDate")),
+                min: getValues("startDate"),
               }}
               textFieldProps={{
                 id: "end-date",

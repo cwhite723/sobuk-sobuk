@@ -18,50 +18,53 @@ import { RootState } from "store/store";
 
 const PostPage = () => {
   // 현재 url에서 postId 추출
-  const { postIdParams } = useParams() as { postIdParams: string };
+  const { postid } = useParams() as { postid: string };
   // redux에 저장된 토큰 가져오기
   const token = useSelector((state: RootState) => state.auth.token);
 
   // 현재 포스트 id
-  const [postId, setPostId] = useState(parseInt(postIdParams));
+  const [nowPostId, setNowPostId] = useState(parseInt(postid));
   // 현재 포스트 정보
   const [post, setPost] = useState<PostInfo>();
   // 현재 포스트 댓글 정보
   const [comments, setComments] = useState<CommentResponse[]>();
+  // 현재 포스트 유저 id
+  const [memberId, setMemberId] = useState<number | null>(null);
   // 현재 포스트 유저 정보
   const [owner, setOwner] = useState<MemberInfo | OtherMemberInfo>();
 
   // react-query - get post 현재 포스트 정보 요청
   const { data: postInfo } = useQuery(
-    ["getPost", postId, token],
-    () => getPost({ postId, accessToken: token }),
+    ["getPost", nowPostId, token],
+    () => getPost({ postId: nowPostId, accessToken: token }),
     {
       onSuccess(data) {
         if (data) {
           setPost(data.data.postResponse);
           setComments(data.data.commentResponses);
+          setMemberId(data.data.postResponse.memberId);
         }
       },
-      enabled: !!postId && !!token,
+      enabled: !!nowPostId && !!token,
+      retry: false,
     },
   );
 
   // react-query get member
   // 현재 포스트 유저 프로필 get
-  if (post) {
-    const { data: memberInfo } = useQuery(
-      ["getMember", post.memberId, token],
-      () => getMember({ memberId: post.memberId, accessToken: token }),
-      {
-        onSuccess(data) {
-          if (data) {
-            setOwner(data.data);
-          }
-        },
-        enabled: !!post.memberId && !!token,
+  const { data: memberInfo } = useQuery(
+    ["getMember", memberId, token],
+    () => getMember({ memberId: memberId, accessToken: token }),
+    {
+      onSuccess(data) {
+        if (data) {
+          setOwner(data.data);
+        }
       },
-    );
-  }
+      enabled: !!memberId && !!token,
+      retry: false,
+    },
+  );
 
   return (
     <Box
@@ -89,7 +92,13 @@ const PostPage = () => {
       {post && <CommonTitle value={post.postTitle} />}
 
       {/* user profile */}
-      {owner && <CommonUserProfile memberInfo={owner} avatarSize={50} />}
+      {owner && post && (
+        <CommonUserProfile
+          memberInfo={owner}
+          memberId={post.memberId}
+          avatarSize={50}
+        />
+      )}
 
       {/* 책 정보 */}
       {post && (
@@ -110,7 +119,11 @@ const PostPage = () => {
       {/* 독서기록 reaction and buttons */}
       {/* 아래 컴포넌트 수정 필요 */}
       {post && post.myPost !== undefined && post.myLike !== undefined && (
-        <PostReaction myPost={post.myPost} myLike={post.myLike} />
+        <PostReaction
+          myPost={post.myPost}
+          myLike={post.myLike}
+          postId={nowPostId}
+        />
       )}
 
       {/* 댓글 container */}
@@ -133,7 +146,7 @@ const PostPage = () => {
       )}
 
       {/* 댓글 입력하기 */}
-      {post && post.postId && <PostCommentForm postId={post.postId} />}
+      {nowPostId && <PostCommentForm postId={nowPostId} />}
     </Box>
   );
 };

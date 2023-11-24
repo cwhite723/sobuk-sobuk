@@ -80,6 +80,7 @@ const FeedPage = () => {
         }
       },
       enabled: !!params,
+      retry: false,
     },
   );
 

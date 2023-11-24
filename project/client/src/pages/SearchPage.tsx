@@ -1,7 +1,8 @@
 import { Box } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
-import { getAllBooks } from "apis/books";
+import { getAllBooks, getBook } from "apis/books";
 import SearchBookRankCard from "components/Search/SearchBookRankCard";
+import SearchBookReadDialog from "components/Search/SearchBookReadDialog";
 import SearchBookSubmitDialog from "components/Search/SearchBookSubmitDialog";
 import SerarchReasult from "components/Search/SearchResult";
 import CommonButton from "components/common/CommonButton";
@@ -10,21 +11,45 @@ import CommonSection from "components/common/CommonSection";
 import CommonSnackBar from "components/common/CommonSnackBar";
 import CommonTitle from "components/common/CommonTitle";
 import CommonTypography from "components/common/CommonTypography";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
+import { useSelector } from "react-redux";
+import { RootState } from "store/store";
 
 const SearchPage = () => {
+  // 로그인 여부 확인(토큰)
+  const memberToken = useSelector((state: RootState) => state.auth.token);
+
   // 도서 리스트 표출 여부
   const [openBookList, setOpenBookList] = useState(false);
 
   // 도서 직접 추가하기 Dialog open 여부
   const [openSubmitDialog, setOpenSubmitDialog] = useState(false);
 
+  // 도서 plan 등록 Dialog open 여부
+  const [openReadDialog, setOpenReadDialog] = useState(false);
+
   // 도서 등록 결과 SnackBar open 여부
   const [openSnackBar, setOpenSnackBar] = useState(false);
 
+  // 로그인 오류 SnackBar open 여부
+  const [openNotMemberSnackBar, setOpenNotMemberSnackBar] = useState(false);
+
   // 검색어 - searchBar에서 입력된 값을 가져옴
   const [searchQuery, setSearchQuery] = useState("");
+
+  // 등록된 도서 - 도서등록시 반환되는 도서 id값
+  // 도서등록 후 plan 등록으로 연결 시 필요
+  const [newBook, setNewBook] = useState<number | null>(null);
+
+  // 도서등록 후 plan 등록으로 연결 하기 위해 도서 정보 조회
+  const { data: bookData } = useQuery(
+    ["getBook", newBook],
+    () => getBook(newBook ? newBook : 0),
+    {
+      enabled: !!newBook,
+    },
+  );
 
   // getbooks 요청 시 사용할 params - 등록된 전체 도서 최초 요청 시
   const allBooksParams: BookParams = {
@@ -54,7 +79,7 @@ const SearchPage = () => {
   const { data: rankBooks } = useQuery(
     ["getAllBooks", rankBooksParams],
     () => getAllBooks(rankBooksParams),
-    { enabled: !!rankBooksParams },
+    { enabled: !!rankBooksParams, retry: false },
   );
 
   // 책 추가하기
@@ -65,13 +90,29 @@ const SearchPage = () => {
   // Dialog 닫기
   const handleClose = () => {
     setOpenSubmitDialog(false);
-    setOpenSnackBar(true);
   };
 
   // SnackBar 닫기
   const handleSnackBarClose = () => {
-    setOpenSnackBar(false);
-    setOpenBookList(false);
+    if (newBook) {
+      setOpenSnackBar(false);
+      setOpenBookList(false);
+      if (memberToken) {
+        // 바로 plan을 등록할 수 있는 Dialog 표출
+        setOpenReadDialog(true);
+      } else {
+        setOpenNotMemberSnackBar(true);
+      }
+    }
+  };
+
+  const handleNotMemberSnackBarClose = () => {
+    setOpenNotMemberSnackBar(false);
+  };
+
+  // readDialog 닫기
+  const handleReadClose = () => {
+    setOpenReadDialog(false);
   };
 
   // 전체 도서 표출 버튼 onClick
@@ -79,12 +120,28 @@ const SearchPage = () => {
     setOpenBookList(!openBookList);
   };
 
+  useEffect(() => {
+    if (newBook && !openSubmitDialog) {
+      // 등록된 새 책이 있다면 성공 SnackBar 띄움
+      setOpenSnackBar(true);
+    }
+  }, [newBook]);
+
   return (
     <Box sx={{ width: "100%" }}>
       <SearchBookSubmitDialog
         isOpen={openSubmitDialog}
         handleClose={handleClose}
+        setNewBook={setNewBook}
       />
+
+      {bookData && memberToken && (
+        <SearchBookReadDialog
+          isOpen={openReadDialog}
+          handleClose={handleReadClose}
+          selectedBook={bookData.data}
+        />
+      )}
 
       {/* snackbar */}
       {openSnackBar && (
@@ -93,6 +150,15 @@ const SearchPage = () => {
           severity="success"
           open={openSnackBar}
           handleClose={handleSnackBarClose}
+        />
+      )}
+
+      {openNotMemberSnackBar && (
+        <CommonSnackBar
+          value="로그인이 필요합니다."
+          severity="error"
+          open={openNotMemberSnackBar}
+          handleClose={handleNotMemberSnackBarClose}
         />
       )}
 

@@ -13,8 +13,9 @@ import { useNavigate } from "react-router-dom";
 import { RootState } from "store/store";
 
 interface PropsType {
-  handleChangeBook: (bookId: number | null) => void;
-  bookId: number;
+  handleChangePlan: (planInfo: PlanInfo | null) => void;
+  // bookId: number;
+  planInfo: PlanInfo;
 }
 
 interface FormValue {
@@ -31,14 +32,14 @@ const WritePostForm = (props: PropsType) => {
   // 스낵바 상태값
   const [snackBarOpen, setSnackBarOpen] = useState(false);
 
-  // react-query 책 정보
-  const { data: bookInfo } = useQuery(
-    ["getBook", props.bookId],
-    () => getBook(props.bookId),
-    {
-      enabled: !!props.bookId,
-    },
-  );
+  // react-query 책 정보 - 수정 전
+  // const { data: bookInfo } = useQuery(
+  //   ["getBook", props.bookId],
+  //   () => getBook(props.bookId),
+  //   {
+  //     enabled: !!props.bookId,
+  //   },
+  // );
 
   // react-query - POST post
   const { mutate, isError } = useMutation(postPost, {
@@ -62,8 +63,8 @@ const WritePostForm = (props: PropsType) => {
   // 포스트(독서기록) 작성 완료 함수
   const handleSubmitPost = (data: FormValue) => {
     mutate({
+      planId: props.planInfo.planId,
       data: {
-        bookId: props.bookId,
         title: data.postTitle,
         content: data.postContents,
       },
@@ -84,16 +85,16 @@ const WritePostForm = (props: PropsType) => {
         open={snackBarOpen}
         handleClose={handleClose}
       />
-      {/* 선택된 책 정보 */}
-      {bookInfo && (
+      {/* 선택된 플랜 정보 */}
+      {props.planInfo && (
         <Box sx={{ display: "flex", alignItems: "baseline" }}>
           <CommonTypography
-            value={"👉" + bookInfo.title}
+            value={"👉" + props.planInfo.title}
             variant="h5"
             bold={true}
           />
           <CommonTypography
-            value={bookInfo.author}
+            value={props.planInfo.author}
             variant="body1"
             bold={true}
           />
@@ -132,7 +133,7 @@ const WritePostForm = (props: PropsType) => {
       <CommonBigButton
         value="다른 책 선택하기"
         onClick={() => {
-          props.handleChangeBook(null);
+          props.handleChangePlan(null);
         }}
       />
     </Box>

@@ -249,7 +249,7 @@ declare global {
     bookAuthor: string;
     startDate: string;
     endDate: string;
-    postId?: number;
+    postId: number;
     postTitle: string;
     content: string;
     countComments: number;

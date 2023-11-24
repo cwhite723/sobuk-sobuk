@@ -21,7 +21,7 @@ const FeedPostCardInfo = (props: PropsType) => {
         }}
       >
         {/* 책 이미지 - 수정 필요 */}
-        {/* <CommonBookImage width={100} height={150} src={props.postItem} /> */}
+        <CommonBookImage width={100} height={150} />
         <Box>
           <Box sx={{ display: "flex", alignItems: "baseline", my: 2 }}>
             <CommonTypography

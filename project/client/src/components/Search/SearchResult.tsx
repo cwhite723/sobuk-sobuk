@@ -17,13 +17,15 @@ interface PropsType {
 // 검색결과목록 표출
 const SerarchReasult = (props: PropsType) => {
   // redux에 저장된 토큰 가져오기 - bookmark 요청에 필요
-  const token = useSelector((state: RootState) => state.auth.token);
+  const memberToken = useSelector((state: RootState) => state.auth.token);
+
+  // kakao api에서 소북DB에 저장한 도서id값
+  // 바로 plans등록을 위해 저장이 필요함
+  const [kakaoBookId, setKakaoBookId] = useState<number | null>(null);
 
   // plan에 등록할, 사용자가 선택한 도서
   // 선택한 도서의 유무에 따라 Dialog open값을 결정함
-  const [selectedBook, setSelectedBook] = useState<BookInfoSimple | undefined>(
-    undefined,
-  );
+  const [selectedBook, setSelectedBook] = useState<BookInfoSimple | null>(null);
 
   // 검색에 필요한 query params
   const [params, setParams] = useState<BookParams>(props.queryParams);
@@ -89,10 +91,13 @@ const SerarchReasult = (props: PropsType) => {
   );
 
   // react-query - post book
-  const { mutate: bookMutate } = useMutation(postBook, {
+  const { mutateAsync: bookMutate, isSuccess } = useMutation(postBook, {
     onSuccess: (data) => {
-      // 도서 등록 성공
-      console.log("도서 등록", data);
+      if (data) {
+        // 도서 등록 성공
+        setKakaoBookId(() => data.data);
+        console.log("도서 등록", data);
+      }
     },
     onError: (error) => {
       // 도서 등록 실패
@@ -102,7 +107,7 @@ const SerarchReasult = (props: PropsType) => {
 
   // react-query - post bookmark
   const { mutate: bookmarkMutate } = useMutation(postBookmark, {
-    onSuccess: async (data) => {
+    onSuccess: (data) => {
       // bookmark 성공
       console.log(data);
     },
@@ -114,26 +119,28 @@ const SerarchReasult = (props: PropsType) => {
 
   // 책 읽기
   const handleReadBook = (book: BookInfoSimple) => {
-    bookMutate({
-      title: book.title,
-      author: book.author,
-      publisher: book.publisher,
-      publicationDate: book.publicationDate ? book.publicationDate : "정보없음",
-      isUserInput: false,
-    });
+    if (props.queryType === "kakao") {
+      bookMutate({
+        title: book.title,
+        author: book.author,
+        publisher: book.publisher,
+        publicationDate: book.publicationDate
+          ? book.publicationDate
+          : "정보없음",
+        isUserInput: false,
+      });
+    }
     setSelectedBook(book);
   };
 
   // 책 찜하기
   const handleBookmark = async (book: BookInfoSimple, token: string) => {
-    if (token) {
-      await bookmarkMutate({ bookId: book.bookId, accessToken: token });
-    }
+    await bookmarkMutate({ bookId: book.bookId, accessToken: token });
   };
 
   // Dialog 닫기
   const handleClose = () => {
-    setSelectedBook(undefined);
+    setSelectedBook(null);
   };
 
   useEffect(() => {
@@ -141,11 +148,17 @@ const SerarchReasult = (props: PropsType) => {
     setResultBooks([]);
   }, [page]);
 
+  useEffect(() => {
+    if (kakaoBookId && selectedBook) {
+      setSelectedBook({ ...selectedBook, bookId: kakaoBookId });
+    }
+  }, [kakaoBookId, selectedBook]);
+
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
-      {selectedBook && (
+      {selectedBook && memberToken && (
         <SearchBookReadDialog
-          isOpen={selectedBook !== undefined}
+          isOpen={selectedBook !== null}
           handleClose={handleClose}
           selectedBook={selectedBook}
         />
@@ -198,24 +211,28 @@ const SerarchReasult = (props: PropsType) => {
                 />
               </Box>
             </Box>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "end",
-              }}
-            >
-              <CommonButton
-                value="📖읽기"
-                outline={false}
-                onClick={() => handleReadBook(bookItem)}
-              />
-              <CommonButton
-                value="📌찜하기"
-                outline={false}
-                onClick={() => token && handleBookmark(bookItem, token)}
-              />
-            </Box>
+            {memberToken && (
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "end",
+                }}
+              >
+                <CommonButton
+                  value="📖읽기"
+                  outline={false}
+                  onClick={() => handleReadBook(bookItem)}
+                />
+                <CommonButton
+                  value="📌찜하기"
+                  outline={false}
+                  onClick={() =>
+                    memberToken && handleBookmark(bookItem, memberToken)
+                  }
+                />
+              </Box>
+            )}
           </Box>
         ))}
       {totalPages && (

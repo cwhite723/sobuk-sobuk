@@ -38,7 +38,7 @@ export const postLogIn = async (data: MemberLogIn) => {
 export const postLogOut = async (accessToken: string | null) => {
   if (accessToken) {
     try {
-      return await Api.post("/members/log-out", {
+      return await Api.post("/members/log-out", null, {
         headers: { Authorization: `${accessToken}` },
       });
     } catch (error) {
@@ -135,10 +135,10 @@ export const getMember = async ({
   memberId,
   accessToken,
 }: {
-  memberId: number;
+  memberId: number | null;
   accessToken: string | null;
 }): Promise<OtherMemberResponse | undefined> => {
-  if (accessToken) {
+  if (accessToken && memberId) {
     try {
       const response = await Api.get(`/members/${memberId}`, {
         headers: { Authorization: accessToken },

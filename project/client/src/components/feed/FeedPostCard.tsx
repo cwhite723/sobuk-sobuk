@@ -26,6 +26,8 @@ const FeedPostCard = (props: PropsType) => {
     },
   );
 
+  console.log(props.postItem);
+
   return (
     <Grid xs="auto" md={5} sx={{ width: "100%" }}>
       <Box
@@ -41,7 +43,13 @@ const FeedPostCard = (props: PropsType) => {
         }}
       >
         {/* user profile */}
-        {data && <CommonUserProfile memberInfo={data.data} avatarSize={50} />}
+        {data && (
+          <CommonUserProfile
+            memberInfo={data.data}
+            memberId={props.postItem.memberId}
+            avatarSize={50}
+          />
+        )}
 
         {/* 책, 게시글 정보 영역 */}
         <FeedPostCardInfo postItem={props.postItem} />

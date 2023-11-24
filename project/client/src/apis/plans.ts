@@ -59,12 +59,22 @@ export const patchPlan = async ({
  * @param planId
  * @returns { success: boolean }
  */
-export const deletePlan = async (planId: number) => {
-  try {
-    return await Api.delete(`/plans/${planId}`);
-  } catch (error) {
-    console.error("Error in Delete Plan:", error);
-    throw new Error("Failed to Delete Plan");
+export const deletePlan = async ({
+  planId,
+  accessToken,
+}: {
+  planId: number;
+  accessToken: string | null;
+}) => {
+  if (accessToken) {
+    try {
+      return await Api.delete(`/plans/${planId}`, {
+        headers: { Authorization: `${accessToken}` },
+      });
+    } catch (error) {
+      console.error("Error in Delete Plan:", error);
+      throw new Error("Failed to Delete Plan");
+    }
   }
 };
 

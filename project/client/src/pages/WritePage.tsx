@@ -12,12 +12,21 @@ import { RootState } from "store/store";
 const WritePage = () => {
   // redux에 저장된 토큰 가져오기
   const token = useSelector((state: RootState) => state.auth.token);
-  // 선택된 책
-  const [selectBookId, setSelectBookId] = useState<number | null>(null);
+
+  // 선택된 책 - 수정 전
+  // const [selectBookId, setSelectBookId] = useState<number | null>(null);
+
+  // plan 기반으로 post를 작성하기 때문에 bookId가 아니라 planInfo가 있어야 함
+  const [selectPlan, setSelectPlan] = useState<PlanInfo | null>(null);
 
   // 선택된 책을 컨트롤 하는 함수
-  const handleSelectBook = (bookId: number) => {
-    setSelectBookId(bookId);
+  // const handleSelectBook = (bookId: number) => {
+  //   setSelectBookId(bookId);
+  // };
+
+  // 선택된 플랜을 컨트롤 하는 함수
+  const handleSelectPlan = (planInfo: PlanInfo) => {
+    setSelectPlan(planInfo);
   };
 
   const { data: notCreatedPostPlans } = useQuery(
@@ -25,12 +34,18 @@ const WritePage = () => {
     () => getPlans("NOT_CREATED_POST", token),
     {
       enabled: !!token,
+      retry: false,
     },
   );
 
   // 선택된 책 초기화 함수
-  const handleChangeBook = () => {
-    setSelectBookId(null);
+  // const handleChangeBook = () => {
+  //   setSelectBookId(null);
+  // };
+
+  // 선택된 플랜 초기화 함수
+  const handleChangePlan = () => {
+    setSelectPlan(null);
   };
 
   return (
@@ -51,7 +66,7 @@ const WritePage = () => {
         bold={true}
       />
       {/* 완독 도서 리스트 */}
-      {selectBookId === null && (
+      {selectPlan === null && (
         <Box
           sx={{
             display: "flex",
@@ -71,17 +86,18 @@ const WritePage = () => {
             notCreatedPostPlans.data.map((planInfo) => (
               <WritePostBookItem
                 key={planInfo.planId}
-                handleSelectBook={handleSelectBook}
-                bookId={planInfo.bookId}
+                handleSelectPlan={handleSelectPlan}
+                // bookId={planInfo.bookId}
+                planInfo={planInfo}
               />
             ))}
         </Box>
       )}
       {/* 독서기록 작성 폼 */}
-      {selectBookId && (
+      {selectPlan && (
         <WritePostForm
-          handleChangeBook={handleChangeBook}
-          bookId={selectBookId}
+          handleChangePlan={handleChangePlan}
+          planInfo={selectPlan}
         />
       )}
     </Box>

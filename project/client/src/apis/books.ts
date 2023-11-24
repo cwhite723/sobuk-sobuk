@@ -104,7 +104,7 @@ export const postBookmark = async ({
 }) => {
   if (accessToken) {
     try {
-      return await Api.post(`/books/${bookId}/bookmark`, {
+      return await Api.post(`/books/${bookId}/bookmark`, null, {
         headers: { Authorization: `${accessToken}` },
       });
     } catch (error) {

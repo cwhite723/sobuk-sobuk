@@ -18,11 +18,24 @@ interface PropsType {
 // 사용 위치에 따라 로그인한 사용자의 정보 or
 // 다른 사용자의 정보가 필요하기 때문에 props로 받음
 
+// 팔로우 여부를 확인하는 함수
+const followCheck = (otherMemberInfo: OtherMemberInfo) => {
+  if (otherMemberInfo.following) {
+    // 팔로우 상태면
+    return true;
+  } else {
+    // 팔로우 상태가 아니면
+    return false;
+  }
+};
+
 const CommonUserProfile = (props: PropsType) => {
   // 로그인 여부 확인 token
   const memberToken = useSelector((state: RootState) => state.auth.token);
   // 팔로우 여부
-  const [isFollow, setIsFollow] = useState(false);
+  const [isFollow, setIsFollow] = useState(
+    followCheck(props.memberInfo as OtherMemberInfo),
+  );
   // 팔로우 버튼 보여주기
   const [showFollow, setShowFollow] = useState(true);
   // profile 주인
@@ -47,17 +60,6 @@ const CommonUserProfile = (props: PropsType) => {
     } else {
       // 팔로우 되어 있지 않으면 팔로우 실행
       setIsFollow(true);
-    }
-  };
-
-  // 팔로우 여부를 확인하는 함수
-  const followCheck = (otherMemberInfo: OtherMemberInfo) => {
-    if (otherMemberInfo.following) {
-      // 팔로우 상태면
-      return true;
-    } else {
-      // 팔로우 상태가 아니면
-      return false;
     }
   };
 

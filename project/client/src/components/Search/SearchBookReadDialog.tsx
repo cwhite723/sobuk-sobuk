@@ -20,7 +20,7 @@ import { getStringDate } from "utils/format";
 
 interface PropsType {
   isOpen: boolean;
-  selectedBook: BookInfoSimple;
+  selectedBook: BookInfoSimple | BookInfo;
   handleClose: () => void;
 }
 
@@ -35,14 +35,14 @@ const SearchBookReadDialog = (props: PropsType) => {
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
   // redux에 저장된 토큰 가져오기 - post plan 요청에 필요
-  const token = useSelector((state: RootState) => state.auth.token);
+  const memberToken = useSelector((state: RootState) => state.auth.token);
 
   // react hook form
   const { control, handleSubmit, reset } = useForm<FormValue>({
     defaultValues: {
       totalPages: 0,
-      startDate: undefined,
-      endDate: undefined,
+      startDate: getStringDate(new Date()),
+      endDate: getStringDate(new Date()),
     },
   });
 
@@ -69,7 +69,7 @@ const SearchBookReadDialog = (props: PropsType) => {
         totalPage: data.totalPages,
         readPageNumber: 0,
       },
-      accessToken: token,
+      accessToken: memberToken,
     });
   };
 
@@ -135,22 +135,20 @@ const SearchBookReadDialog = (props: PropsType) => {
             <CommonTextField
               name="startDate"
               control={control}
-              rules={{ required: true }}
+              rules={{ required: true, min: getStringDate(new Date()) }}
               textFieldProps={{
                 id: "start-date",
                 label: "Start",
-                placeholder: "시작일을 입력해주세요",
                 type: "date",
               }}
             />
             <CommonTextField
               name="endDate"
               control={control}
-              rules={{ required: true }}
+              rules={{ required: true, min: getStringDate(new Date()) }}
               textFieldProps={{
                 id: "end-date",
                 label: "End",
-                placeholder: "종료일을 입력해주세요",
                 type: "date",
               }}
             />

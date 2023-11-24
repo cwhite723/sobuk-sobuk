@@ -5,6 +5,12 @@ import MainPlanProgressCover from "./MainPlanProgressCover";
 import { useState } from "react";
 import MainPlanProgressDialog from "./MainPlanProgressDialog";
 import MainPlanProgressBar from "./MainPlanProgressBar";
+import CommonButton from "components/common/CommonButton";
+import { useMutation } from "react-query";
+import { deletePlan } from "apis/plans";
+import CommonSnackBar from "components/common/CommonSnackBar";
+import { useSelector } from "react-redux";
+import { RootState } from "store/store";
 
 interface PropsType {
   planItem: PlanInfo;
@@ -13,8 +19,25 @@ interface PropsType {
 }
 
 const MainPlanProgressCard = (props: PropsType) => {
+  // redux에 저장된 토큰 가져오기
+  const memberToken = useSelector((state: RootState) => state.auth.token);
+
   // Dialog open 여부
   const [openDialog, setOpenDialog] = useState(false);
+
+  // snackbar open 여부
+  const [openSnackBar, setOpenSnackBar] = useState(false);
+
+  // react-query DELETE plan
+  const { mutate } = useMutation(deletePlan, {
+    onSuccess: () => {
+      // 삭제 성공
+      setOpenSnackBar(true);
+    },
+    onError: (error) => {
+      console.log("삭제 실패", error);
+    },
+  });
 
   // 독서 정보(기간, 읽은 페이지) 수정하기
   // READING, OVERDUE, NOT_STARTED
@@ -22,9 +45,19 @@ const MainPlanProgressCard = (props: PropsType) => {
     setOpenDialog(true);
   };
 
+  // 독서 정보 삭제하기
+  const hadleDeletePlan = () => {
+    mutate({ planId: props.planItem.planId, accessToken: memberToken });
+  };
+
   // Dialog 닫기
   const handleClose = () => {
     setOpenDialog(false);
+  };
+
+  // SnackBar 닫기
+  const handleSnackBarClose = () => {
+    setOpenSnackBar(false);
   };
 
   return (
@@ -44,9 +77,18 @@ const MainPlanProgressCard = (props: PropsType) => {
         mb: 2,
       }}
     >
+      {openSnackBar && (
+        <CommonSnackBar
+          value="독서 정보 삭제가 완료되었습니다."
+          severity="success"
+          open={openSnackBar}
+          handleClose={handleSnackBarClose}
+        />
+      )}
+
       {/* 독서 진행률 수정을 위한 Dialog */}
       {/* Status가 READING */}
-      {props.planItem.status === "reading" && (
+      {props.planItem.status === "reading" && openDialog && (
         <MainPlanProgressDialog
           selectedPlan={props.planItem}
           isOpen={openDialog}
@@ -139,6 +181,7 @@ const MainPlanProgressCard = (props: PropsType) => {
 
           {/* 진행률 그래프 부분 */}
           <MainPlanProgressBar planItem={props.planItem} />
+          <CommonButton value="삭제" onClick={hadleDeletePlan} outline={true} />
         </Box>
       </Box>
     </Box>

@@ -122,9 +122,7 @@ const MainPage = () => {
             {(allPlans[status] &&
               allPlans[status].map((plan) => (
                 <Box key={plan.planId}>
-                  <CommonLink to="../write">
-                    <MainPlanCard planItem={plan} />
-                  </CommonLink>
+                  <MainPlanCard planItem={plan} />
                 </Box>
               ))) ?? (
               <CommonLink to="../search">
