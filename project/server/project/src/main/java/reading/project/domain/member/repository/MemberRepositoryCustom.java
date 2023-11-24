@@ -20,4 +20,7 @@ public interface MemberRepositoryCustom {
     Slice<InfoPagePostList> findByPostList(Long id, Long cursorId, Pageable pageable);
     Slice<InfoPageBookmarkList> findByReadingPlanList(Long id, Long cursorId, Pageable pageable);
 
+    Long countByPostList(Long id);
+
+    Long countByReadingPlanList(Long id);
 }

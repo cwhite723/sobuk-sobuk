@@ -47,7 +47,8 @@ public class MemberService {
         this.memberRepository.save(member);
     }
 
-    public MemberDto.Response updateMember(long memberId, MemberDto.Patch requestBody) {
+    public MemberDto.Response updateMember(MemberDto.Patch requestBody) {
+        long memberId = jwtParseInterceptor.getAuthenticatedUserId();
         validateUser(memberId);
         return this.mapper.memberToMemberDtoResponse(this.findExistsMember(memberId).update(requestBody));
     }
@@ -56,7 +57,8 @@ public class MemberService {
         return this.mapper.memberToMemberDtoResponse(this.findExistsMember(memberId));
     }
 
-    public void deleteMember(long memberId) {
+    public void deleteMember() {
+        long memberId = jwtParseInterceptor.getAuthenticatedUserId();
         validateUser(memberId);
         this.memberRepository.delete(this.findExistsMember(memberId));
     }
@@ -93,7 +95,8 @@ public class MemberService {
         Member member = this.findExistsMember(userId);
         Long follower = memberRepository.countByFollowings(userId);
         Long following = memberRepository.countByFollowers(userId);
-
+        Long countPost = memberRepository.countByPostList(userId);
+        Long countReadingPlan = memberRepository.countByReadingPlanList(userId);
         MyPageDetails memberInfo = MyPageDetails.builder()
                 .userName(member.getUserName())
                 .nickname(member.getNickname())
@@ -101,6 +104,8 @@ public class MemberService {
                 .image(member.getImage())
                 .countFollower(follower)
                 .countFollowing(following)
+                .countPost(countPost)
+                .countBookMark(countReadingPlan)
                 .build();
         return memberInfo;
     }
@@ -165,8 +170,8 @@ public class MemberService {
         Member member = findExistsMember(memberId);
 
         boolean isFollowing = checkFollowing(userId, member).size() > 0;
-        long countBookMark = 0L;
-        long countPost = 0L;
+        long countBookMark = memberRepository.countByReadingPlanList(memberId);
+        long countPost = memberRepository.countByPostList(memberId);
         UserPageDetails userInfo = UserPageDetails.builder()
                 .userName(member.getUserName())
                 .nickname(member.getNickname())
