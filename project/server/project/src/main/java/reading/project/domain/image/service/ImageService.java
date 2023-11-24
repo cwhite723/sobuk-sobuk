@@ -50,6 +50,7 @@ public class ImageService {
     private String uploadImage(MultipartFile file, String ext, String changedImageName) {
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentType("image/" + ext.substring(1));
+        metadata.setContentLength(file.getSize());
 
         try {
             amazonS3.putObject(new PutObjectRequest(
