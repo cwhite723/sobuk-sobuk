@@ -36,13 +36,12 @@ public class MemberController {
         return ApplicationResponse.noData();
     }
 
-    @PatchMapping("/{member-id}")
+    @PatchMapping
     @ResponseStatus(OK)
     public ApplicationResponse<MemberDto.Response> patchMember(
-            @PathVariable("member-id") long memberId,
             @RequestBody MemberDto.Patch requestBody
     ) {
-        return ApplicationResponse.ok(this.memberService.updateMember(memberId, requestBody));
+        return ApplicationResponse.ok(this.memberService.updateMember(requestBody));
     }
     // 유저 정보 상세 페이지 api
     @GetMapping("/{member-id}")
@@ -52,10 +51,10 @@ public class MemberController {
         return ApplicationResponse.ok(response);
     }
 
-    @DeleteMapping("/{member-id}")
+    @DeleteMapping
     @ResponseStatus(NO_CONTENT)
-    public ApplicationResponse<Void> deleteMember(@PathVariable("member-id") long memberId) {
-        this.memberService.deleteMember(memberId);
+    public ApplicationResponse<Void> deleteMember() {
+        this.memberService.deleteMember();
         return ApplicationResponse.noData();
     }
 

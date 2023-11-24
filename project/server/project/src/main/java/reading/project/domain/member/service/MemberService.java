@@ -47,7 +47,8 @@ public class MemberService {
         this.memberRepository.save(member);
     }
 
-    public MemberDto.Response updateMember(long memberId, MemberDto.Patch requestBody) {
+    public MemberDto.Response updateMember(MemberDto.Patch requestBody) {
+        long memberId = jwtParseInterceptor.getAuthenticatedUserId();
         validateUser(memberId);
         return this.mapper.memberToMemberDtoResponse(this.findExistsMember(memberId).update(requestBody));
     }
@@ -56,7 +57,8 @@ public class MemberService {
         return this.mapper.memberToMemberDtoResponse(this.findExistsMember(memberId));
     }
 
-    public void deleteMember(long memberId) {
+    public void deleteMember() {
+        long memberId = jwtParseInterceptor.getAuthenticatedUserId();
         validateUser(memberId);
         this.memberRepository.delete(this.findExistsMember(memberId));
     }
