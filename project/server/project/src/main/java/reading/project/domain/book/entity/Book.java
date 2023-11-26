@@ -44,6 +44,9 @@ public class Book extends BaseEntity {
     @Column(name = "is_user_input")
     private boolean isUserInput;
 
+    @Column(name = "image_url")
+    private String imageUrl;
+
     @OnDelete(action = CASCADE)
     @OneToMany(mappedBy = "book", cascade = PERSIST)
     private List<Post> posts = new ArrayList<>();
@@ -57,12 +60,13 @@ public class Book extends BaseEntity {
     private List<Bookmark> bookmarks = new ArrayList<>();
 
     @Builder
-    public Book(String title, String publisher, String author, LocalDate publicationDate, boolean isUserInput) {
+    public Book(String title, String publisher, String author, LocalDate publicationDate, boolean isUserInput, String imageUrl) {
         this.title = title;
         this.publisher = publisher;
         this.author = author;
         this.publicationDate = publicationDate;
         this.isUserInput = isUserInput;
+        this.imageUrl = imageUrl;
     }
 
     public void update(String title, String publisher, String author, LocalDate publicationDate, boolean isUserInput) {

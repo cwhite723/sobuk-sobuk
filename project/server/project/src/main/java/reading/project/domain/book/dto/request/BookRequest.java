@@ -1,6 +1,7 @@
 package reading.project.domain.book.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.annotation.Nullable;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,6 +20,7 @@ public class BookRequest {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDate publicationDate;
     private boolean isUserInput;
+    private String imageUrl;
 
     public Book toEntity() {
         return Book.builder()
@@ -27,6 +29,7 @@ public class BookRequest {
                 .author(author)
                 .publicationDate(publicationDate)
                 .isUserInput(isUserInput)
+                .imageUrl(imageUrl)
                 .build();
     }
 }

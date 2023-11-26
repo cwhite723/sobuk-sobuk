@@ -9,12 +9,14 @@ public class BookResponse {
     private String title;
     private String author;
     private String publisher;
+    private String imageUrl;
 
     @QueryProjection
-    public BookResponse(Long bookId, String title, String author, String publisher) {
+    public BookResponse(Long bookId, String title, String author, String publisher, String imageUrl) {
         this.bookId = bookId;
         this.title = title;
         this.author = author;
         this.publisher = publisher;
+        this.imageUrl = imageUrl;
     }
 }

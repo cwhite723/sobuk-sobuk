@@ -29,7 +29,8 @@ public class ReadingPlanRepositoryImpl implements ReadingPlanRepositoryCustom {
                         readingPlan.startDate,
                         readingPlan.endDate,
                         readingPlan.todayPage,
-                        readingPlan.totalPage
+                        readingPlan.totalPage,
+                        readingPlan.readPageNumber
                 ))
                 .from(readingPlan)
                 .where(readingPlan.member.id.eq(memberId)
