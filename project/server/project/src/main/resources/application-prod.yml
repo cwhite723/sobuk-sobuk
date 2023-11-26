@@ -47,6 +47,6 @@ cloud:
     region:
       static: ap-northeast-2
     s3:
-      bucket: mainproject
+      bucket: mainproject.bucket
     stack:
       auto: false
