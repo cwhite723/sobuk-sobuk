@@ -35,7 +35,8 @@ public class BookRepositoryImpl implements BookRepositoryCustom {
                         book.author,
                         book.publicationDate,
                         book.createdAt,
-                        book.isUserInput
+                        book.isUserInput,
+                        book.imageUrl
                 ))
                 .from(book)
                 .where(book.id.eq(bookId))
@@ -49,7 +50,8 @@ public class BookRepositoryImpl implements BookRepositoryCustom {
                         book.id,
                         book.title,
                         book.author,
-                        book.publisher
+                        book.publisher,
+                        book.imageUrl
                 ))
                 .from(book)
                 .where(searchFilter(filterCondition))
