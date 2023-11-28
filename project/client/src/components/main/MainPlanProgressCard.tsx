@@ -6,7 +6,7 @@ import { useState } from "react";
 import MainPlanProgressDialog from "./MainPlanProgressDialog";
 import MainPlanProgressBar from "./MainPlanProgressBar";
 import CommonButton from "components/common/CommonButton";
-import { useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { deletePlan } from "apis/plans";
 import CommonSnackBar from "components/common/CommonSnackBar";
 import { useSelector } from "react-redux";
@@ -14,8 +14,6 @@ import { RootState } from "store/store";
 
 interface PropsType {
   planItem: PlanInfo;
-  bookTitle: string;
-  bookAuthor: string;
 }
 
 const MainPlanProgressCard = (props: PropsType) => {
@@ -27,6 +25,9 @@ const MainPlanProgressCard = (props: PropsType) => {
 
   // snackbar open 여부
   const [openSnackBar, setOpenSnackBar] = useState(false);
+
+  // react-query GET book info
+  // const { data } = useQuery(["getBook", props.planItem.])
 
   // react-query DELETE plan
   const { mutate } = useMutation(deletePlan, {
@@ -103,8 +104,7 @@ const MainPlanProgressCard = (props: PropsType) => {
       )}
 
       {/* 상태에 상관없이 공통으로 표출되는 책 정보 */}
-      {/* 아직 이미지 정보 없음 */}
-      <CommonBookImage width={100} height={150} />
+      <CommonBookImage width={100} height={150} src={null} />
       <Box
         sx={{
           width: { xs: "100%", md: "auto" },

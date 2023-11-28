@@ -31,7 +31,7 @@ export const postLogIn = async (data: MemberLogIn) => {
 };
 
 /**
- * 로그아웃 - 에러
+ * 로그아웃 - 완료
  * @param accessToken
  * @returns
  */
@@ -77,20 +77,14 @@ export const postNicknameCheck = async (data: { nickname: string }) => {
 };
 
 /**
- * 회원탈퇴 - 테스트필요
- * @param { memberId, accessToken }
+ * 회원탈퇴 - 완료
+ * @param { accessToken }
  * @returns
  */
-export const deleteMember = async ({
-  memberId,
-  accessToken,
-}: {
-  memberId: number;
-  accessToken: string | null;
-}) => {
+export const deleteMember = async (accessToken: string | null) => {
   if (accessToken) {
     try {
-      return await Api.delete(`/members/${memberId}`, {
+      return await Api.delete(`/members`, {
         headers: { Authorization: `${accessToken}` },
       });
     } catch (error) {
@@ -101,22 +95,20 @@ export const deleteMember = async ({
 };
 
 /**
- * 회원 정보 수정 - 테스트필요
- * @param { memberId: number, data: MemberData, accessToken: string | null }
+ * 회원 정보 수정 - 완료
+ * @param { data: MemberData, accessToken: string | null }
  * @returns
  */
 export const patchMember = async ({
-  memberId,
   data,
   accessToken,
 }: {
-  memberId: number;
-  data: MemberData;
+  data: MemberPatchData;
   accessToken: string | null;
 }) => {
   if (accessToken) {
     try {
-      return await Api.patch(`/members/${memberId}`, data, {
+      return await Api.patch(`/members`, data, {
         headers: { Authorization: `${accessToken}` },
       });
     } catch (error) {
@@ -294,7 +286,7 @@ export const patchMemberFollow = async ({
 }) => {
   if (accessToken) {
     try {
-      return await Api.patch(`/members/${memberId}/follow`, {
+      return await Api.patch(`/members/${memberId}/follow`, null, {
         headers: { Authorization: accessToken },
       });
     } catch (error) {

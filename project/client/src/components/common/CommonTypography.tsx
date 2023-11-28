@@ -1,22 +1,23 @@
 import { Typography } from "@mui/material";
 
 interface PropsType {
-  value: string;
+  text: string;
   variant: "h5" | "h6" | "body1" | "body2";
   bold: boolean;
   error?: boolean;
 }
 
-const CommonTypography: React.FC<PropsType> = (props) => {
+// 공통 타이포그라피
+const CommonTypography = ({ text, variant, bold, error }: PropsType) => {
   return (
     <Typography
-      variant={props.variant}
+      variant={variant}
       sx={{
-        fontWeight: props.bold ? 800 : 400,
-        color: props.error ? "error.main" : "text.primary",
+        fontWeight: bold ? 800 : 400,
+        color: error ? "error.main" : "text.primary",
       }}
     >
-      {props.value}
+      {text}
     </Typography>
   );
 };

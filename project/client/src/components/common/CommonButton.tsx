@@ -1,19 +1,20 @@
 import { Box, Button } from "@mui/material";
 
 interface PropsType {
-  value: string;
+  buttonText: string;
   outline: boolean;
-  onClick: React.MouseEventHandler<HTMLButtonElement>;
+  handleClickEvent: React.MouseEventHandler<HTMLButtonElement>;
 }
 
-const CommonButton: React.FC<PropsType> = (props) => {
+const CommonButton = ({ buttonText, outline, handleClickEvent }: PropsType) => {
   return (
     <Box>
       <Button
         // outline prop에 따라 버튼 스타일 변경
         sx={
-          props.outline
+          outline
             ? {
+                whiteSpace: "nowrap",
                 borderRadius: 20,
                 m: 1,
                 color: "text.primary",
@@ -25,16 +26,17 @@ const CommonButton: React.FC<PropsType> = (props) => {
                 },
               }
             : {
+                whiteSpace: "nowrap",
                 borderRadius: 20,
                 m: 1,
                 color: "text.secondary",
                 backgroundColor: "text.primary",
               }
         }
-        variant={props.outline ? "outlined" : "contained"}
-        onClick={props.onClick}
+        variant={outline ? "outlined" : "contained"}
+        onClick={handleClickEvent}
       >
-        {props.value}
+        {buttonText}
       </Button>
     </Box>
   );

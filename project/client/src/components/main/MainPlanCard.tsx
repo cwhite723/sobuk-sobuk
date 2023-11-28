@@ -20,13 +20,7 @@ const MainPlanCard = (props: PropsType) => {
         mb: 2,
       }}
     >
-      {props.planItem && (
-        <MainPlanProgressCard
-          planItem={props.planItem}
-          bookTitle={props.planItem.title}
-          bookAuthor={props.planItem.author}
-        />
-      )}
+      {props.planItem && <MainPlanProgressCard planItem={props.planItem} />}
     </Box>
   );
 };

@@ -146,36 +146,36 @@ const SearchPage = () => {
       {/* snackbar */}
       {openSnackBar && (
         <CommonSnackBar
-          value="새로운 도서가 등록되었습니다."
+          text="새로운 도서가 등록되었습니다."
           severity="success"
           open={openSnackBar}
-          handleClose={handleSnackBarClose}
+          handleSnackBarClose={handleSnackBarClose}
         />
       )}
 
       {openNotMemberSnackBar && (
         <CommonSnackBar
-          value="로그인이 필요합니다."
+          text="로그인이 필요합니다."
           severity="error"
           open={openNotMemberSnackBar}
-          handleClose={handleNotMemberSnackBarClose}
+          handleSnackBarClose={handleNotMemberSnackBarClose}
         />
       )}
 
       <Box sx={{ display: "flex", flexDirection: "column", mt: 5, mb: -3 }}>
-        <CommonTitle value="🎁 어떤 책을 읽어볼까요? 자유롭게 도서를 탐색하세요!" />
+        <CommonTitle text="🎁 어떤 책을 읽어볼까요? 자유롭게 도서를 탐색하세요!" />
         <CommonButton
-          value={
+          buttonText={
             openBookList ? "> 등록된 전체 도서 닫기" : "> 등록된 전체 도서 보기"
           }
           outline={true}
-          onClick={handleAllBookList}
+          handleClickEvent={handleAllBookList}
         />
         {/* 원하는 검색결과가 없을 경우 */}
         <CommonButton
-          value="📕직접 추가하기"
+          buttonText="📕직접 추가하기"
           outline={false}
-          onClick={handleAddBook}
+          handleClickEvent={handleAddBook}
         />
       </Box>
 
@@ -189,18 +189,18 @@ const SearchPage = () => {
 
       {/* 도서검색 */}
       <CommonSection>
-        <CommonTitle value="📚 도서 검색" />
+        <CommonTitle text="📚 도서 검색" />
         <CommonSearchBar setSearchQuery={setSearchQuery} />
         {/* 검색 결과 표출 */}
         {searchQuery && (
           <CommonSection>
-            <CommonTitle value="📚 소북소북 등록 도서" />
+            <CommonTitle text="📚 소북소북 등록 도서" />
             <SerarchReasult queryType="sobuk" queryParams={searchBooksParams} />
           </CommonSection>
         )}
         {searchQuery && (
           <CommonSection>
-            <CommonTitle value="📚 카카오 검색 도서" />
+            <CommonTitle text="📚 카카오 검색 도서" />
             <SerarchReasult queryType="kakao" queryParams={searchBooksParams} />
           </CommonSection>
         )}
@@ -208,13 +208,13 @@ const SearchPage = () => {
 
       {/* 인기도서 */}
       <CommonSection maxHight={700}>
-        <CommonTitle value="📚 인기도서 TOP10" />
+        <CommonTitle text="📚 인기도서 TOP10" />
         {/* 도서container */}
         <Grid container spacing={2} columns={{ xs: 1, md: 10 }}>
           {/* 도서item */}
           {rankBooks?.data.content === undefined ? (
             <CommonTypography
-              value="랭킹정보를 가져올 수 없습니다."
+              text="랭킹정보를 가져올 수 없습니다."
               variant="body1"
               bold={true}
             />

@@ -6,11 +6,13 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Input,
   useMediaQuery,
 } from "@mui/material";
 import { postBook } from "apis/books";
+import CommonBookImage from "components/common/CommonBookImage";
 import CommonTextField from "components/common/CommonTextField";
-import { useEffect } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
 import theme from "styles/theme";
@@ -33,6 +35,15 @@ interface FormValue {
 const SearchBookSubmitDialog = (props: PropsType) => {
   // 화면 크기가 md보다 작아지면 Dialog를 fullscreen으로 띄움
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
+  // 책 이미지
+  const [bookImage, setBookImage] = useState("");
+
+  // 이미지 변경 함수
+  const handleChangeImg = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      setBookImage(URL.createObjectURL(event.target.files[0]));
+    }
+  };
 
   // react hook form
   const { control, handleSubmit, reset } = useForm<FormValue>({
@@ -134,6 +145,19 @@ const SearchBookSubmitDialog = (props: PropsType) => {
                 type: "date",
               }}
             />
+          </Box>
+
+          {/* 사진 업로드 */}
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              mt: 2,
+            }}
+          >
+            <CommonBookImage width={50} height={80} src={bookImage} />
+            <Input type="file" onChange={handleChangeImg} name="img" />
           </Box>
         </DialogContent>
       </form>

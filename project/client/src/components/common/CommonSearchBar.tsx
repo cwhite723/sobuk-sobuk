@@ -7,16 +7,20 @@ interface PropsType {
   setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const CommonSearchBar = (props: PropsType) => {
+// 검색창 컴포넌트
+const CommonSearchBar = ({ setSearchQuery }: PropsType) => {
+  // input value
   const [searchValue, setSearchValue] = useState("");
+
+  // 1.5초 동안 입력이 없으면 검색하도록 디바운스 적용
   const debouncedValue = useDebounce(searchValue, 1500);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(event.target.value);
   };
 
   useEffect(() => {
-    props.setSearchQuery(debouncedValue);
+    setSearchQuery(debouncedValue);
   }, [debouncedValue]);
 
   return (
@@ -58,7 +62,7 @@ const CommonSearchBar = (props: PropsType) => {
           }}
           placeholder="검색어를 입력하세요"
           type="text"
-          onChange={handleChange}
+          onChange={handleValueChange}
         />
       </Box>
     </Box>

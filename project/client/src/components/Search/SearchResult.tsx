@@ -8,6 +8,8 @@ import { getAllBooks, getKakaoBooks, postBook, postBookmark } from "apis/books";
 import { useSelector } from "react-redux";
 import { RootState } from "store/store";
 import { convertBookResponse } from "utils/format";
+import { postImage } from "apis/images";
+import CommonBookImage from "components/common/CommonBookImage";
 
 interface PropsType {
   queryParams: BookParams;
@@ -22,6 +24,9 @@ const SerarchReasult = (props: PropsType) => {
   // kakao api에서 소북DB에 저장한 도서id값
   // 바로 plans등록을 위해 저장이 필요함
   const [kakaoBookId, setKakaoBookId] = useState<number | null>(null);
+
+  // image를 서버에 업로드하면 반환되는 url
+  const [bookImageUrl, setBookImageUrl] = useState<string | null>(null);
 
   // plan에 등록할, 사용자가 선택한 도서
   // 선택한 도서의 유무에 따라 Dialog open값을 결정함
@@ -95,7 +100,7 @@ const SerarchReasult = (props: PropsType) => {
     onSuccess: (data) => {
       if (data) {
         // 도서 등록 성공
-        setKakaoBookId(() => data.data);
+        setKakaoBookId(data.data);
         console.log("도서 등록", data);
       }
     },
@@ -117,8 +122,22 @@ const SerarchReasult = (props: PropsType) => {
     },
   });
 
+  // react-query - post image
+  const { mutate: imageMutate } = useMutation(postImage, {
+    onSuccess: (data) => {
+      setBookImageUrl(data);
+      console.log(data);
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
   // 책 읽기
   const handleReadBook = (book: BookInfoSimple) => {
+    if (props.queryType === "sobuk" && book.imageUrl) {
+      imageMutate(book.imageUrl);
+    }
     if (props.queryType === "kakao") {
       bookMutate({
         title: book.title,
@@ -128,9 +147,10 @@ const SerarchReasult = (props: PropsType) => {
           ? book.publicationDate
           : "정보없음",
         isUserInput: false,
+        imageUrl: book.imageUrl,
       });
     }
-    setSelectedBook(book);
+    setSelectedBook({ ...book, imageUrl: bookImageUrl });
   };
 
   // 책 찜하기
@@ -182,6 +202,7 @@ const SerarchReasult = (props: PropsType) => {
               },
             }}
           >
+            <CommonBookImage src={bookItem.imageUrl} width={50} height={80} />
             <Box
               sx={{
                 display: "flex",

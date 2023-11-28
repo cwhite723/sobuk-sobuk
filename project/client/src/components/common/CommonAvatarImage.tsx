@@ -5,14 +5,15 @@ interface PropsType {
   size: number;
 }
 
-const CommonAvaratImage = (props: PropsType) => {
+// user 프로필 사진을 위한 AvatarImg 컴포넌트
+const CommonAvaratImage = ({ src, size }: PropsType) => {
   return (
-    // user 프로필 사진을 위한 AvatarImg 컴포넌트
+    // src 값이 undefined나 null이면 기본 아이콘이 표출됨
     <Avatar
-      src={props.src ? props.src : ""}
+      src={src ?? ""}
       sx={{
-        width: props.size,
-        height: props.size,
+        width: size,
+        height: size,
         backgroundColor: "text.primary",
       }}
     />

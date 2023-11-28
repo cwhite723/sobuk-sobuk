@@ -1,25 +1,31 @@
 import { Button } from "@mui/material";
 
 interface PropsType {
-  value: string;
-  onClick: React.MouseEventHandler<HTMLButtonElement>;
+  buttonText: string;
+  handleClickEvent: React.MouseEventHandler<HTMLButtonElement>;
+  disabled?: boolean;
 }
 
-const CommonBigButton: React.FC<PropsType> = (props) => {
+const CommonBigButton = ({
+  buttonText,
+  handleClickEvent,
+  disabled,
+}: PropsType) => {
   return (
-    // 기본 버튼보다 큰 버전
+    // fullWidth 속성을 가진 버튼
+    // disabled true 일때 hover 스타일 변경 필요
     <Button
       fullWidth
       variant="contained"
       sx={{
         display: "block",
-        backgroundColor: "text.primary",
-        color: "text.secondary",
-        mt: 2,
+        backgroundColor: disabled ? "primary.light" : "text.primary",
+        color: disabled ? "text.primary" : "text.secondary",
+        my: 1,
       }}
-      onClick={props.onClick}
+      onClick={handleClickEvent}
     >
-      {props.value}
+      {buttonText}
     </Button>
   );
 };

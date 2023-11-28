@@ -1,21 +1,22 @@
 import { Box } from "@mui/material";
 
 interface PropsType {
-  src?: string;
+  // member쪽 image response 값 수정하면 undefined 빼야함
+  src: string | null | undefined;
   width: number;
   height: number;
 }
 
-const CommonBookImage: React.FC<PropsType> = (props) => {
+// 도서 이미지 컴포넌트
+const CommonBookImage = ({ src, width, height }: PropsType) => {
   return (
-    // 이미지 컴포넌트
     <Box
       component="img"
       sx={{
-        width: props.width,
-        height: props.height,
+        width,
+        height,
         m: 2,
-        backgroundImage: `url(${props.src})`,
+        backgroundImage: `url(${src})`,
         backgroundSize: "contain",
         backgroundRepeat: "no-repeat",
         backgroundColor: "text.primary",

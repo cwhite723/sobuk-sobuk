@@ -1,5 +1,5 @@
 import { Alert, Box, CircularProgress, Input } from "@mui/material";
-import { deleteMember, patchMember } from "apis/members";
+import { deleteMember, getMyPage, patchMember } from "apis/members";
 import CommonAvaratImage from "components/common/CommonAvatarImage";
 import CommonBigButton from "components/common/CommonBigButton";
 import CommonSnackBar from "components/common/CommonSnackBar";
@@ -8,9 +8,10 @@ import CommonTitle from "components/common/CommonTitle";
 import CommonTypography from "components/common/CommonTypography";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useMutation } from "react-query";
-import { useSelector } from "react-redux";
+import { useMutation, useQuery } from "react-query";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { logout, setMember } from "store/auth";
 import { RootState } from "store/store";
 
 interface FormValue {
@@ -20,7 +21,9 @@ interface FormValue {
 }
 
 const UserSetting = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+
   // 에러메세지
   const [errorMessage, setErrorMessage] = useState("");
   // 스낵바 상태값
@@ -45,39 +48,57 @@ const UserSetting = () => {
     mode: "onSubmit",
   });
 
-  // react-query DELETE member
-  const { mutate: deleteMutate, isLoading: deleteIsLoading } = useMutation(
-    deleteMember,
+  // react-query - get myInfo
+  const { data: myPage, refetch } = useQuery(
+    ["getMyPage", memberToken],
+    () => getMyPage(memberToken),
     {
-      onSuccess: () => {
-        // 탈퇴 성공
-        sessionStorage.clear();
-        console.log("회원탈퇴");
-        navigate("../login");
+      onSuccess(data) {
+        if (data) {
+          // 수정된 데이터로 redux 업데이트
+          dispatch(setMember(data.data));
+        }
       },
-      onError: (error) => {
-        // 탈퇴 실패
-        console.log(error);
+      onError(error) {
+        console.log("getMyPage Error", error);
       },
+      enabled: !!snackBarOpen,
     },
   );
 
-  // 회원정보수정
-  const { mutate: patchMutate, isLoading: patchIsLoading } = useMutation(
-    patchMember,
-    {
-      onSuccess: () => {
-        // 수정 성공
-        // 수정된 데이터로 redux 업데이트 필요
-        console.log("수정 성공");
-        setSnackBarOpen(true);
-      },
-      onError: (error) => {
-        // 수정 실패
-        console.log(error);
-      },
+  // react-query DELETE member
+  const {
+    mutate: deleteMutate,
+    isLoading: deleteIsLoading,
+    isError: deleteIsError,
+  } = useMutation(deleteMember, {
+    onSuccess: () => {
+      // 탈퇴 성공
+      dispatch(logout());
+      navigate("../login");
     },
-  );
+    onError: (error) => {
+      // 탈퇴 실패
+      console.log(error);
+    },
+  });
+
+  // react-query PATCH member
+  const {
+    mutate: patchMutate,
+    isLoading: patchIsLoading,
+    isError: patchIsError,
+  } = useMutation(patchMember, {
+    onSuccess: () => {
+      // 수정 성공
+      refetch();
+      setSnackBarOpen(true);
+    },
+    onError: (error) => {
+      // 수정 실패
+      console.log(error);
+    },
+  });
 
   // 로그인한 유저의 프로필 이미지 변경 함수
   const handleChangeImg = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -87,29 +108,25 @@ const UserSetting = () => {
   };
 
   // 정보 수정 완료 버튼 함수
-  // const handleSetting = (data: FormValue) => {
-  //   data.img = profileImg;
-  //   patchMutate({
-  //     memberId: storedMemberInfo.memberId,
-  //     data: {
-  //       userName: storedMemberInfo.userName,
-  //       password: storedMemberInfo.password,
-  //       nickname: data.nickname,
-  //       email: storedMemberInfo.email,
-  //       introduction: data.introduction,
-  //     },
-  //     accessToken: memberToken,
-  //   });
-  // };
+  const handleSetting = (data: FormValue) => {
+    data.img = profileImg;
+    patchMutate({
+      data: {
+        nickname: data.nickname,
+        introduction: data.introduction,
+      },
+      accessToken: memberToken,
+    });
+  };
 
   // 회원탈퇴 버튼 함수
-  // const handleDropOut = () => {
-  //   deleteMutate(storedMemberInfo.memberId);
-  // };
+  const handleDropOut = () => {
+    deleteMutate(memberToken);
+  };
 
   const handleClose = () => {
     setSnackBarOpen(false);
-    navigate("../user/" + storedMemberInfo.memberId);
+    navigate(0);
   };
 
   useEffect(() => {
@@ -146,12 +163,12 @@ const UserSetting = () => {
         {deleteIsLoading || (patchIsLoading && <CircularProgress />)}
 
         {/* 에러발생 */}
-        {/* {deleteIsError && (
+        {deleteIsError && (
           <Alert severity="error">회원탈퇴 중 오류가 발생했습니다.</Alert>
         )}
         {patchIsError && (
           <Alert severity="error">회원정보 수정 중 오류가 발생했습니다.</Alert>
-        )} */}
+        )}
 
         <CommonTitle value="😊 계정 정보 수정하기" />
 
@@ -196,11 +213,11 @@ const UserSetting = () => {
             error={true}
           />
 
-          {/* <CommonBigButton
+          <CommonBigButton
             value="수정완료"
             onClick={handleSubmit(handleSetting)}
           />
-          <CommonBigButton value="회원탈퇴" onClick={handleDropOut} /> */}
+          <CommonBigButton value="회원탈퇴" onClick={handleDropOut} />
         </form>
       </Box>
     </Box>

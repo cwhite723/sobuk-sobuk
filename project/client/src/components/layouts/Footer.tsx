@@ -1,6 +1,7 @@
 import { Box } from "@mui/material";
-import CommonTypography from "./CommonTypography";
+import CommonTypography from "../common/CommonTypography";
 
+// 페이지 하단 정보
 const Footer = () => {
   return (
     <Box
@@ -23,7 +24,7 @@ const Footer = () => {
       />
       {/* copyright */}
       <CommonTypography
-        value="Copyright ⓒ 2023 소북소북 All Rights Reserved."
+        text="Copyright ⓒ 2023 소북소북 All Rights Reserved."
         variant="body2"
         bold={true}
       />

@@ -23,7 +23,13 @@ const SearchBookRankCard = (props: PropsType) => {
           m: 1,
         }}
       >
-        <CommonBookImage width={100} height={150} src={props.bookItem.image} />
+        {props.bookItem.imageUrl && (
+          <CommonBookImage
+            width={100}
+            height={150}
+            src={props.bookItem.imageUrl}
+          />
+        )}
 
         <Box sx={{ ml: 2, borderTop: "1px solid" }}>
           <CommonTypography

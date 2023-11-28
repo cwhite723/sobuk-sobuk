@@ -5,14 +5,15 @@ interface PropsType {
   maxHight?: number;
 }
 
-const CommonSection: React.FC<PropsType> = (props) => {
+// 컨텐츠 구역을 나누기 위한 컴포넌트
+const CommonSection = ({ children, maxHight }: PropsType) => {
   return (
     <Box
       sx={{
         display: "flex",
         flexDirection: "column",
         justifyContent: "start",
-        maxHeight: props.maxHight ? props.maxHight : "100%",
+        maxHeight: maxHight || "100%",
         overflowY: "auto",
         "::-webkit-scrollbar": {
           display: "none",
@@ -24,7 +25,7 @@ const CommonSection: React.FC<PropsType> = (props) => {
         p: 4,
       }}
     >
-      {props.children}
+      {children}
     </Box>
   );
 };

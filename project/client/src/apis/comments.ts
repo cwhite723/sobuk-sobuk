@@ -35,31 +35,45 @@ export const postComment = async ({
 export const patchComment = async ({
   commentId,
   data,
+  accessToken,
 }: {
   commentId: number;
   data: CommentData;
+  accessToken: string | null;
 }): Promise<CommentIdResponse | undefined> => {
-  try {
-    const response = await Api.patch(`/comments/${commentId}`, {
-      data,
-    });
-    return response.data;
-  } catch (error) {
-    console.error("Error in Patch Comment:", error);
-    throw new Error("Failed to Modify Comment");
+  if (accessToken) {
+    try {
+      const response = await Api.patch(`/comments/${commentId}`, data, {
+        headers: { Authorization: `${accessToken}` },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error in Patch Comment:", error);
+      throw new Error("Failed to Modify Comment");
+    }
   }
 };
 
 /**
  * 댓글 삭제 - 완료
- * @param commentId
+ * @param { commentId, accessToken }
  * @returns { success: boolean }
  */
-export const deleteComment = async (commentId: number) => {
-  try {
-    return await Api.delete(`/comments/${commentId}`);
-  } catch (error) {
-    console.error("Error in Delete Comment:", error);
-    throw new Error("Failed to Delete Comment");
+export const deleteComment = async ({
+  commentId,
+  accessToken,
+}: {
+  commentId: number;
+  accessToken: string | null;
+}) => {
+  if (accessToken) {
+    try {
+      return await Api.delete(`/comments/${commentId}`, {
+        headers: { Authorization: `${accessToken}` },
+      });
+    } catch (error) {
+      console.error("Error in Delete Comment:", error);
+      throw new Error("Failed to Delete Comment");
+    }
   }
 };

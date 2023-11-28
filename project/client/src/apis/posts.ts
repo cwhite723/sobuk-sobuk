@@ -35,16 +35,22 @@ export const postPost = async ({
 export const patchPost = async ({
   postId,
   data,
+  accessToken,
 }: {
   postId: number;
   data: PostData;
-}): Promise<PostIdResponse> => {
-  try {
-    const response = await Api.patch(`/posts/${postId}`, data);
-    return response.data;
-  } catch (error) {
-    console.error("Error in Patch Post:", error);
-    throw new Error("Failed to Modify Post");
+  accessToken: string | null;
+}): Promise<PostIdResponse | undefined> => {
+  if (accessToken) {
+    try {
+      const response = await Api.patch(`/posts/${postId}`, data, {
+        headers: { Authorization: `${accessToken}` },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error in Patch Post:", error);
+      throw new Error("Failed to Modify Post");
+    }
   }
 };
 
@@ -102,17 +108,24 @@ export const getPost = async ({
  * @param params : PostParams
  * @returns { PostsResponse }
  */
-export const getAllPosts = async (
-  params: PostParams,
-): Promise<PostsResponse | undefined> => {
-  try {
-    const response = await Api.get("/posts", {
-      params,
-    });
-    return response.data;
-  } catch (error) {
-    console.error("Error in Get All Posts:", error);
-    throw new Error("Failed to Check All Posts");
+export const getAllPosts = async ({
+  params,
+  accessToken,
+}: {
+  params: PostParams;
+  accessToken: string | null;
+}): Promise<PostsResponse | undefined> => {
+  if (accessToken) {
+    try {
+      const response = await Api.get("/posts", {
+        params,
+        headers: { Authorization: `${accessToken}` },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error in Get All Posts:", error);
+      throw new Error("Failed to Check All Posts");
+    }
   }
 };
 

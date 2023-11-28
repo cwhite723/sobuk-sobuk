@@ -11,7 +11,7 @@ const MainLayout = () => {
   const isLoading = useSelector((state: RootState) => state.auth.loading);
 
   return (
-    // main, feed, group, post, setting, user, write 페이지에 적용되는 레이아웃
+    // main, feed, group, post, user, write 페이지에 적용되는 레이아웃
     <Box sx={{ flexGrow: 1 }}>
       {/* loading */}
       <Backdrop

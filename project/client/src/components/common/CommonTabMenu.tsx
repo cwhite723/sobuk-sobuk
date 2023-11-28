@@ -4,10 +4,10 @@ import React from "react";
 interface PropsType {
   handelTabFocus: (newSelectMenu: TabMenuType) => void;
   nowTab: TabMenuType;
-  tabMenus: TabMenuType[];
+  allTabs: TabMenuType[];
 }
 
-const CommonTabMenu = (props: PropsType) => {
+const CommonTabMenu = ({ handelTabFocus, nowTab, allTabs }: PropsType) => {
   return (
     <Box
       sx={{
@@ -16,7 +16,7 @@ const CommonTabMenu = (props: PropsType) => {
       }}
     >
       <Tabs
-        value={props.nowTab.value}
+        value={nowTab.value}
         variant="scrollable"
         scrollButtons
         allowScrollButtonsMobile
@@ -33,12 +33,12 @@ const CommonTabMenu = (props: PropsType) => {
           },
         }}
       >
-        {props.tabMenus.map((item, index) => (
+        {allTabs.map((tab, index) => (
           <Tab
             key={index}
-            label={item.label}
-            value={item.value}
-            onFocus={() => props.handelTabFocus(item)}
+            label={tab.label}
+            value={tab.value}
+            onFocus={() => handelTabFocus(tab)}
           />
         ))}
       </Tabs>

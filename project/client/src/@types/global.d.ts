@@ -56,6 +56,13 @@ declare global {
     image?: string | null;
   }
 
+  interface MemberPatchData {
+    password?: string;
+    nickname: string;
+    introduction: string;
+    image?: string | null;
+  }
+
   interface MemberLogIn {
     userName: string;
     password: string;
@@ -94,6 +101,7 @@ declare global {
     author: string;
     title: string;
     content: string;
+    imageUrl?: string;
     countComment: number;
     countLike: number;
   }
@@ -104,6 +112,7 @@ declare global {
     author: string;
     totalPage: number;
     todayPage: number;
+    imageUrl?: string;
     status: BookStatus;
   }
 
@@ -141,7 +150,7 @@ declare global {
     publisher: string;
     publicationDate: string;
     isUserInput: boolean;
-    image?: string;
+    imageUrl?: string | null;
   }
 
   interface BookInfo {
@@ -152,7 +161,7 @@ declare global {
     publicationDate: string;
     createdAt?: string;
     isUserInput: boolean;
-    image?: string;
+    imageUrl: string | null;
   }
 
   interface BookInfoSimple {
@@ -160,7 +169,7 @@ declare global {
     title: string;
     author: string;
     publisher: string;
-    image?: string;
+    imageUrl: string | null;
     publicationDate?: string;
   }
 
@@ -206,6 +215,7 @@ declare global {
     endDate: string;
     totalPage: number;
     todayPage: number;
+    readPage: number;
   }
 
   // ------ Plans API Response 데이터 타입
@@ -238,6 +248,7 @@ declare global {
   interface PostData {
     title: string;
     content: string;
+    imageUrl?: string;
   }
 
   interface PostInfo {
@@ -252,6 +263,7 @@ declare global {
     postId: number;
     postTitle: string;
     content: string;
+    imageUrl: string | null;
     countComments: number;
     countLikes: number;
     createdAt: string;

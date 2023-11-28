@@ -11,24 +11,17 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import React, { useState } from "react";
-import CommonButton from "./CommonButton";
-import CommonLink from "./CommonLink";
+import CommonButton from "../common/CommonButton";
+import CommonLink from "../common/CommonLink";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logout } from "store/auth";
-import CommonSnackBar from "./CommonSnackBar";
+import CommonSnackBar from "../common/CommonSnackBar";
 import { RootState } from "store/store";
-import CommonTypography from "./CommonTypography";
+import CommonTypography from "../common/CommonTypography";
 import { useMutation } from "react-query";
 import { postLogOut } from "apis/members";
-
-const pages = [
-  { name: "홈", link: "../main" },
-  { name: "도서 탐색", link: "../search" },
-  { name: "피드", link: "../feed" },
-  { name: "독서 모임", link: "../group" },
-  { name: "내 서재", link: `../my` },
-];
+import { pages } from "constants/pages";
 
 const HeaderBar = () => {
   const dispatch = useDispatch();
@@ -46,6 +39,7 @@ const HeaderBar = () => {
 
   // snackbar 오픈 여부
   const [snackBarOpen, setSnackBarOpen] = useState(false);
+  const [errorSnackBarOpen, setErrorSnackBarOpen] = useState(false);
 
   // react-query - POST logout
   const { mutate } = useMutation(postLogOut, {
@@ -56,6 +50,7 @@ const HeaderBar = () => {
     },
     onError: (error) => {
       // 로그아웃 실패
+      setErrorSnackBarOpen(true);
       console.log(error);
     },
   });
@@ -63,6 +58,7 @@ const HeaderBar = () => {
   // snackbar 닫기 함수
   const handleClose = () => {
     setSnackBarOpen(false);
+    setErrorSnackBarOpen(false);
   };
 
   // 네비게이션 메뉴 열기
@@ -80,16 +76,32 @@ const HeaderBar = () => {
     if (memberToken) {
       // 로그아웃 작동
       mutate(memberToken);
-    } else {
-      // 로그인 페이지로 이동
-      navigate("../login");
     }
+
+    // 로그인 페이지로 이동
+    navigate("../login");
   };
 
   return (
     // 상단에 고정된 AppBar
     <AppBar position="sticky">
       <Container maxWidth="xl">
+        {/* snackbar */}
+        <CommonSnackBar
+          text="로그아웃 되었습니다."
+          severity="success"
+          open={snackBarOpen}
+          handleSnackBarClose={handleClose}
+        />
+
+        {/* snackbar */}
+        <CommonSnackBar
+          text="로그아웃 되었습니다."
+          severity="success"
+          open={errorSnackBarOpen}
+          handleSnackBarClose={handleClose}
+        />
+
         <Toolbar>
           {/* 네비게이션 메뉴 버튼 */}
           <Box sx={{ display: { xs: "flex", md: "none" } }}>
@@ -166,14 +178,6 @@ const HeaderBar = () => {
             ))}
           </Box>
 
-          {/* snackbar */}
-          <CommonSnackBar
-            value="로그아웃 되었습니다."
-            severity="success"
-            open={snackBarOpen}
-            handleClose={handleClose}
-          />
-
           {/* 로그인, 로그아웃 버튼 */}
           <Box
             sx={{
@@ -184,13 +188,13 @@ const HeaderBar = () => {
             }}
           >
             <CommonButton
-              value={memberToken ? "LOGOUT" : "LOGIN"}
+              buttonText={memberToken ? "LOGOUT" : "LOGIN"}
               outline={true}
-              onClick={handleUserStatus}
+              handleClickEvent={handleUserStatus}
             />
             {memberInfo && (
               <CommonTypography
-                value={memberInfo.nickname + "님"}
+                text={memberInfo.nickname + "님"}
                 bold={true}
                 variant="body1"
               />

@@ -6,17 +6,17 @@ interface PropsType {
   to: string;
 }
 
-const CommonLink: React.FC<PropsType> = (props) => {
+const CommonLink = ({ children, to }: PropsType) => {
   return (
     // react router dom에서 제공하는 Link
     <Link
-      to={props.to}
+      to={to}
       style={{
         textDecoration: "none",
         color: `${theme.palette.text.primary}`,
       }}
     >
-      {props.children}
+      {children}
     </Link>
   );
 };

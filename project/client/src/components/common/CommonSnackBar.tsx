@@ -1,26 +1,28 @@
 import { Alert, Snackbar } from "@mui/material";
 
 interface PropsType {
-  value: string;
+  text: string;
   severity: "error" | "success";
   open: boolean;
-  handleClose: () => void;
+  handleSnackBarClose: () => void;
 }
 
-const CommonSnackBar: React.FC<PropsType> = (props) => {
+// 어떤 요청 결과를 나타내기 위한 SnackBar 컴포넌트
+const CommonSnackBar = ({
+  text,
+  severity,
+  open,
+  handleSnackBarClose,
+}: PropsType) => {
   return (
     <Snackbar
-      open={props.open}
+      open={open}
       autoHideDuration={6000}
-      onClose={props.handleClose}
+      onClose={handleSnackBarClose}
       anchorOrigin={{ horizontal: "center", vertical: "bottom" }}
     >
-      <Alert
-        severity={props.severity}
-        variant="filled"
-        onClose={props.handleClose}
-      >
-        {props.value}
+      <Alert severity={severity} variant="filled" onClose={handleSnackBarClose}>
+        {text}
       </Alert>
     </Snackbar>
   );
