@@ -12,6 +12,7 @@ public class ReadingPlanResponse {
     private Long planId;
     private String title;
     private String author;
+    private String bookImage;
     private Status status;
     private LocalDate startDate;
     private LocalDate endDate;
@@ -20,10 +21,11 @@ public class ReadingPlanResponse {
     private int totalPage;
 
     @QueryProjection
-    public ReadingPlanResponse(Long planId, String title, String author, Status status, LocalDate startDate, LocalDate endDate, int todayPage, int readPage, int totalPage) {
+    public ReadingPlanResponse(Long planId, String title, String author, String bookImage, Status status, LocalDate startDate, LocalDate endDate, int todayPage, int readPage, int totalPage) {
         this.planId = planId;
         this.title = title;
         this.author = author;
+        this.bookImage = bookImage;
         this.status = status;
         this.startDate = startDate;
         this.endDate = endDate;

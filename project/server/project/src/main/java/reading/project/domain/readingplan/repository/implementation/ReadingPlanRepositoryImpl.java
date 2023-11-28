@@ -1,6 +1,5 @@
 package reading.project.domain.readingplan.repository.implementation;
 
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import reading.project.domain.readingplan.dto.response.QReadingPlanResponse;
@@ -9,10 +8,9 @@ import reading.project.domain.readingplan.repository.ReadingPlanRepositoryCustom
 
 import java.util.List;
 
+import static reading.project.domain.book.entity.QBook.book;
 import static reading.project.domain.readingplan.entity.QReadingPlan.readingPlan;
 import static reading.project.domain.readingplan.entity.ReadingPlan.Status;
-import static reading.project.domain.readingplan.entity.ReadingPlan.Status.NOT_CREATED_POST;
-import static reading.project.domain.readingplan.entity.ReadingPlan.Status.READING;
 
 @RequiredArgsConstructor
 public class ReadingPlanRepositoryImpl implements ReadingPlanRepositoryCustom {
@@ -23,8 +21,9 @@ public class ReadingPlanRepositoryImpl implements ReadingPlanRepositoryCustom {
         return queryFactory
                 .select(new QReadingPlanResponse(
                         readingPlan.id,
-                        readingPlan.book.title,
-                        readingPlan.book.author,
+                        book.title,
+                        book.author,
+                        book.imageUrl,
                         readingPlan.status,
                         readingPlan.startDate,
                         readingPlan.endDate,
@@ -33,6 +32,7 @@ public class ReadingPlanRepositoryImpl implements ReadingPlanRepositoryCustom {
                         readingPlan.readPageNumber
                 ))
                 .from(readingPlan)
+                .innerJoin(readingPlan.book, book)
                 .where(readingPlan.member.id.eq(memberId)
                         .and(readingPlan.status.in(statuses))
                 )
