@@ -1,27 +1,24 @@
 import { Box } from "@mui/material";
 import CommonButton from "components/common/CommonButton";
+import { cardStatus } from "constants/titles";
 import { useNavigate } from "react-router-dom";
 
 interface PropsType {
   status: "completed" | "not_created_post";
 }
 
-// 상태값에 따른 버튼 내용
-const cardStatus = {
-  completed: "😎완독하고 독서기록 까지 작성했어요!",
-  not_created_post: "🎉완독했어요! 독서기록 작성하기",
-};
-
-const MainPlanProgressCover = (props: PropsType) => {
+const MainPlanProgressCover = ({ status }: PropsType) => {
   // 네비게이트
   const navigate = useNavigate();
 
   // 상태값에 따른 버튼 내용 변경
   const handleCardStatus = () => {
-    if (props.status === "not_created_post") {
+    if (status === "completed") {
+      // 추후 completed 상태에 대한 처리 - 보관 처리 등
+      return;
+    }
+    if (status === "not_created_post") {
       navigate("../write");
-    } else {
-      // completed 상태에 대한 처리
     }
   };
 
@@ -42,9 +39,9 @@ const MainPlanProgressCover = (props: PropsType) => {
       }}
     >
       <CommonButton
-        value={cardStatus[props.status]}
+        buttonText={cardStatus[status]}
         outline={true}
-        onClick={handleCardStatus}
+        handleClickEvent={handleCardStatus}
       />
     </Box>
   );

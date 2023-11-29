@@ -4,11 +4,10 @@ import CommonAvaratImage from "components/common/CommonAvatarImage";
 import CommonButton from "components/common/CommonButton";
 import CommonLink from "components/common/CommonLink";
 import CommonTypography from "components/common/CommonTypography";
+import useMemberFollowMutation from "hooks/mutates/members/useMemberFollowMutation";
 import { useEffect, useState } from "react";
-import { useMutation } from "react-query";
-import { useSelector } from "react-redux";
-import { RootState } from "store/store";
 import { isFollow } from "utils/check";
+import { getStoredToken } from "utils/get";
 
 interface PropsType {
   avatarSize: number;
@@ -21,7 +20,7 @@ interface PropsType {
 
 const CommonUserProfile = ({ avatarSize, memberInfo, memberId }: PropsType) => {
   // 로그인 여부 확인 token
-  const memberToken = useSelector((state: RootState) => state.auth.token);
+  const memberToken = getStoredToken();
 
   // 팔로우 여부
   const [followStatus, setFollowStatus] = useState(
@@ -31,26 +30,31 @@ const CommonUserProfile = ({ avatarSize, memberInfo, memberId }: PropsType) => {
   const [showFollow, setShowFollow] = useState(true);
 
   // react-query PATCH member follow
-  const { mutate } = useMutation(patchMemberFollow, {
-    onSuccess: (data) => {
-      console.log(data);
-    },
-    onError: (error) => {
-      console.log(error);
-    },
-  });
+  const { mutate: followMutate } = useMemberFollowMutation();
 
   // 팔로우 상태 변경 함수
   const handleUserFollow = () => {
     if (isFollow(memberInfo as OtherMemberInfo) && memberId) {
-      mutate({ memberId, accessToken: memberToken });
-      // 팔로우 된 상태에서 한번 더 누르면 팔로우 취소
-      setFollowStatus(false);
+      followMutate(
+        { memberId, accessToken: memberToken },
+        {
+          onSuccess: () => {
+            // 팔로우 된 상태에서 한번 더 누르면 팔로우 취소
+            setFollowStatus(false);
+          },
+        },
+      );
     }
     if (!isFollow(memberInfo as OtherMemberInfo) && memberId) {
-      mutate({ memberId, accessToken: memberToken });
-      // 팔로우 되어 있지 않으면 팔로우 실행
-      setFollowStatus(true);
+      followMutate(
+        { memberId, accessToken: memberToken },
+        {
+          onSuccess: () => {
+            // 팔로우 되어 있지 않으면 팔로우 실행
+            setFollowStatus(true);
+          },
+        },
+      );
     }
   };
 

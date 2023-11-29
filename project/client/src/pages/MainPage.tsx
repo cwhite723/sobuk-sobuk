@@ -1,110 +1,44 @@
 import Grid from "@mui/material/Unstable_Grid2";
-import CommonSection from "components/common/CommonSection";
-import CommonTitle from "components/common/CommonTitle";
-import MainPlanCard from "components/main/MainPlanCard";
+import MainPlanBox from "components/main/MainPlanBox";
 import CommonLink from "components/common/CommonLink";
-import { useSelector } from "react-redux";
-import { RootState } from "store/store";
-import { useQuery } from "react-query";
-import { getPlans } from "apis/plans";
-import { useState } from "react";
-import { Box } from "@mui/material";
 import CommonTypography from "components/common/CommonTypography";
+import { getStoredToken } from "utils/get";
+import usePlansQuery from "hooks/queries/plans/usePlansQuery";
+import { titleByPlanStatus } from "constants/titles";
+import { Box } from "@mui/material";
 
 const MainPage = () => {
-  // plans 상태에 따른 title 설정
-  const titleByPlanStatus = {
-    NOT_CREATED_POST: "📚 독서 기록을 작성해주세요",
-    READING: "📚 완독까지 이만큼 남았어요",
-    OVERDUE: "📚 기간이 지나버린 책들이에요",
-    NOT_STARTED: "📚 읽을 예정이에요",
-    COMPLETED: "📚 완독 후 독서 기록까지 작성했어요",
-  };
-
   // redux에 저장된 토큰 가져오기
-  const token = useSelector((state: RootState) => state.auth.token);
-  // 가져온 plans 정보
-  const [allPlans, setAllPlans] = useState<{ [key: string]: PlanInfo[] }>({});
+  const memberToken = getStoredToken();
 
-  // react-query - get plans
-  const { data: readingPlans } = useQuery(
-    ["getPlans", { status: "READING", token }],
-    () => getPlans("READING", token),
+  // react-query - GET plans
+  const { data: readingPlans, isSuccess: isSuccessReading } = usePlansQuery(
+    "READING",
+    memberToken,
     {
-      onSuccess(data) {
-        if (data) {
-          setAllPlans((prevData) => ({
-            ...prevData,
-            ["READING"]: data.data,
-          }));
-        }
-      },
-      enabled: !!token,
-      retry: false,
+      enabled: !!memberToken,
     },
   );
-  const { data: completedPlans } = useQuery(
-    ["getPlans", { status: "COMPLETED", token }],
-    () => getPlans("COMPLETED", token),
+  const { data: completedPlans, isSuccess: isSuccessCompleted } = usePlansQuery(
+    "COMPLETED",
+    memberToken,
     {
-      onSuccess(data) {
-        if (data) {
-          setAllPlans((prevData) => ({
-            ...prevData,
-            ["COMPLETED"]: data.data,
-          }));
-        }
-      },
-      enabled: !!token,
-      retry: false,
+      enabled: !!memberToken,
     },
   );
-  const { data: notCreatedPostPlans } = useQuery(
-    ["getPlans", { status: "NOT_CREATED_POST", token }],
-    () => getPlans("NOT_CREATED_POST", token),
+  const { data: notCreatedPostPlans, isSuccess: isSuccessNotCreatedPost } =
+    usePlansQuery("NOT_CREATED_POST", memberToken, {
+      enabled: !!memberToken,
+    });
+  const { data: notStartedPlans, isSuccess: isSuccessNotStarted } =
+    usePlansQuery("NOT_STARTED", memberToken, {
+      enabled: !!memberToken,
+    });
+  const { data: overduePlans, isSuccess: isSuccessOverdue } = usePlansQuery(
+    "OVERDUE",
+    memberToken,
     {
-      onSuccess(data) {
-        if (data) {
-          setAllPlans((prevData) => ({
-            ...prevData,
-            ["NOT_CREATED_POST"]: data.data,
-          }));
-        }
-      },
-      enabled: !!token,
-      retry: false,
-    },
-  );
-  const { data: notStartedPlans } = useQuery(
-    ["getPlans", { status: "NOT_STARTED", token }],
-    () => getPlans("NOT_STARTED", token),
-    {
-      onSuccess(data) {
-        if (data) {
-          setAllPlans((prevData) => ({
-            ...prevData,
-            ["NOT_STARTED"]: data.data,
-          }));
-        }
-      },
-      enabled: !!token,
-      retry: false,
-    },
-  );
-  const { data: overduePlans } = useQuery(
-    ["getPlans", { status: "OVERDUE", token }],
-    () => getPlans("OVERDUE", token),
-    {
-      onSuccess(data) {
-        if (data) {
-          setAllPlans((prevData) => ({
-            ...prevData,
-            ["OVERDUE"]: data.data,
-          }));
-        }
-      },
-      enabled: !!token,
-      retry: false,
+      enabled: !!memberToken,
     },
   );
 
@@ -115,27 +49,50 @@ const MainPage = () => {
       columns={{ xs: 1, md: 10 }}
       sx={{ width: "100%" }}
     >
-      {Object.entries(titleByPlanStatus).map(([status, title]) => (
-        <Grid xs={1} md={10} key={status}>
-          <CommonSection maxHight={500}>
-            <CommonTitle value={title} />
-            {(allPlans[status] &&
-              allPlans[status].map((plan) => (
-                <Box key={plan.planId}>
-                  <MainPlanCard planItem={plan} />
-                </Box>
-              ))) ?? (
-              <CommonLink to="../search">
-                <CommonTypography
-                  value="저장된 독서 정보가 없어요, 독서 검색으로 이동할까요?"
-                  bold={true}
-                  variant="body1"
-                />
-              </CommonLink>
-            )}
-          </CommonSection>
-        </Grid>
-      ))}
+      {readingPlans && (
+        <MainPlanBox
+          plans={readingPlans.data}
+          boxTitle={titleByPlanStatus.READING}
+        />
+      )}
+      {completedPlans && (
+        <MainPlanBox
+          plans={completedPlans.data}
+          boxTitle={titleByPlanStatus.COMPLETED}
+        />
+      )}
+      {notCreatedPostPlans && (
+        <MainPlanBox
+          plans={notCreatedPostPlans.data}
+          boxTitle={titleByPlanStatus.NOT_CREATED_POST}
+        />
+      )}
+      {notStartedPlans && (
+        <MainPlanBox
+          plans={notStartedPlans.data}
+          boxTitle={titleByPlanStatus.NOT_STARTED}
+        />
+      )}
+      {overduePlans && (
+        <MainPlanBox
+          plans={overduePlans.data}
+          boxTitle={titleByPlanStatus.OVERDUE}
+        />
+      )}
+
+      {(!isSuccessReading ||
+        !isSuccessCompleted ||
+        !isSuccessNotCreatedPost ||
+        !isSuccessNotStarted ||
+        !isSuccessOverdue) && (
+        <Box sx={{ m: 5 }}>
+          <CommonTypography
+            text="독서 정보를 가져오는데 실패했어요. 잠시 후 다시 시도해주세요."
+            bold={true}
+            variant="body1"
+          />
+        </Box>
+      )}
     </Grid>
   );
 };

@@ -1,16 +1,15 @@
 import { Box } from "@mui/material";
 import CommonSnackBar from "components/common/CommonSnackBar";
-import { useSelector } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
-import { RootState } from "store/store";
+import { getStoredToken } from "utils/get";
 
 const PrivateRoute = () => {
   const navigate = useNavigate();
 
   // 토큰으로 로그인 확인, 로그인 상태여야함
-  const memberToken = useSelector((state: RootState) => state.auth.token);
+  const memberToken = getStoredToken();
 
-  const handleClose = () => {
+  const handleSnackBarClose = () => {
     navigate("../login");
   };
 
@@ -32,10 +31,10 @@ const PrivateRoute = () => {
       >
         {/* snackbar */}
         <CommonSnackBar
-          value="로그인이 필요합니다. 로그인 페이지로 이동합니다."
+          text="로그인이 필요합니다. 로그인 페이지로 이동합니다."
           severity="error"
           open={true}
-          handleClose={handleClose}
+          handleSnackBarClose={handleSnackBarClose}
         />
       </Box>
       <Outlet />

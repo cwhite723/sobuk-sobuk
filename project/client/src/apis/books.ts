@@ -20,7 +20,7 @@ export const postBook = async (
 };
 
 /**
- * 도서 수정 - 완료
+ * 도서 수정 - admin 페이지 추가 필요
  * @param { bookId: number, data: BookData }
  * @returns { data: BookId }
  */
@@ -41,7 +41,7 @@ export const patchBook = async ({
 };
 
 /**
- * 도서 삭제 - 완료
+ * 도서 삭제 - admin 페이지 추가 필요
  * @param bookId
  * @returns body{ success: boolean }
  */
@@ -60,14 +60,17 @@ export const deleteBook = async (bookId: number) => {
  * @param bookId
  * @returns { data: BookInfo }
  */
-export const getBook = async (bookId: number): Promise<BookResponse> => {
-  try {
-    const response = await Api.get(`/books/${bookId}`);
-    return response.data;
-  } catch (error) {
-    console.error("Error in Get Book:", error);
-    throw new Error("Failed to Check Book Info");
+export const getBook = async (bookId: number | null): Promise<BookResponse> => {
+  if (bookId) {
+    try {
+      const response = await Api.get(`/books/${bookId}`);
+      return response.data;
+    } catch (error) {
+      console.error("Error in Get Book:", error);
+      throw new Error("Failed to Check Book Info");
+    }
   }
+  throw new Error("Missing Book-Id");
 };
 
 /**
@@ -112,6 +115,7 @@ export const postBookmark = async ({
       throw new Error("Failed to Bookmark");
     }
   }
+  throw new Error("Missin Access Token");
 };
 
 // kakao api 도서 정보 조회

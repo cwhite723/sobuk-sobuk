@@ -8,20 +8,19 @@ import {
   DialogTitle,
   useMediaQuery,
 } from "@mui/material";
-import { patchPlan } from "apis/plans";
+import CommonFormHelperText from "components/common/CommonFormHelperText";
 import CommonTextField from "components/common/CommonTextField";
 import CommonTypography from "components/common/CommonTypography";
+import usePlanEditMutation from "hooks/mutates/plans/usePlanEditMutation";
 import { useForm } from "react-hook-form";
-import { useMutation } from "react-query";
-import { useSelector } from "react-redux";
-import { RootState } from "store/store";
 import theme from "styles/theme";
-import { getDateObject, getStringDate } from "utils/format";
+import { getStringDate } from "utils/format";
+import { getStoredToken } from "utils/get";
 
 interface PropsType {
   selectedPlan: PlanInfo;
   isOpen: boolean;
-  handleClose: () => void;
+  handleDialogClose: () => void;
 }
 
 interface FormValue {
@@ -32,63 +31,64 @@ interface FormValue {
 
 // 독서 정보(기간, 읽은 페이지) 수정하기
 // READING, OVERDUE, NOT_STARTED
-const MainPlanProgressDialog = (props: PropsType) => {
+const MainPlanEditDialog = ({
+  selectedPlan,
+  isOpen,
+  handleDialogClose,
+}: PropsType) => {
   // 화면 크기가 md보다 작아지면 Dialog를 fullscreen으로 띄움
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
   // redux에 저장된 토큰 가져오기
-  const token = useSelector((state: RootState) => state.auth.token);
+  const memberToken = getStoredToken();
 
   // react hook form
-  const { control, handleSubmit, reset, getValues } = useForm<FormValue>({
+  const { control, handleSubmit, reset, formState } = useForm<FormValue>({
     defaultValues: {
       // 기본값은 기존 date 정보
       // ?? : null, undefined인 경우 오른쪽 값을 반환
-      startDate: props.selectedPlan.startDate ?? getStringDate(new Date()),
-      endDate: props.selectedPlan.endDate ?? getStringDate(new Date()),
+      startDate: selectedPlan.startDate ?? getStringDate(new Date()),
+      endDate: selectedPlan.endDate ?? getStringDate(new Date()),
       todayPage: 0,
     },
+    mode: "onSubmit",
   });
 
   // react-query - patch plan
-  const { mutate, isError } = useMutation(patchPlan, {
-    onSuccess: async () => {
-      // 요청이 성공하면 폼을 비우고 Dialog를 닫음
-      reset();
-      props.handleClose();
-    },
-    onError: (error) => {
-      // 요청 실패 시 Dialog를 닫지 않고 내부에서 error 메세지 표출
-      console.log("isError:" + isError, error);
-    },
-  });
+  const { mutate: planEditMutate } = usePlanEditMutation();
 
-  const handleDialogData = async (formData: FormValue) => {
+  const handleDialogData = (formData: FormValue) => {
     // html 폼 요소의 입력값은 기본적으로 문자열
     // 따라서 입력받은 todayPages 값은 숫자형으로 변환해야함
     const numbericTodayPage = Number(formData.todayPage);
     // 입력받은 formData로 plan patch 요청
     // props가 정상적으로 넘어왔을 때만 mutate 실행
-    if (props.selectedPlan.planId) {
-      await mutate({
-        planId: props.selectedPlan.planId,
-        accessToken: token,
+    planEditMutate(
+      {
+        planId: selectedPlan.planId,
+        accessToken: memberToken,
         data: {
           startDate: formData.startDate,
           endDate: formData.endDate,
-          totalPage: props.selectedPlan.totalPage,
+          totalPage: selectedPlan.totalPage,
           readPageNumber: numbericTodayPage,
         },
-      });
-    }
+      },
+      {
+        onSuccess: () => {
+          reset();
+          handleDialogClose();
+        },
+      },
+    );
   };
 
   // dialog 전체 에러 메세지 추가 필요
 
   return (
     <Dialog
-      open={props.isOpen}
-      onClose={props.handleClose}
+      open={isOpen}
+      onClose={handleDialogClose}
       fullScreen={fullScreen}
       sx={{ minWidth: "300px" }}
     >
@@ -121,20 +121,20 @@ const MainPlanProgressDialog = (props: PropsType) => {
             >
               {/* 선택한 plan의 정보 */}
               <CommonTypography
-                value={props.selectedPlan.title}
+                text={selectedPlan.title}
                 variant="h6"
                 bold={true}
               />
               <CommonTypography
-                value={props.selectedPlan.author}
+                text={selectedPlan.author}
                 variant="body1"
                 bold={false}
               />
               <CommonTypography
-                value={
-                  props.selectedPlan.totalPage +
+                text={
+                  selectedPlan.totalPage +
                   "쪽 중에 " +
-                  props.selectedPlan.todayPage +
+                  selectedPlan.readPage +
                   " 쪽 까지 읽었어요."
                 }
                 variant="body1"
@@ -142,61 +142,83 @@ const MainPlanProgressDialog = (props: PropsType) => {
               />
             </Box>
 
-            {/* 입력 필드 */}
+            {/* 페이지 입력 필드 */}
+            {/* overdue, not_started일 때는 페이지말고 날짜만 수정가능 */}
             <CommonTextField
               name="todayPage"
               control={control}
               rules={{
                 required: true,
-                validate: (value) =>
-                  props.selectedPlan.todayPage
-                    ? value > 0
-                    : value > props.selectedPlan.todayPage,
+                validate: (value) => value > selectedPlan.readPage,
               }}
               textFieldProps={{
+                disabled:
+                  selectedPlan.status === "overdue" ||
+                  selectedPlan.status === "not_started"
+                    ? true
+                    : false,
                 id: "today-page",
-                label: "Today Page",
+                label: "오늘 읽은 페이지",
                 placeholder: "오늘은 몇 페이지까지 읽었나요?",
                 type: "number",
               }}
             />
+            {formState.errors.todayPage && (
+              <CommonFormHelperText text="오늘 읽은 페이지가 지금까지 읽은 페이지보다 작을 수 없어요." />
+            )}
 
+            {/* overdue, not_started일 때만 수정이 가능한 시작 날짜 */}
             <CommonTextField
               name="startDate"
               control={control}
-              rules={{ required: true }}
+              rules={{
+                required: true,
+                min: {
+                  value: getStringDate(new Date()),
+                  message: "오늘 날짜부터 선택할 수 있어요.",
+                },
+              }}
               textFieldProps={{
                 disabled:
-                  props.selectedPlan.status === "overdue" ? false : true,
+                  selectedPlan.status === "overdue" ||
+                  selectedPlan.status === "not_started"
+                    ? false
+                    : true,
                 id: "start-date",
-                label: "Start",
+                label: "시작일",
                 type: "date",
               }}
             />
+            <CommonFormHelperText text={formState.errors.startDate?.message} />
+
             <CommonTextField
               name="endDate"
               control={control}
               rules={{
                 required: true,
-                min: getValues("startDate"),
+                min: {
+                  value: getStringDate(new Date()),
+                  message: "오늘 날짜부터 선택할 수 있어요.",
+                },
               }}
               textFieldProps={{
                 id: "end-date",
-                label: "End",
+                label: "종료일",
                 type: "date",
               }}
             />
+            <CommonFormHelperText text={formState.errors.endDate?.message} />
           </Box>
         </DialogContent>
       </form>
 
       {/* 하단 버튼 */}
       <DialogActions>
-        <Button onClick={props.handleClose}>취소</Button>
+        <Button onClick={handleDialogClose}>취소</Button>
         <Button onClick={handleSubmit(handleDialogData)}>완료</Button>
       </DialogActions>
     </Dialog>
   );
 };
 
-export default MainPlanProgressDialog;
+export default MainPlanEditDialog;

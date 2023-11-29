@@ -46,6 +46,7 @@ export const postLogOut = async (accessToken: string | null) => {
       throw new Error("Failed to LogOut");
     }
   }
+  throw new Error("Missing Access Token");
 };
 
 /**
@@ -92,6 +93,7 @@ export const deleteMember = async (accessToken: string | null) => {
       throw new Error("Failed to Drop Out of Membership");
     }
   }
+  throw new Error("Missing Access Token");
 };
 
 /**
@@ -116,6 +118,7 @@ export const patchMember = async ({
       throw new Error("Failed to Modify Member Info");
     }
   }
+  throw new Error("Missing Access Token");
 };
 
 /**
@@ -129,7 +132,7 @@ export const getMember = async ({
 }: {
   memberId: number | null;
   accessToken: string | null;
-}): Promise<OtherMemberResponse | undefined> => {
+}): Promise<OtherMemberResponse> => {
   if (accessToken && memberId) {
     try {
       const response = await Api.get(`/members/${memberId}`, {
@@ -141,6 +144,7 @@ export const getMember = async ({
       throw new Error("Failed to Check Member Info");
     }
   }
+  throw new Error("Missing Access Token or Member Id");
 };
 
 /**
@@ -150,7 +154,7 @@ export const getMember = async ({
  */
 export const getMyPage = async (
   accessToken: string | null,
-): Promise<MemberResponse | undefined> => {
+): Promise<MemberResponse> => {
   if (accessToken) {
     try {
       const response = await Api.get(`/members/my-page`, {
@@ -162,6 +166,7 @@ export const getMyPage = async (
       throw new Error("Failed to Check My Info");
     }
   }
+  throw new Error("Missing Token");
 };
 
 /**
@@ -175,7 +180,7 @@ export const getMyPosts = async ({
 }: {
   params: MemberPostsAndBooksParams;
   accessToken: string | null;
-}): Promise<MemberPostsResponse | undefined> => {
+}): Promise<MemberPostsResponse> => {
   if (accessToken) {
     try {
       const response = await Api.get(`/members/my-page/postInfo`, {
@@ -188,6 +193,7 @@ export const getMyPosts = async ({
       throw new Error("Failed to Check My Posts Info");
     }
   }
+  throw new Error("Missing Access Token");
 };
 
 /**
@@ -201,7 +207,7 @@ export const getMyPlans = async ({
 }: {
   params: MemberPostsAndBooksParams;
   accessToken: string | null;
-}): Promise<MemberPlansResponse | undefined> => {
+}): Promise<MemberPlansResponse> => {
   if (accessToken) {
     try {
       const response = await Api.get(`/members/my-page/bookmarkInfo`, {
@@ -214,6 +220,7 @@ export const getMyPlans = async ({
       throw new Error("Failed to Check My Plans Info");
     }
   }
+  throw new Error("Missing Access Token");
 };
 
 /**
@@ -228,9 +235,9 @@ export const getMemberPosts = async ({
 }: {
   params: MemberPostsAndBooksParams;
   accessToken: string | null;
-  memberId: number;
-}): Promise<MemberPostsResponse | undefined> => {
-  if (accessToken) {
+  memberId: number | null;
+}): Promise<MemberPostsResponse> => {
+  if (accessToken && memberId) {
     try {
       const response = await Api.get(`/members/${memberId}/postInfo`, {
         params,
@@ -242,6 +249,7 @@ export const getMemberPosts = async ({
       throw new Error("Failed to Check Member's Posts Info");
     }
   }
+  throw new Error("Missing Access Token or Member Id");
 };
 
 /**
@@ -256,9 +264,9 @@ export const getMemberPlans = async ({
 }: {
   params: MemberPostsAndBooksParams;
   accessToken: string | null;
-  memberId: number;
-}): Promise<MemberPlansResponse | undefined> => {
-  if (accessToken) {
+  memberId: number | null;
+}): Promise<MemberPlansResponse> => {
+  if (accessToken && memberId) {
     try {
       const response = await Api.get(`/members/${memberId}/bookmarkInfo`, {
         params,
@@ -270,6 +278,7 @@ export const getMemberPlans = async ({
       throw new Error("Failed to Check Member's Plans Info");
     }
   }
+  throw new Error("Missing Access Token or Member Id");
 };
 
 /**
@@ -294,4 +303,5 @@ export const patchMemberFollow = async ({
       throw new Error("Failed to Modify Member Follow");
     }
   }
+  throw new Error("Missing Access Token");
 };

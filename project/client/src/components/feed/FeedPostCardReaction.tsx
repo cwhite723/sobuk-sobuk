@@ -8,9 +8,13 @@ interface PropsType {
   likeCount: number;
 }
 
-const FeedPostCardReaction = (props: PropsType) => {
+const FeedPostCardReaction = ({
+  postId,
+  commentCount,
+  likeCount,
+}: PropsType) => {
   return (
-    <CommonLink to={"../post/" + props.postId}>
+    <CommonLink to={"../post/" + postId}>
       <Box
         sx={{
           display: "flex",
@@ -18,15 +22,11 @@ const FeedPostCardReaction = (props: PropsType) => {
         }}
       >
         <CommonTypography
-          value={"📄" + props.commentCount}
+          text={"📄" + commentCount}
           variant="body2"
           bold={true}
         />
-        <CommonTypography
-          value={"✨" + props.likeCount}
-          variant="body2"
-          bold={true}
-        />
+        <CommonTypography text={"✨" + likeCount} variant="body2" bold={true} />
       </Box>
     </CommonLink>
   );

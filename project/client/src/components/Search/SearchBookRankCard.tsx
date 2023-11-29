@@ -7,7 +7,7 @@ interface PropsType {
   bookItem: BookInfoSimple;
 }
 
-const SearchBookRankCard = (props: PropsType) => {
+const SearchBookRankCard = ({ bookItem }: PropsType) => {
   return (
     <Grid xs="auto" md={5} sx={{ width: "100%" }}>
       <Box
@@ -23,27 +23,19 @@ const SearchBookRankCard = (props: PropsType) => {
           m: 1,
         }}
       >
-        {props.bookItem.imageUrl && (
-          <CommonBookImage
-            width={100}
-            height={150}
-            src={props.bookItem.imageUrl}
-          />
+        {bookItem.imageUrl && (
+          <CommonBookImage width={100} height={150} src={bookItem.imageUrl} />
         )}
 
         <Box sx={{ ml: 2, borderTop: "1px solid" }}>
+          <CommonTypography text={bookItem.title} variant="h6" bold={true} />
           <CommonTypography
-            value={props.bookItem.title}
-            variant="h6"
-            bold={true}
-          />
-          <CommonTypography
-            value={props.bookItem.author}
+            text={bookItem.author}
             variant="body2"
             bold={false}
           />
           <CommonTypography
-            value={props.bookItem.publisher}
+            text={bookItem.publisher}
             variant="body2"
             bold={false}
           />

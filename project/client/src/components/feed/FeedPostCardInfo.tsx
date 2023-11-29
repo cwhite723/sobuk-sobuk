@@ -7,9 +7,9 @@ interface PropsType {
   postItem: PostInfo;
 }
 
-const FeedPostCardInfo = (props: PropsType) => {
+const FeedPostCardInfo = ({ postItem }: PropsType) => {
   return (
-    <CommonLink to={"../post/" + props.postItem.postId}>
+    <CommonLink to={"../post/" + postItem.postId}>
       <Box
         sx={{
           display: "flex",
@@ -20,29 +20,30 @@ const FeedPostCardInfo = (props: PropsType) => {
           py: 2,
         }}
       >
-        {/* 책 이미지 - 수정 필요 */}
-        <CommonBookImage width={100} height={150} />
+        {/* post 이미지 */}
+        <CommonBookImage width={100} height={150} src={postItem.imageUrl} />
+
         <Box>
           <Box sx={{ display: "flex", alignItems: "baseline", my: 2 }}>
             <CommonTypography
-              value={props.postItem.bookTitle}
+              text={postItem.bookTitle}
               variant="h6"
               bold={true}
             />
             <CommonTypography
-              value={props.postItem.bookAuthor}
+              text={postItem.bookAuthor}
               variant="body2"
               bold={true}
             />
           </Box>
           <Box>
             <CommonTypography
-              value={props.postItem.postTitle}
+              text={postItem.postTitle}
               variant="body2"
               bold={true}
             />
             <CommonTypography
-              value={props.postItem.content}
+              text={postItem.content}
               variant="body2"
               bold={false}
             />

@@ -1,6 +1,5 @@
 import { Box } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
-import { getAllBooks, getBook } from "apis/books";
 import SearchBookRankCard from "components/Search/SearchBookRankCard";
 import SearchBookReadDialog from "components/Search/SearchBookReadDialog";
 import SearchBookSubmitDialog from "components/Search/SearchBookSubmitDialog";
@@ -11,14 +10,14 @@ import CommonSection from "components/common/CommonSection";
 import CommonSnackBar from "components/common/CommonSnackBar";
 import CommonTitle from "components/common/CommonTitle";
 import CommonTypography from "components/common/CommonTypography";
+import useBookQuery from "hooks/queries/books/useBookQuery";
+import useBooksQuery from "hooks/queries/books/useBooksQuery";
 import { useEffect, useState } from "react";
-import { useQuery } from "react-query";
-import { useSelector } from "react-redux";
-import { RootState } from "store/store";
+import { getStoredToken } from "utils/get";
 
 const SearchPage = () => {
   // 로그인 여부 확인(토큰)
-  const memberToken = useSelector((state: RootState) => state.auth.token);
+  const memberToken = getStoredToken();
 
   // 도서 리스트 표출 여부
   const [openBookList, setOpenBookList] = useState(false);
@@ -43,13 +42,7 @@ const SearchPage = () => {
   const [newBook, setNewBook] = useState<number | null>(null);
 
   // 도서등록 후 plan 등록으로 연결 하기 위해 도서 정보 조회
-  const { data: bookData } = useQuery(
-    ["getBook", newBook],
-    () => getBook(newBook ? newBook : 0),
-    {
-      enabled: !!newBook,
-    },
-  );
+  const { data: bookData } = useBookQuery(newBook, { enabled: !!newBook });
 
   // getbooks 요청 시 사용할 params - 등록된 전체 도서 최초 요청 시
   const allBooksParams: BookParams = {
@@ -76,11 +69,10 @@ const SearchPage = () => {
   };
 
   // react-query get books - 인기도서 요청
-  const { data: rankBooks } = useQuery(
-    ["getAllBooks", rankBooksParams],
-    () => getAllBooks(rankBooksParams),
-    { enabled: !!rankBooksParams, retry: false },
-  );
+  const { data: rankBooks } = useBooksQuery(rankBooksParams, {
+    enabled: !!rankBooksParams,
+    staleTime: 60 * 1000,
+  });
 
   // 책 추가하기
   const handleAddBook = () => {
@@ -88,7 +80,7 @@ const SearchPage = () => {
   };
 
   // Dialog 닫기
-  const handleClose = () => {
+  const handleSubmitClose = () => {
     setOpenSubmitDialog(false);
   };
 
@@ -129,40 +121,38 @@ const SearchPage = () => {
 
   return (
     <Box sx={{ width: "100%" }}>
+      {/* 도서 직접 등록 Dialog */}
       <SearchBookSubmitDialog
         isOpen={openSubmitDialog}
-        handleClose={handleClose}
+        handleDialogClose={handleSubmitClose}
         setNewBook={setNewBook}
       />
 
+      {/* 도서 선택하여 Plan 등록 Dialog */}
       {bookData && memberToken && (
         <SearchBookReadDialog
           isOpen={openReadDialog}
-          handleClose={handleReadClose}
+          handleDialogClose={handleReadClose}
           selectedBook={bookData.data}
         />
       )}
 
       {/* snackbar */}
-      {openSnackBar && (
-        <CommonSnackBar
-          text="새로운 도서가 등록되었습니다."
-          severity="success"
-          open={openSnackBar}
-          handleSnackBarClose={handleSnackBarClose}
-        />
-      )}
-
-      {openNotMemberSnackBar && (
-        <CommonSnackBar
-          text="로그인이 필요합니다."
-          severity="error"
-          open={openNotMemberSnackBar}
-          handleSnackBarClose={handleNotMemberSnackBarClose}
-        />
-      )}
+      <CommonSnackBar
+        text="새로운 도서가 등록되었습니다."
+        severity="success"
+        open={openSnackBar}
+        handleSnackBarClose={handleSnackBarClose}
+      />
+      <CommonSnackBar
+        text="로그인이 필요합니다."
+        severity="error"
+        open={openNotMemberSnackBar}
+        handleSnackBarClose={handleNotMemberSnackBarClose}
+      />
 
       <Box sx={{ display: "flex", flexDirection: "column", mt: 5, mb: -3 }}>
+        {/* 페이지 타이틀 */}
         <CommonTitle text="🎁 어떤 책을 읽어볼까요? 자유롭게 도서를 탐색하세요!" />
         <CommonButton
           buttonText={
@@ -178,7 +168,6 @@ const SearchPage = () => {
           handleClickEvent={handleAddBook}
         />
       </Box>
-
       {/* 등록된 전체 도서 리스트 표출 */}
       {/* 도서 목록 표출 여부 */}
       {openBookList && (
@@ -186,7 +175,6 @@ const SearchPage = () => {
           <SerarchReasult queryType="sobuk" queryParams={allBooksParams} />
         </CommonSection>
       )}
-
       {/* 도서검색 */}
       <CommonSection>
         <CommonTitle text="📚 도서 검색" />
@@ -213,11 +201,13 @@ const SearchPage = () => {
         <Grid container spacing={2} columns={{ xs: 1, md: 10 }}>
           {/* 도서item */}
           {rankBooks?.data.content === undefined ? (
-            <CommonTypography
-              text="랭킹정보를 가져올 수 없습니다."
-              variant="body1"
-              bold={true}
-            />
+            <Box sx={{ m: 5 }}>
+              <CommonTypography
+                text="랭킹정보를 가져올 수 없습니다."
+                variant="body1"
+                bold={true}
+              />
+            </Box>
           ) : (
             rankBooks.data.content &&
             rankBooks.data.content.map((bookItem) => (

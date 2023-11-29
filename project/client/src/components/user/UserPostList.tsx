@@ -1,13 +1,12 @@
 import { Box } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
-import { getMemberPosts, getMyPosts } from "apis/members";
 import CommonBookImage from "components/common/CommonBookImage";
 import CommonTitle from "components/common/CommonTitle";
 import CommonTypography from "components/common/CommonTypography";
-import { useState } from "react";
-import { useQuery } from "react-query";
-import { useSelector } from "react-redux";
-import { RootState } from "store/store";
+import useMemberPostsQuery from "hooks/queries/members/useMemberPostsQuery";
+import useMyPostsQuery from "hooks/queries/members/useMyPostsQuery";
+import { useEffect, useState } from "react";
+import { getStoredToken } from "utils/get";
 
 interface PropsType {
   memberInfo: MemberInfo | OtherMemberInfo;
@@ -16,57 +15,49 @@ interface PropsType {
   isPreview: boolean;
 }
 
-const UserPostList = (props: PropsType) => {
-  const memberToken = useSelector((state: RootState) => state.auth.token);
+const UserPostList = ({
+  memberInfo,
+  memberId,
+  isMyPage,
+  isPreview,
+}: PropsType) => {
+  const memberToken = getStoredToken();
 
   // 데이터 요청에 필요한 params
+  // 무한 스크롤 구현 필요
   const [params, setParams] = useState<MemberPostsAndBooksParams>({
     id: null,
     size: 10,
   });
 
-  const [memberPosts, setMemberPosts] = useState<MemberPostsInfo[]>();
+  // 받아온 데이터
+  const [memberPosts, setMemberPosts] = useState<MemberPostsInfo[] | null>(
+    null,
+  );
 
   // react-query - GET my posts
-  const { data: myPostsData } = useQuery(
-    ["getMyPosts", params, memberToken],
-    () => getMyPosts({ params, accessToken: memberToken }),
+  const { data: myPostsData, isSuccess: isMyPostsSuccess } = useMyPostsQuery(
+    params,
+    memberToken,
     {
-      onSuccess: (data) => {
-        // 성공했을 때
-        if (data) {
-          setMemberPosts(data.data.data);
-        }
-      },
-      onError: (error) => {
-        console.log(error);
-      },
-      enabled: !!params && !!props.isMyPage,
+      enabled: !!memberToken && !!params && isMyPage,
     },
   );
 
   // react-query - GET member posts
-  const { data: memberPostsData } = useQuery(
-    ["getMemberPosts", params, memberToken, props.memberId],
-    () =>
-      getMemberPosts({
-        params,
-        accessToken: memberToken,
-        memberId: props.memberId ? props.memberId : 0,
-      }),
-    {
-      onSuccess: (data) => {
-        // 성공했을 때
-        if (data) {
-          setMemberPosts(data.data.data);
-        }
-      },
-      onError: (error) => {
-        console.log(error);
-      },
-      enabled: !!params && !!props.memberId,
-    },
-  );
+  const { data: memberPostsData, isSuccess: isMemberPostsSuccess } =
+    useMemberPostsQuery(params, memberToken, memberId, {
+      enabled: !!memberToken && !!params && !!memberId,
+    });
+
+  useEffect(() => {
+    if (isMyPage && isMyPostsSuccess) {
+      setMemberPosts(myPostsData.data.data);
+    }
+    if (memberId && isMemberPostsSuccess) {
+      setMemberPosts(memberPostsData.data.data);
+    }
+  }, []);
 
   return (
     <Box>
@@ -79,14 +70,12 @@ const UserPostList = (props: PropsType) => {
         }}
       >
         <CommonTitle
-          value={
+          text={
             "📓 " +
-              props.memberInfo.nickname +
-              "님의 독서기록은 총 " +
-              props.memberInfo.countPost ===
-            null
-              ? "0"
-              : props.memberInfo.countPost + "개가 있어요"
+            memberInfo.nickname +
+            "님의 독서기록은 총 " +
+            memberInfo.countPost +
+            "개가 있어요"
           }
         />
       </Box>
@@ -105,9 +94,7 @@ const UserPostList = (props: PropsType) => {
         {/* 유저 독서기록 item */}
         {memberPosts &&
           memberPosts
-            .filter((postItem, index) =>
-              props.isPreview ? index < 3 : postItem,
-            )
+            .filter((postItem, index) => (isPreview ? index < 3 : postItem))
             .map((postItem) => (
               <Grid xs={1} md={1} key={postItem.postId}>
                 <Box
@@ -138,23 +125,23 @@ const UserPostList = (props: PropsType) => {
                     }}
                   >
                     <CommonTypography
-                      value={postItem.bookTitle}
+                      text={postItem.bookTitle}
                       variant="h6"
                       bold={true}
                     />
                     <CommonTypography
-                      value={postItem.title}
+                      text={postItem.title}
                       variant="body2"
                       bold={false}
                     />
                     <Box sx={{ display: "flex", mt: 2 }}>
                       <CommonTypography
-                        value={"📄" + postItem.countComment.toString()}
+                        text={"📄" + postItem.countComment.toString()}
                         variant="body2"
                         bold={true}
                       />
                       <CommonTypography
-                        value={"✨" + postItem.countLike.toString()}
+                        text={"✨" + postItem.countLike.toString()}
                         variant="body2"
                         bold={true}
                       />

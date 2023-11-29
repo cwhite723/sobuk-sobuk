@@ -10,11 +10,11 @@ export const postComment = async ({
   data,
   accessToken,
 }: {
-  postId: number;
+  postId: number | null;
   data: CommentData;
   accessToken: string | null;
-}): Promise<CommentIdResponse | undefined> => {
-  if (accessToken) {
+}): Promise<CommentIdResponse> => {
+  if (accessToken && postId) {
     try {
       const response = await Api.post(`/comments/${postId}`, data, {
         headers: { Authorization: `${accessToken}` },
@@ -25,6 +25,7 @@ export const postComment = async ({
       throw new Error("Failed to Write Comment");
     }
   }
+  throw new Error("Missing Access Token or Post Id");
 };
 
 /**
@@ -37,11 +38,11 @@ export const patchComment = async ({
   data,
   accessToken,
 }: {
-  commentId: number;
+  commentId: number | null;
   data: CommentData;
   accessToken: string | null;
-}): Promise<CommentIdResponse | undefined> => {
-  if (accessToken) {
+}): Promise<CommentIdResponse> => {
+  if (accessToken && commentId) {
     try {
       const response = await Api.patch(`/comments/${commentId}`, data, {
         headers: { Authorization: `${accessToken}` },
@@ -52,6 +53,7 @@ export const patchComment = async ({
       throw new Error("Failed to Modify Comment");
     }
   }
+  throw new Error("Missing Access Token or Comment Id");
 };
 
 /**
@@ -76,4 +78,5 @@ export const deleteComment = async ({
       throw new Error("Failed to Delete Comment");
     }
   }
+  throw new Error("Missing Access Token");
 };

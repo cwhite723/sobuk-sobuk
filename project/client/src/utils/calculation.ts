@@ -22,5 +22,5 @@ export const getTodayPage = (leftPage: number, leftDate: number) => {
 
 // 읽은 페이지의 퍼센트 계산
 export const getPercent = (currentPage: number, totalPage: number) => {
-  return (currentPage / totalPage) * 100;
+  return currentPage === 0 ? 0 : Math.ceil((currentPage / totalPage) * 100);
 };

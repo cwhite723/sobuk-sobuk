@@ -24,6 +24,7 @@ export const postPlan = async ({
       throw new Error("Failed to Register Plan");
     }
   }
+  throw new Error("Missing Access Token");
 };
 
 /**
@@ -52,6 +53,7 @@ export const patchPlan = async ({
       throw new Error("Failed to Modify Plan");
     }
   }
+  throw new Error("Missing Access Token");
 };
 
 /**
@@ -76,6 +78,7 @@ export const deletePlan = async ({
       throw new Error("Failed to Delete Plan");
     }
   }
+  throw new Error("Missing Access Token");
 };
 
 /**
@@ -84,10 +87,13 @@ export const deletePlan = async ({
  * @param accessToken
  * @returns { success: boolean, data: PlanInfo[] }
  */
-export const getPlans = async (
-  status: string,
-  accessToken: string | null,
-): Promise<PlansResponse | undefined> => {
+export const getPlans = async ({
+  status,
+  accessToken,
+}: {
+  status: PlanStatusForReq;
+  accessToken: string | null;
+}): Promise<PlansResponse> => {
   if (accessToken) {
     try {
       const response = await Api.get("/plans", {
@@ -100,4 +106,5 @@ export const getPlans = async (
       throw new Error("Failed to Check Plans Info");
     }
   }
+  throw new Error("Missing Access Token");
 };

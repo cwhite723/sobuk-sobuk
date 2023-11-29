@@ -1,55 +1,49 @@
 import { Box } from "@mui/material";
-import { deletePost, postLikePost } from "apis/posts";
 import CommonButton from "components/common/CommonButton";
 import CommonTypography from "components/common/CommonTypography";
-import { useState } from "react";
-import { useMutation } from "react-query";
-import { useSelector } from "react-redux";
-import { RootState } from "store/store";
+import usePostDeleteMutation from "hooks/mutates/posts/usePostDeleteMutation";
+import usePostLikeMutation from "hooks/mutates/posts/usePostLikeMutation";
+import { useNavigate } from "react-router-dom";
+import { getStoredToken } from "utils/get";
 
 interface PropsType {
+  countComments: number;
+  countLikes: number;
   myPost: boolean;
   myLike: boolean;
   postId: number;
 }
 
-const PostReaction = (props: PropsType) => {
+const PostReaction = ({
+  countComments,
+  countLikes,
+  myPost,
+  myLike,
+  postId,
+}: PropsType) => {
+  const navigate = useNavigate();
   // redux에 저장된 토큰 가져오기
-  const memberToken = useSelector((state: RootState) => state.auth.token);
+  const memberToken = getStoredToken();
 
   // react-query POST like post
-  const { mutate: likeMutate } = useMutation(postLikePost, {
-    onSuccess: () => {
-      console.log("추천 성공");
-    },
-    onError: (error) => {
-      console.log("like error", error);
-    },
-  });
+  const { mutate: likeMutate } = usePostLikeMutation();
 
-  // react-query POST like post
-  const { mutate: deleteMutate } = useMutation(deletePost, {
-    onSuccess: () => {
-      console.log("삭제 성공");
-    },
-    onError: (error) => {
-      console.log("delete error", error);
-    },
-  });
+  // react-query DELETE post
+  const { mutate: deleteMutate } = usePostDeleteMutation();
 
   // 포스트 삭제 버튼 함수
   const handlePostDelete = () => {
-    deleteMutate({ postId: props.postId, accessToken: memberToken });
+    deleteMutate({ postId, accessToken: memberToken });
   };
 
   // 포스트 수정 버튼 함수
   const handlePostEdit = () => {
-    console.log("post edit");
+    navigate("../edit/" + postId);
   };
 
   // 포스트 좋아요 버튼 함수
-  const handlePostLike = async (postId: number, accessToken: string) => {
-    await likeMutate({ postId, accessToken });
+  const handlePostLike = () => {
+    likeMutate({ postId, accessToken: memberToken });
   };
 
   return (
@@ -65,33 +59,39 @@ const PostReaction = (props: PropsType) => {
     >
       {/* comment and like */}
       <Box sx={{ display: "flex" }}>
-        <CommonTypography value="📄 2" variant="body2" bold={true} />
-        <CommonTypography value="✨ 53" variant="body2" bold={true} />
+        <CommonTypography
+          text={"📄 " + countComments}
+          variant="body2"
+          bold={true}
+        />
+        <CommonTypography
+          text={"✨ " + countLikes}
+          variant="body2"
+          bold={true}
+        />
       </Box>
 
       {/* buttons */}
       <Box sx={{ display: "flex" }}>
-        {props.myPost && (
+        {myPost && (
           <Box sx={{ display: "flex" }}>
             <CommonButton
-              value="삭제"
+              buttonText="삭제"
               outline={false}
-              onClick={handlePostDelete}
+              handleClickEvent={handlePostDelete}
             />
             <CommonButton
-              value="수정"
+              buttonText="수정"
               outline={false}
-              onClick={handlePostEdit}
+              handleClickEvent={handlePostEdit}
             />
           </Box>
         )}
         {memberToken && (
           <CommonButton
-            value="추천"
+            buttonText={myLike ? "🤎" : "🤍"}
             outline={false}
-            onClick={() =>
-              memberToken && handlePostLike(props.postId, memberToken)
-            }
+            handleClickEvent={handlePostLike}
           />
         )}
       </Box>

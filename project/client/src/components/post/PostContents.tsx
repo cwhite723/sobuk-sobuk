@@ -7,11 +7,11 @@ interface PropsType {
   contents: string;
 }
 
-const PostContents = (props: PropsType) => {
+const PostContents = ({ title, contents }: PropsType) => {
   return (
     <Box sx={{ my: 4 }}>
-      <CommonTitle value={props.title} />
-      <CommonTypography value={props.contents} variant="body1" bold={false} />
+      <CommonTitle text={title} />
+      <CommonTypography text={contents} variant="body1" bold={false} />
     </Box>
   );
 };

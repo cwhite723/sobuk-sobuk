@@ -8,20 +8,19 @@ import {
   DialogTitle,
   useMediaQuery,
 } from "@mui/material";
-import { postPlan } from "apis/plans";
+import CommonFormHelperText from "components/common/CommonFormHelperText";
 import CommonTextField from "components/common/CommonTextField";
 import CommonTypography from "components/common/CommonTypography";
+import usePlanSubmitMutation from "hooks/mutates/plans/usePlanSubmitMutation";
 import { useForm } from "react-hook-form";
-import { useMutation } from "react-query";
-import { useSelector } from "react-redux";
-import { RootState } from "store/store";
 import theme from "styles/theme";
 import { getStringDate } from "utils/format";
+import { getStoredToken } from "utils/get";
 
 interface PropsType {
   isOpen: boolean;
   selectedBook: BookInfoSimple | BookInfo;
-  handleClose: () => void;
+  handleDialogClose: () => void;
 }
 
 interface FormValue {
@@ -30,53 +29,55 @@ interface FormValue {
   endDate: string;
 }
 
-const SearchBookReadDialog = (props: PropsType) => {
+const SearchBookReadDialog = ({
+  isOpen,
+  selectedBook,
+  handleDialogClose,
+}: PropsType) => {
   // 화면 크기가 md보다 작아지면 Dialog를 fullscreen으로 띄움
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
 
   // redux에 저장된 토큰 가져오기 - post plan 요청에 필요
-  const memberToken = useSelector((state: RootState) => state.auth.token);
+  const memberToken = getStoredToken();
 
   // react hook form
-  const { control, handleSubmit, reset } = useForm<FormValue>({
+  const { control, handleSubmit, reset, formState } = useForm<FormValue>({
     defaultValues: {
       totalPages: 0,
       startDate: getStringDate(new Date()),
       endDate: getStringDate(new Date()),
     },
+    mode: "onSubmit",
   });
 
   // react-query - post plan
-  const { mutate, isError } = useMutation(postPlan, {
-    onSuccess: () => {
-      // 독서 정보 등록 성공
-      reset();
-      props.handleClose();
-      console.log("등록 성공");
-    },
-    onError: (error) => {
-      // 독서 정보 등록 실패
-      console.log("isError:" + isError, error);
-    },
-  });
+  const { mutate: planSubmitMutate } = usePlanSubmitMutation();
 
   const handleDialogData = (data: FormValue) => {
-    mutate({
-      bookId: props.selectedBook.bookId,
-      data: {
-        startDate: data.startDate,
-        endDate: data.endDate,
-        totalPage: data.totalPages,
-        readPageNumber: 0,
+    planSubmitMutate(
+      {
+        bookId: selectedBook.bookId,
+        data: {
+          startDate: data.startDate,
+          endDate: data.endDate,
+          totalPage: data.totalPages,
+          readPageNumber: 0,
+        },
+        accessToken: memberToken,
       },
-      accessToken: memberToken,
-    });
+      {
+        onSuccess: () => {
+          reset();
+          handleDialogClose();
+        },
+      },
+    );
   };
 
   return (
     <Dialog
-      open={props.isOpen}
-      onClose={props.handleClose}
+      open={isOpen}
+      onClose={handleDialogClose}
       fullScreen={fullScreen}
       sx={{ minWidth: "300px" }}
     >
@@ -107,58 +108,75 @@ const SearchBookReadDialog = (props: PropsType) => {
               }}
             >
               <CommonTypography
-                value={props.selectedBook.title}
+                text={selectedBook.title}
                 variant="h6"
                 bold={true}
               />
               <CommonTypography
-                value={
-                  props.selectedBook.author +
-                  " | " +
-                  props.selectedBook.publisher
-                }
+                text={selectedBook.author + " | " + selectedBook.publisher}
                 variant="body1"
                 bold={false}
               />
             </Box>
+
             <CommonTextField
               name="totalPages"
               control={control}
-              rules={{ required: true }}
+              rules={{
+                required: true,
+                min: { value: 1, message: "최소 1이상의 값을 입력해주세요." },
+              }}
               textFieldProps={{
                 id: "total-pages",
-                label: "Total Pages",
-                placeholder: "총 페이지 수를 입력해주세요",
+                label: "전체 페이지 수",
+                placeholder: "전체 페이지 수를 입력하세요",
                 type: "number",
               }}
             />
+            <CommonFormHelperText text={formState.errors.totalPages?.message} />
+
             <CommonTextField
               name="startDate"
               control={control}
-              rules={{ required: true, min: getStringDate(new Date()) }}
+              rules={{
+                required: true,
+                min: {
+                  value: getStringDate(new Date()),
+                  message: "오늘 날짜부터 선택할 수 있어요.",
+                },
+              }}
               textFieldProps={{
                 id: "start-date",
-                label: "Start",
+                label: "시작일",
                 type: "date",
               }}
             />
+            <CommonFormHelperText text={formState.errors.startDate?.message} />
+
             <CommonTextField
               name="endDate"
               control={control}
-              rules={{ required: true, min: getStringDate(new Date()) }}
+              rules={{
+                required: true,
+                min: {
+                  value: getStringDate(new Date()),
+                  message: "오늘 날짜부터 선택할 수 있어요.",
+                },
+              }}
               textFieldProps={{
                 id: "end-date",
-                label: "End",
+                label: "종료일",
                 type: "date",
               }}
             />
+            <CommonFormHelperText text={formState.errors.endDate?.message} />
           </Box>
         </DialogContent>
       </form>
 
       {/* 하단 버튼 */}
       <DialogActions>
-        <Button onClick={props.handleClose}>취소</Button>
+        <Button onClick={handleDialogClose}>취소</Button>
         <Button onClick={handleSubmit(handleDialogData)}>완료</Button>
       </DialogActions>
     </Dialog>

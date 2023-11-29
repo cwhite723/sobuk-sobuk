@@ -1,6 +1,5 @@
 import { Box } from "@mui/material";
-import { getMember } from "apis/members";
-import { getPost } from "apis/posts";
+import CommonBookImage from "components/common/CommonBookImage";
 import CommonLink from "components/common/CommonLink";
 import CommonTitle from "components/common/CommonTitle";
 import CommonTypography from "components/common/CommonTypography";
@@ -10,61 +9,43 @@ import PostCommentForm from "components/post/PostCommentForm";
 import PostCommentItem from "components/post/PostCommentItem";
 import PostContents from "components/post/PostContents";
 import PostReaction from "components/post/PostReaction";
-import { useState } from "react";
-import { useQuery } from "react-query";
-import { useSelector } from "react-redux";
+import useMemberInfoQuery from "hooks/queries/members/useMemberInfoQuery";
+import usePostQuery from "hooks/queries/posts/usePostQuery";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { RootState } from "store/store";
+import { getStoredToken } from "utils/get";
 
 const PostPage = () => {
   // 현재 url에서 postId 추출
   const { postid } = useParams() as { postid: string };
-  // redux에 저장된 토큰 가져오기
-  const token = useSelector((state: RootState) => state.auth.token);
+  const postId = parseInt(postid, 10);
 
-  // 현재 포스트 id
-  const [nowPostId, setNowPostId] = useState(parseInt(postid));
-  // 현재 포스트 정보
-  const [post, setPost] = useState<PostInfo>();
-  // 현재 포스트 댓글 정보
-  const [comments, setComments] = useState<CommentResponse[]>();
+  // redux에 저장된 토큰 가져오기
+  const memberToken = getStoredToken();
+
   // 현재 포스트 유저 id
   const [memberId, setMemberId] = useState<number | null>(null);
-  // 현재 포스트 유저 정보
-  const [owner, setOwner] = useState<MemberInfo | OtherMemberInfo>();
 
   // react-query - get post 현재 포스트 정보 요청
-  const { data: postInfo } = useQuery(
-    ["getPost", nowPostId, token],
-    () => getPost({ postId: nowPostId, accessToken: token }),
+  const { data: postInfo, isSuccess: isPostInfoSuccess } = usePostQuery(
+    postId,
+    memberToken,
     {
-      onSuccess(data) {
-        if (data) {
-          setPost(data.data.postResponse);
-          setComments(data.data.commentResponses);
-          setMemberId(data.data.postResponse.memberId);
-        }
-      },
-      enabled: !!nowPostId && !!token,
-      retry: false,
+      enabled: !!postId && !!memberToken,
     },
   );
 
   // react-query get member
   // 현재 포스트 유저 프로필 get
-  const { data: memberInfo } = useQuery(
-    ["getMember", memberId, token],
-    () => getMember({ memberId: memberId, accessToken: token }),
-    {
-      onSuccess(data) {
-        if (data) {
-          setOwner(data.data);
-        }
-      },
-      enabled: !!memberId && !!token,
-      retry: false,
-    },
-  );
+  const { data: memberInfo } = useMemberInfoQuery(memberId, memberToken, {
+    enabled: !!memberId && !!memberToken,
+  });
+
+  useEffect(() => {
+    if (postInfo && isPostInfoSuccess) {
+      setMemberId(postInfo.data.postResponse.memberId);
+    }
+  }, [isPostInfoSuccess]);
 
   return (
     <Box
@@ -83,51 +64,68 @@ const PostPage = () => {
       {/* 피드로 돌아가기 버튼 */}
       <CommonLink to="../feed">
         <CommonTypography
-          value="⬅피드로 돌아가기"
+          text="⬅피드로 돌아가기"
           variant="body2"
           bold={true}
         />
       </CommonLink>
 
-      {post && <CommonTitle value={post.postTitle} />}
-
-      {/* user profile */}
-      {owner && post && (
+      {/* 사용자 정보 */}
+      {memberInfo && postInfo && (
         <CommonUserProfile
-          memberInfo={owner}
-          memberId={post.memberId}
+          memberInfo={memberInfo.data}
+          memberId={postInfo.data.postResponse.memberId}
           avatarSize={50}
         />
       )}
 
-      {/* 책 정보 */}
-      {post && (
-        <PostBookInfo bookTitle={post.bookTitle} bookAuthor={post.bookAuthor} />
-      )}
+      {postInfo && (
+        <Box>
+          <CommonTitle text={postInfo.data.postResponse.postTitle} />
 
-      {/* 독서 기간 */}
-      {post && post.startDate && post.endDate && (
-        <PostContents
-          title="독서기간"
-          contents={post.startDate + " ~ " + post.endDate}
-        />
-      )}
+          {/* 책 정보 */}
+          <PostBookInfo
+            bookTitle={postInfo.data.postResponse.bookTitle}
+            bookAuthor={postInfo.data.postResponse.bookAuthor}
+          />
 
-      {/* 독서기록 내용 */}
-      {post && <PostContents title="독서기록 내용" contents={post.content} />}
+          {/* 독서 기간 */}
+          <PostContents
+            title="독서기간"
+            contents={
+              postInfo.data.postResponse.startDate +
+              " ~ " +
+              postInfo.data.postResponse.endDate
+            }
+          />
 
-      {/* 독서기록 reaction and buttons */}
-      {/* 아래 컴포넌트 수정 필요 */}
-      {post && post.myPost !== undefined && post.myLike !== undefined && (
-        <PostReaction
-          myPost={post.myPost}
-          myLike={post.myLike}
-          postId={nowPostId}
-        />
+          {/* 독서기록 내용 */}
+          <CommonBookImage
+            width={100}
+            height={150}
+            src={postInfo.data.postResponse.imageUrl}
+          />
+          <PostContents
+            title="독서기록 내용"
+            contents={postInfo.data.postResponse.content}
+          />
+
+          {/* 독서기록 reaction and buttons */}
+          {postInfo.data.postResponse.myPost &&
+            postInfo.data.postResponse.myLike && (
+              <PostReaction
+                countComments={postInfo.data.postResponse.countComments}
+                countLikes={postInfo.data.postResponse.countLikes}
+                myPost={postInfo.data.postResponse.myPost}
+                myLike={postInfo.data.postResponse.myLike}
+                postId={postId}
+              />
+            )}
+        </Box>
       )}
 
       {/* 댓글 container */}
-      {comments && (
+      {postInfo && (
         <Box
           sx={{
             display: "flex",
@@ -136,7 +134,7 @@ const PostPage = () => {
           }}
         >
           {/* 댓글 item */}
-          {comments.map((commnetItem) => (
+          {postInfo.data.commentResponses.map((commnetItem) => (
             <PostCommentItem
               key={commnetItem.commentId}
               commentItem={commnetItem}
@@ -145,8 +143,8 @@ const PostPage = () => {
         </Box>
       )}
 
-      {/* 댓글 입력하기 */}
-      {nowPostId && <PostCommentForm postId={nowPostId} />}
+      {/* 댓글 입력 폼 */}
+      {postId && <PostCommentForm postId={postId} />}
     </Box>
   );
 };

@@ -3,22 +3,12 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 interface InitialStateType {
   token: string | null;
   // 실제로는 memberInfo 객체를 가지고 있지만 직렬화한 값만 저장이 가능하므로 string으로 지정
-  member: string;
-  loading: boolean;
+  member: string | null;
 }
 
 const initialState: InitialStateType = {
-  token: "",
-  member: JSON.stringify({
-    memberId: 0,
-    userName: "",
-    password: "",
-    nickname: "",
-    email: "",
-    introduction: "",
-    // userImg: "",
-  }),
-  loading: false,
+  token: null,
+  member: null,
 };
 
 const authSlice = createSlice({
@@ -27,16 +17,12 @@ const authSlice = createSlice({
   reducers: {
     setToken: (state, action: PayloadAction<string>) => {
       // 토큰을 저장해용
-      // 쿠키에다가 저장해야함
       state.token = action.payload;
     },
     setMember: (state, action: PayloadAction<MemberInfo>) => {
       // 유저 프로필을 저장해용
       // storage에 객체는 저장불가, 꺼내올때도 JSON.parse 해야함
       state.member = JSON.stringify(action.payload);
-    },
-    setLoading: (state, action: PayloadAction<boolean>) => {
-      state.loading = action.payload;
     },
     logout: (state) => {
       // 세션이랑 쿠키를 비워서 로그아웃처리
@@ -48,6 +34,6 @@ const authSlice = createSlice({
 
 const { actions, reducer } = authSlice;
 
-export const { setToken, setMember, setLoading, logout } = actions;
+export const { setToken, setMember, logout } = actions;
 
 export default reducer;

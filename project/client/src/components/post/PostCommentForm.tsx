@@ -1,14 +1,13 @@
 import { Box } from "@mui/material";
-import { postComment } from "apis/comments";
 import CommonBigButton from "components/common/CommonBigButton";
+import CommonFormHelperText from "components/common/CommonFormHelperText";
 import CommonSnackBar from "components/common/CommonSnackBar";
 import CommonTextField from "components/common/CommonTextField";
+import useCommentSubmitMutation from "hooks/mutates/comments/useCommentSubmitMutation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useMutation } from "react-query";
-import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { RootState } from "store/store";
+import { getStoredToken } from "utils/get";
 
 interface PropsType {
   postId: number;
@@ -18,46 +17,46 @@ interface FormValue {
   comment: string;
 }
 
-const PostCommentForm = (props: PropsType) => {
+const PostCommentForm = ({ postId }: PropsType) => {
   const navigate = useNavigate();
 
   // redux에 저장된 토큰 가져오기
-  const token = useSelector((state: RootState) => state.auth.token);
+  const memberToken = getStoredToken();
 
   // 스낵바 상태값
   const [snackBarOpen, setSnackBarOpen] = useState(false);
 
-  const { control, handleSubmit } = useForm<FormValue>({
+  const { control, handleSubmit, formState } = useForm<FormValue>({
     defaultValues: {
       comment: "",
     },
+    mode: "onSubmit",
   });
 
   // react-query - POST comment
-  const { mutate, isError } = useMutation(postComment, {
-    onSuccess: () => {
-      // 성공
-      setSnackBarOpen(true);
-    },
-    onError: (error) => {
-      console.log("isError:" + isError, error);
-    },
-  });
+  const { mutate: submitMutate } = useCommentSubmitMutation();
 
   // 댓글 작성 완료 버튼 함수
   const handleSubmitComment = (data: FormValue) => {
-    mutate({
-      postId: props.postId,
-      data: {
-        content: data.comment,
+    submitMutate(
+      {
+        postId: postId,
+        data: {
+          content: data.comment,
+        },
+        accessToken: memberToken,
       },
-      accessToken: token,
-    });
+      {
+        onSuccess: () => {
+          setSnackBarOpen(true);
+        },
+      },
+    );
   };
 
-  const handleClose = () => {
+  const handleSnackBarClose = () => {
     setSnackBarOpen(false);
-    navigate("../post/" + props.postId);
+    navigate("../post/" + postId);
   };
 
   return (
@@ -72,24 +71,29 @@ const PostCommentForm = (props: PropsType) => {
         }}
       >
         <CommonSnackBar
-          value="댓글 작성이 완료되었습니다."
+          text="댓글 작성이 완료되었습니다."
           severity="success"
           open={snackBarOpen}
-          handleClose={handleClose}
+          handleSnackBarClose={handleSnackBarClose}
         />
+
         <CommonTextField
           name="comment"
           control={control}
-          rules={{ required: true }}
+          rules={{
+            required: { value: true, message: "내용은 꼭 입력해주세요." },
+          }}
           textFieldProps={{
             id: "comment",
-            label: "comment",
+            label: "댓글",
             placeholder: "댓글 내용을 입력하세요",
           }}
         />
+        <CommonFormHelperText text={formState.errors.comment?.message} />
+
         <CommonBigButton
-          value="입력"
-          onClick={handleSubmit(handleSubmitComment)}
+          buttonText="입력"
+          handleClickEvent={handleSubmit(handleSubmitComment)}
         />
       </Box>
     </form>

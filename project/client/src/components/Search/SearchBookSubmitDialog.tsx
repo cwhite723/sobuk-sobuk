@@ -9,82 +9,105 @@ import {
   Input,
   useMediaQuery,
 } from "@mui/material";
-import { postBook } from "apis/books";
 import CommonBookImage from "components/common/CommonBookImage";
+import CommonFormHelperText from "components/common/CommonFormHelperText";
 import CommonTextField from "components/common/CommonTextField";
+import useBookSubmitMutation from "hooks/mutates/books/useBookSubmitMutation";
+import useImageMutation from "hooks/mutates/useImageMutation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useMutation } from "react-query";
 import theme from "styles/theme";
 import { getStringDate } from "utils/format";
 
 interface PropsType {
   isOpen: boolean;
   setNewBook: React.Dispatch<React.SetStateAction<number | null>>;
-  handleClose: () => void;
+  handleDialogClose: () => void;
 }
 
 interface FormValue {
-  bookTitle: string;
-  bookWriter: string;
-  bookPublish: string;
-  bookPublicationDate: string;
+  title: string;
+  author: string;
+  publisher: string;
+  publicationDate: string;
+  img?: string;
   isUserInput: true;
 }
 
-const SearchBookSubmitDialog = (props: PropsType) => {
+const SearchBookSubmitDialog = ({
+  isOpen,
+  setNewBook,
+  handleDialogClose,
+}: PropsType) => {
   // 화면 크기가 md보다 작아지면 Dialog를 fullscreen으로 띄움
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
+
   // 책 이미지
-  const [bookImage, setBookImage] = useState("");
+  const [bookImg, setBookImg] = useState("");
+
+  // react hook form
+  const { setValue, control, handleSubmit, reset, formState } =
+    useForm<FormValue>({
+      defaultValues: {
+        title: "",
+        author: "",
+        publisher: "",
+        publicationDate: getStringDate(new Date()),
+        img: "",
+      },
+      mode: "onSubmit",
+    });
+
+  // react-query - POST image
+  const { mutate: imageMutate } = useImageMutation();
 
   // 이미지 변경 함수
   const handleChangeImg = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
-      setBookImage(URL.createObjectURL(event.target.files[0]));
+      // 유저에게 보여주기 위한 state
+      setBookImg(URL.createObjectURL(event.target.files[0]));
+
+      // 이미지 url을 얻기위한 요청에 필요한 데이터 형식으로 변경
+      const formData = new FormData();
+      formData.append("file", event.target.files[0]);
+      imageMutate(formData, {
+        onSuccess: (data) => {
+          setValue("img", data);
+        },
+      });
     }
   };
 
-  // react hook form
-  const { control, handleSubmit, reset } = useForm<FormValue>({
-    defaultValues: {
-      bookTitle: "",
-      bookWriter: "",
-      bookPublish: "",
-      bookPublicationDate: getStringDate(new Date()),
-    },
-  });
-
   // react-query - post book
-  const { mutate, isError, isSuccess } = useMutation(postBook, {
-    onSuccess: (data) => {
-      if (data) {
-        // 도서 등록 성공
-        reset();
-        props.setNewBook(data.data);
-        props.handleClose();
-      }
-    },
-    onError: (error) => {
-      // 도서 등록 실패
-      console.log(error);
-    },
-  });
+  const { mutate: bookSubmitMutate } = useBookSubmitMutation();
 
   const handleDialogData = (data: FormValue) => {
-    mutate({
-      title: data.bookTitle,
-      author: data.bookWriter,
-      publisher: data.bookPublish,
-      publicationDate: data.bookPublicationDate,
-      isUserInput: true,
-    });
+    bookSubmitMutate(
+      {
+        title: data.title,
+        author: data.author,
+        publisher: data.publisher,
+        publicationDate: data.publicationDate,
+        imageUrl: data.img,
+        isUserInput: true,
+      },
+      {
+        onSuccess: (data) => {
+          if (data) {
+            // 도서 등록 성공
+            reset();
+            setNewBook(data.data);
+            handleDialogClose();
+          }
+        },
+      },
+    );
   };
 
   return (
     <Dialog
-      open={props.isOpen}
-      onClose={props.handleClose}
+      open={isOpen}
+      onClose={handleDialogClose}
       fullScreen={fullScreen}
       sx={{ minWidth: "300px" }}
     >
@@ -105,45 +128,68 @@ const SearchBookSubmitDialog = (props: PropsType) => {
             }}
           >
             <CommonTextField
-              name="bookTitle"
+              name="title"
               control={control}
-              rules={{ required: true }}
+              rules={{
+                required: { value: true, message: "제목은 필수 입력값입니다." },
+              }}
               textFieldProps={{
-                id: "book-title",
-                label: "Title",
-                placeholder: "책 제목을 입력해주세요",
+                id: "title",
+                label: "제목",
+                placeholder: "제목을 입력하세요",
               }}
             />
+            <CommonFormHelperText text={formState.errors.title?.message} />
+
             <CommonTextField
-              name="bookWriter"
+              name="author"
               control={control}
-              rules={{ required: true }}
+              rules={{
+                required: { value: true, message: "작가는 필수 입력값입니다." },
+              }}
               textFieldProps={{
                 id: "book-writer",
-                label: "Writer",
-                placeholder: "지은이를 입력해주세요",
+                label: "작가",
+                placeholder: "작가를 입력하세요",
               }}
             />
+            <CommonFormHelperText text={formState.errors.author?.message} />
+
             <CommonTextField
-              name="bookPublish"
+              name="publisher"
               control={control}
-              rules={{ required: true }}
+              rules={{
+                required: {
+                  value: true,
+                  message: "출판사는 필수 입력값입니다.",
+                },
+              }}
               textFieldProps={{
                 id: "book-publish",
-                label: "Publish",
-                placeholder: "출판사를 입력해주세요",
+                label: "출판사",
+                placeholder: "출판사를 입력하세요",
               }}
             />
+            <CommonFormHelperText text={formState.errors.publisher?.message} />
+
             <CommonTextField
-              name="bookPublicationDate"
+              name="publicationDate"
               control={control}
-              rules={{ required: true }}
+              rules={{
+                required: {
+                  value: true,
+                  message: "출간일은 필수 입력값입니다.",
+                },
+              }}
               textFieldProps={{
                 id: "book-publication-date",
-                label: "PublicationDate",
-                placeholder: "출간일을 입력해주세요",
+                label: "출간일",
+                placeholder: "출간일을 입력하세요",
                 type: "date",
               }}
+            />
+            <CommonFormHelperText
+              text={formState.errors.publicationDate?.message}
             />
           </Box>
 
@@ -156,15 +202,21 @@ const SearchBookSubmitDialog = (props: PropsType) => {
               mt: 2,
             }}
           >
-            <CommonBookImage width={50} height={80} src={bookImage} />
+            <CommonBookImage width={50} height={80} src={bookImg} />
             <Input type="file" onChange={handleChangeImg} name="img" />
+            {!bookImg && (
+              <CommonFormHelperText
+                text="도서 사진을 등록해보세요."
+                status="success"
+              />
+            )}
           </Box>
         </DialogContent>
       </form>
 
       {/* 하단 버튼 */}
       <DialogActions>
-        <Button onClick={props.handleClose}>취소</Button>
+        <Button onClick={handleDialogClose}>취소</Button>
         <Button onClick={handleSubmit(handleDialogData)}>완료</Button>
       </DialogActions>
     </Dialog>

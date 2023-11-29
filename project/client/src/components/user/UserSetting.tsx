@@ -1,18 +1,19 @@
-import { Alert, Box, CircularProgress, Input } from "@mui/material";
-import { deleteMember, getMyPage, patchMember } from "apis/members";
+import { Box, Input } from "@mui/material";
 import CommonAvaratImage from "components/common/CommonAvatarImage";
 import CommonBigButton from "components/common/CommonBigButton";
+import CommonFormHelperText from "components/common/CommonFormHelperText";
 import CommonSnackBar from "components/common/CommonSnackBar";
 import CommonTextField from "components/common/CommonTextField";
 import CommonTitle from "components/common/CommonTitle";
-import CommonTypography from "components/common/CommonTypography";
-import React, { useEffect, useState } from "react";
+import useLogOutMutation from "hooks/mutates/members/useLogOutMutaion";
+import useMemberDeleteMutation from "hooks/mutates/members/useMemberDeleteMutation";
+import useMemberPatchMutation from "hooks/mutates/members/useMemberPatchMutation";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useMutation, useQuery } from "react-query";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { logout, setMember } from "store/auth";
-import { RootState } from "store/store";
+import { logout } from "store/auth";
+import { getStoredMember, getStoredToken } from "utils/get";
 
 interface FormValue {
   nickname: string;
@@ -24,83 +25,56 @@ const UserSetting = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // 에러메세지
-  const [errorMessage, setErrorMessage] = useState("");
   // 스낵바 상태값
-  const [snackBarOpen, setSnackBarOpen] = useState(false);
+  const [successSnackBarOpen, setSuccessSnackBarOpen] = useState(false);
+
   // 로그인한 유저의 프로필 이미지
   const [profileImg, setProfileImg] = useState("");
 
   // store 토큰 값 가져오기
-  const memberToken = useSelector((state: RootState) => state.auth.token);
+  const memberToken = getStoredToken();
   // store 값 가져오기
-  const storedMemberInfo: MemberInfo = JSON.parse(
-    useSelector((state: RootState) => state.auth.member),
-  );
+  const memberInfo = getStoredMember();
 
   // react hook form
   const { control, handleSubmit, formState } = useForm<FormValue>({
     defaultValues: {
-      nickname: storedMemberInfo.nickname,
-      introduction: storedMemberInfo.introduction,
+      nickname: memberInfo?.nickname ?? "",
+      introduction: memberInfo?.introduction ?? "",
       img: "",
     },
     mode: "onSubmit",
   });
 
   // react-query - get myInfo
-  const { data: myPage, refetch } = useQuery(
-    ["getMyPage", memberToken],
-    () => getMyPage(memberToken),
-    {
-      onSuccess(data) {
-        if (data) {
-          // 수정된 데이터로 redux 업데이트
-          dispatch(setMember(data.data));
-        }
-      },
-      onError(error) {
-        console.log("getMyPage Error", error);
-      },
-      enabled: !!snackBarOpen,
-    },
-  );
+  // const { data: myPage, refetch } = useQuery(
+  //   ["getMyPage", memberToken],
+  //   () => getMyPage(memberToken),
+  //   {
+  //     onSuccess(data) {
+  //       if (data) {
+  //         // 수정된 데이터로 redux 업데이트
+  //         dispatch(setMember(data.data));
+  //       }
+  //     },
+  //     onError(error) {
+  //       console.log("getMyPage Error", error);
+  //     },
+  //     enabled: !!snackBarOpen,
+  //   },
+  // );
+
+  // react-query POST log out
+  const { mutate: logOutMutate } = useLogOutMutation();
 
   // react-query DELETE member
-  const {
-    mutate: deleteMutate,
-    isLoading: deleteIsLoading,
-    isError: deleteIsError,
-  } = useMutation(deleteMember, {
-    onSuccess: () => {
-      // 탈퇴 성공
-      dispatch(logout());
-      navigate("../login");
-    },
-    onError: (error) => {
-      // 탈퇴 실패
-      console.log(error);
-    },
-  });
+  const { mutate: memberDeleteMutate } = useMemberDeleteMutation();
 
   // react-query PATCH member
-  const {
-    mutate: patchMutate,
-    isLoading: patchIsLoading,
-    isError: patchIsError,
-  } = useMutation(patchMember, {
-    onSuccess: () => {
-      // 수정 성공
-      refetch();
-      setSnackBarOpen(true);
-    },
-    onError: (error) => {
-      // 수정 실패
-      console.log(error);
-    },
-  });
+  const { mutate: memberPatchMutate } = useMemberPatchMutation();
 
   // 로그인한 유저의 프로필 이미지 변경 함수
+  // 아직 member 쪽은 필드 없음
   const handleChangeImg = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       setProfileImg(URL.createObjectURL(event.target.files[0]));
@@ -110,32 +84,36 @@ const UserSetting = () => {
   // 정보 수정 완료 버튼 함수
   const handleSetting = (data: FormValue) => {
     data.img = profileImg;
-    patchMutate({
-      data: {
-        nickname: data.nickname,
-        introduction: data.introduction,
+    memberPatchMutate(
+      {
+        data: {
+          nickname: data.nickname,
+          introduction: data.introduction,
+        },
+        token: memberToken,
       },
-      accessToken: memberToken,
-    });
+      {
+        onSuccess: () => {
+          setSuccessSnackBarOpen(true);
+        },
+      },
+    );
   };
 
   // 회원탈퇴 버튼 함수
   const handleDropOut = () => {
-    deleteMutate(memberToken);
+    memberDeleteMutate(memberToken, {
+      onSuccess: () => {
+        logOutMutate(memberToken);
+        dispatch(logout());
+        navigate("../login");
+      },
+    });
   };
 
-  const handleClose = () => {
-    setSnackBarOpen(false);
-    navigate(0);
+  const handleSnackBarClose = () => {
+    setSuccessSnackBarOpen(false);
   };
-
-  useEffect(() => {
-    if (formState.errors.nickname) {
-      setErrorMessage("닉네임은 필수 입력입니다.(2~10자)");
-    } else {
-      setErrorMessage("");
-    }
-  }, [formState]);
 
   return (
     <Box>
@@ -153,24 +131,13 @@ const UserSetting = () => {
       >
         {/* snackbar */}
         <CommonSnackBar
-          value="정보수정이 완료되었습니다."
+          text="정보수정이 완료되었습니다."
           severity="success"
-          open={snackBarOpen}
-          handleClose={handleClose}
+          open={successSnackBarOpen}
+          handleSnackBarClose={handleSnackBarClose}
         />
 
-        {/* 로딩중 */}
-        {deleteIsLoading || (patchIsLoading && <CircularProgress />)}
-
-        {/* 에러발생 */}
-        {deleteIsError && (
-          <Alert severity="error">회원탈퇴 중 오류가 발생했습니다.</Alert>
-        )}
-        {patchIsError && (
-          <Alert severity="error">회원정보 수정 중 오류가 발생했습니다.</Alert>
-        )}
-
-        <CommonTitle value="😊 계정 정보 수정하기" />
+        <CommonTitle text="😊 계정 정보 수정하기" />
 
         {/* 프로필 수정 폼 */}
         {/* 프로필 이미지 업데이트 */}
@@ -190,12 +157,24 @@ const UserSetting = () => {
           <CommonTextField
             name="nickname"
             control={control}
-            rules={{ required: true, minLength: 2, maxLength: 10 }}
+            rules={{
+              required: true,
+              minLength: {
+                value: 2,
+                message: "닉네임은 2자 이상 입력해주세요.",
+              },
+              maxLength: {
+                value: 10,
+                message: "닉네임은 10자가 넘지 않게 입력해주세요.",
+              },
+            }}
             textFieldProps={{
               id: "user-name",
               label: "닉네임",
             }}
           />
+          <CommonFormHelperText text={formState.errors.nickname?.message} />
+
           <CommonTextField
             name="introduction"
             control={control}
@@ -205,19 +184,14 @@ const UserSetting = () => {
             }}
           />
 
-          {/* error message */}
-          <CommonTypography
-            value={errorMessage}
-            variant="body2"
-            bold={true}
-            error={true}
-          />
-
           <CommonBigButton
-            value="수정완료"
-            onClick={handleSubmit(handleSetting)}
+            buttonText="수정완료"
+            handleClickEvent={handleSubmit(handleSetting)}
           />
-          <CommonBigButton value="회원탈퇴" onClick={handleDropOut} />
+          <CommonBigButton
+            buttonText="회원탈퇴"
+            handleClickEvent={handleDropOut}
+          />
         </form>
       </Box>
     </Box>

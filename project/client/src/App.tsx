@@ -14,8 +14,19 @@ import PrivateRoute from "pages/auth/PrivateRoute";
 import NotPrivateRoute from "pages/auth/NotPrivateRoute";
 import SearchPage from "pages/SearchPage";
 import { QueryClient, QueryClientProvider } from "react-query";
+import EditPage from "pages/EditPage";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      // 필요한 요청에 한해서 true로 설정
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+      retry: false,
+    },
+  },
+});
 
 function App() {
   return (
@@ -35,6 +46,7 @@ function App() {
             <Route path="main" element={<MainPage />} />
             <Route path="post/:postid" element={<PostPage />} />
             <Route path="write" element={<WritePage />} />
+            <Route path="edit/:postid" element={<EditPage />} />
             <Route path="my" element={<UserPage />} />
             <Route path="user/:userid" element={<UserPage />} />
           </Route>

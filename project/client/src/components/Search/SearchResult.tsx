@@ -3,13 +3,13 @@ import CommonButton from "components/common/CommonButton";
 import CommonTypography from "components/common/CommonTypography";
 import { useEffect, useState } from "react";
 import SearchBookReadDialog from "./SearchBookReadDialog";
-import { useMutation, useQuery } from "react-query";
-import { getAllBooks, getKakaoBooks, postBook, postBookmark } from "apis/books";
-import { useSelector } from "react-redux";
-import { RootState } from "store/store";
 import { convertBookResponse } from "utils/format";
-import { postImage } from "apis/images";
 import CommonBookImage from "components/common/CommonBookImage";
+import { getStoredToken } from "utils/get";
+import useBooksQuery from "hooks/queries/books/useBooksQuery";
+import useBooksKakaoQuery from "hooks/queries/books/useBooksKakaoQuery";
+import useBookSubmitMutation from "hooks/mutates/books/useBookSubmitMutation";
+import useBookmarkMutation from "hooks/mutates/books/useBookmarkMutation";
 
 interface PropsType {
   queryParams: BookParams;
@@ -17,23 +17,16 @@ interface PropsType {
 }
 
 // 검색결과목록 표출
-const SerarchReasult = (props: PropsType) => {
+const SerarchReasult = ({ queryParams, queryType }: PropsType) => {
   // redux에 저장된 토큰 가져오기 - bookmark 요청에 필요
-  const memberToken = useSelector((state: RootState) => state.auth.token);
-
-  // kakao api에서 소북DB에 저장한 도서id값
-  // 바로 plans등록을 위해 저장이 필요함
-  const [kakaoBookId, setKakaoBookId] = useState<number | null>(null);
-
-  // image를 서버에 업로드하면 반환되는 url
-  const [bookImageUrl, setBookImageUrl] = useState<string | null>(null);
+  const memberToken = getStoredToken();
 
   // plan에 등록할, 사용자가 선택한 도서
   // 선택한 도서의 유무에 따라 Dialog open값을 결정함
   const [selectedBook, setSelectedBook] = useState<BookInfoSimple | null>(null);
 
   // 검색에 필요한 query params
-  const [params, setParams] = useState<BookParams>(props.queryParams);
+  const [params, setParams] = useState<BookParams>(queryParams);
 
   // kakao 검색 api 결과값 or 소북소북 등록 도서 검색 결과값
   const [resultBooks, setResultBooks] = useState<BookInfoSimple[]>();
@@ -51,95 +44,37 @@ const SerarchReasult = (props: PropsType) => {
     setPage(value);
   };
 
-  const { data } = useQuery(
-    ["getAllBooks", params],
-    () => getAllBooks(params),
-    {
-      onSuccess(data) {
-        if (props.queryType === "sobuk") {
-          setResultBooks([...data.data.content]);
-          setTotalPages(data.data.totalPages);
-        }
-      },
-      enabled: !!params,
-      retry: false,
-    },
-  );
-
-  const { data: kakaoData } = useQuery(
-    ["getKakaoBooks", params],
-    () =>
-      getKakaoBooks({
-        page: params.page,
-        size: params.size,
-        query: params.title ? params.title : "",
-        target: "title",
-      }),
-    {
-      onSuccess(data) {
-        if (props.queryType === "kakao") {
-          setResultBooks([]);
-          const newData = data.documents.map((item) =>
-            convertBookResponse(item),
-          );
-          setResultBooks(() => newData);
-          setTotalPages(
-            Math.ceil(data.meta.pageable_count / params.size) > 50
-              ? 50
-              : Math.ceil(data.meta.pageable_count / params.size),
-          );
-        }
-      },
-      enabled: !!params,
-      retry: false,
-    },
-  );
-
-  // react-query - post book
-  const { mutateAsync: bookMutate, isSuccess } = useMutation(postBook, {
-    onSuccess: (data) => {
-      if (data) {
-        // 도서 등록 성공
-        setKakaoBookId(data.data);
-        console.log("도서 등록", data);
-      }
-    },
-    onError: (error) => {
-      // 도서 등록 실패
-      console.log("도서 등록 실패", error);
-    },
+  // react-query GET books
+  const { data: sobukData, isSuccess: isSobukSuccess } = useBooksQuery(params, {
+    enabled: !!params && queryType === "sobuk",
   });
+
+  // react-query GET kakao books
+  const { data: kakaoData, isSuccess: isKakaoSuccess } = useBooksKakaoQuery(
+    {
+      page: params.page,
+      size: params.size,
+      query: params.title || "",
+      target: "title",
+    },
+    { enabled: !!params && queryType === "kakao" },
+  );
+
+  // react-query - POST book
+  const { mutate: bookSubmitMutate } = useBookSubmitMutation();
 
   // react-query - post bookmark
-  const { mutate: bookmarkMutate } = useMutation(postBookmark, {
-    onSuccess: (data) => {
-      // bookmark 성공
-      console.log(data);
-    },
-    onError: (error) => {
-      // bookmark 실패
-      console.log(error);
-    },
-  });
-
-  // react-query - post image
-  const { mutate: imageMutate } = useMutation(postImage, {
-    onSuccess: (data) => {
-      setBookImageUrl(data);
-      console.log(data);
-    },
-    onError: (error) => {
-      console.log(error);
-    },
-  });
+  const { mutate: bookmarkMutate } = useBookmarkMutation();
 
   // 책 읽기
   const handleReadBook = (book: BookInfoSimple) => {
-    if (props.queryType === "sobuk" && book.imageUrl) {
-      imageMutate(book.imageUrl);
+    if (queryType === "sobuk") {
+      setSelectedBook(book);
+      return;
     }
-    if (props.queryType === "kakao") {
-      bookMutate({
+    // 카카오검색 정보면 소북DB에 먼저 등록
+    bookSubmitMutate(
+      {
         title: book.title,
         author: book.author,
         publisher: book.publisher,
@@ -148,38 +83,60 @@ const SerarchReasult = (props: PropsType) => {
           : "정보없음",
         isUserInput: false,
         imageUrl: book.imageUrl,
-      });
-    }
-    setSelectedBook({ ...book, imageUrl: bookImageUrl });
+      },
+      {
+        onSuccess: (data) => {
+          if (data) {
+            setSelectedBook({ ...book, bookId: data.data });
+          }
+        },
+      },
+    );
   };
 
   // 책 찜하기
-  const handleBookmark = async (book: BookInfoSimple, token: string) => {
-    await bookmarkMutate({ bookId: book.bookId, accessToken: token });
+  // 찜 요청에 따른 데이터 변경 or UI 변경 추가 필요
+  const handleBookmark = (book: BookInfoSimple, token: string) => {
+    bookmarkMutate({ bookId: book.bookId, accessToken: token });
   };
 
   // Dialog 닫기
-  const handleClose = () => {
+  const handleDialogClose = () => {
     setSelectedBook(null);
   };
 
+  // 페이지네이션
   useEffect(() => {
     setParams((prevParams) => ({ ...prevParams, page }));
     setResultBooks([]);
   }, [page]);
 
+  // useQuery data setState
   useEffect(() => {
-    if (kakaoBookId && selectedBook) {
-      setSelectedBook({ ...selectedBook, bookId: kakaoBookId });
+    if (isSobukSuccess && queryType === "sobuk") {
+      setResultBooks([...sobukData.data.content]);
+      setTotalPages(sobukData.data.totalPages);
     }
-  }, [kakaoBookId, selectedBook]);
+
+    if (isKakaoSuccess && queryType === "kakao") {
+      setResultBooks([]);
+      setResultBooks(
+        kakaoData.documents.map((item) => convertBookResponse(item)),
+      );
+      setTotalPages(
+        Math.ceil(kakaoData.meta.pageable_count / params.size) > 50
+          ? 50
+          : Math.ceil(kakaoData.meta.pageable_count / params.size),
+      );
+    }
+  }, [isSobukSuccess, isKakaoSuccess]);
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
       {selectedBook && memberToken && (
         <SearchBookReadDialog
           isOpen={selectedBook !== null}
-          handleClose={handleClose}
+          handleDialogClose={handleDialogClose}
           selectedBook={selectedBook}
         />
       )}
@@ -187,10 +144,9 @@ const SerarchReasult = (props: PropsType) => {
       {/* 검색된 도서 리스트 */}
       {/* 컴포넌트 분리할까 */}
       {resultBooks &&
-        resultBooks.length > 0 &&
-        resultBooks.map((bookItem) => (
+        resultBooks.map((bookItem, index) => (
           <Box
-            key={bookItem.bookId}
+            key={index}
             sx={{
               display: "flex",
               justifyContent: "space-between",
@@ -210,7 +166,7 @@ const SerarchReasult = (props: PropsType) => {
               }}
             >
               <CommonTypography
-                value={bookItem.title}
+                text={bookItem.title}
                 variant="body1"
                 bold={true}
               />
@@ -221,17 +177,19 @@ const SerarchReasult = (props: PropsType) => {
                 }}
               >
                 <CommonTypography
-                  value={bookItem.author}
+                  text={bookItem.author}
                   variant="body1"
                   bold={false}
                 />
                 <CommonTypography
-                  value={bookItem.publisher}
+                  text={bookItem.publisher}
                   variant="body1"
                   bold={false}
                 />
               </Box>
             </Box>
+
+            {/* 로그인한 유저에게만 버튼 표출 */}
             {memberToken && (
               <Box
                 sx={{
@@ -241,14 +199,14 @@ const SerarchReasult = (props: PropsType) => {
                 }}
               >
                 <CommonButton
-                  value="📖읽기"
+                  buttonText="📖읽기"
                   outline={false}
-                  onClick={() => handleReadBook(bookItem)}
+                  handleClickEvent={() => handleReadBook(bookItem)}
                 />
                 <CommonButton
-                  value="📌찜하기"
+                  buttonText="📌찜하기"
                   outline={false}
-                  onClick={() =>
+                  handleClickEvent={() =>
                     memberToken && handleBookmark(bookItem, memberToken)
                   }
                 />
@@ -256,6 +214,8 @@ const SerarchReasult = (props: PropsType) => {
             )}
           </Box>
         ))}
+
+      {/* 전체페이지 값이 넘어온 경우만 표출 */}
       {totalPages && (
         <Box
           sx={{

@@ -5,15 +5,14 @@ import CommonLink from "components/common/CommonLink";
 import CommonTypography from "components/common/CommonTypography";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { setMember, setToken } from "store/auth";
-import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import CommonSnackBar from "components/common/CommonSnackBar";
-import { useMutation, useQuery } from "react-query";
-import { getMyPage, postLogIn } from "apis/members";
-import { RootState } from "store/store";
 import CommonTitle from "components/common/CommonTitle";
 import CommonFormHelperText from "components/common/CommonFormHelperText";
+import useMyPageQuery from "hooks/queries/members/useMyPageQuery";
+import useLogInMutation from "hooks/mutates/members/useLogInMutation";
+import { getStoredToken } from "utils/get";
+import { setMember } from "store/auth";
 
 interface FormValue {
   id: string;
@@ -22,63 +21,47 @@ interface FormValue {
 
 const LoginPage = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-
-  // redux에 저장된 토큰 가져오기
-  const token = useSelector((state: RootState) => state.auth.token);
+  const memberToken = getStoredToken();
 
   // 스낵바 상태값
   const [errorSnackBarOpen, setErrorSnackBarOpen] = useState(false);
 
   // react hook form
-  const { control, handleSubmit, formState } = useForm<FormValue>({
+  const { control, handleSubmit, formState, reset } = useForm<FormValue>({
     defaultValues: {
       id: "",
       password: "",
     },
     // mode를 설정하여 해당 mode에 검증 로직이 동작하도록 함
-    mode: "onChange",
+    mode: "onSubmit",
   });
 
   // react-query - post log-in
-  const { mutate, isError } = useMutation(postLogIn, {
-    onSuccess: (data) => {
-      // 로그인 성공 시, 받아온 받아온 토큰을 redux에 저장
-      dispatch(setToken(data.headers.authorization));
-    },
-    onError: (error) => {
-      // 로그인 실패 시, 로그인 실패 SnackBar를 보여줌
-      setErrorSnackBarOpen(true);
-      console.log(error);
-    },
-  });
+  const { mutate: logInMutate, isSuccess: isLogInSuccess } = useLogInMutation();
 
   // react-query - get myInfo
-  const { data: myPage } = useQuery(
-    ["getMyPage", token],
-    () => getMyPage(token),
+  const { data: myPage, isSuccess: isMyPageSuccess } = useMyPageQuery(
+    memberToken,
     {
-      onSuccess(data) {
-        if (data) {
-          dispatch(setMember(data.data));
-          // 메인으로 이동
-          navigate("../main");
-        }
-      },
-      onError(error) {
-        console.log("getMyPage Error", error);
-      },
-      enabled: !!token,
+      enabled: !!memberToken,
     },
   );
 
   // 로그인 동작 함수
-  const handleLogin = async (formData: FormValue) => {
-    await mutate({ userName: formData.id, password: formData.password });
+  const handleLogin = (formData: FormValue) => {
+    logInMutate(
+      { userName: formData.id, password: formData.password },
+      {
+        onError: () => {
+          setErrorSnackBarOpen(true);
+        },
+      },
+    );
   };
 
   const handleSnackBarClose = () => {
     setErrorSnackBarOpen(false);
+    reset();
   };
 
   // 카카오 로그인 버튼 함수
@@ -91,18 +74,13 @@ const LoginPage = () => {
     console.log("google login");
   };
 
-  // 검증 로직에 따른 에러 메세지 표시
-  // useEffect(() => {
-  //   if (formState.errors.id) {
-  //     setErrorMessage("ID는 영문과 숫자만 입력가능합니다.(2~15자)");
-  //   } else if (formState.errors.password) {
-  //     setErrorMessage(
-  //       "Password는 영문과 숫자, 특수문자만 입력가능합니다.(6~15자)",
-  //     );
-  //   } else {
-  //     setErrorMessage("");
-  //   }
-  // }, [formState]);
+  useEffect(() => {
+    // get myInfo 성공시
+    if (isLogInSuccess && isMyPageSuccess && myPage) {
+      console.log("성공", myPage.data);
+      dispatch(setMember(myPage.data));
+    }
+  }, [isLogInSuccess, isMyPageSuccess]);
 
   return (
     <Box

@@ -13,15 +13,15 @@ import MenuIcon from "@mui/icons-material/Menu";
 import React, { useState } from "react";
 import CommonButton from "../common/CommonButton";
 import CommonLink from "../common/CommonLink";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logout } from "store/auth";
 import CommonSnackBar from "../common/CommonSnackBar";
-import { RootState } from "store/store";
 import CommonTypography from "../common/CommonTypography";
 import { useMutation } from "react-query";
 import { postLogOut } from "apis/members";
-import { pages } from "constants/pages";
+import { pages } from "constants/menus";
+import { getStoredMember, getStoredToken } from "utils/get";
 
 const HeaderBar = () => {
   const dispatch = useDispatch();
@@ -31,11 +31,9 @@ const HeaderBar = () => {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
 
   // 로그인 여부 토큰으로 확인
-  const memberToken = useSelector((state: RootState) => state.auth.token);
+  const memberToken = getStoredToken();
   // redux에 저장된 유저정보 확인
-  const memberInfo: MemberInfo =
-    memberToken &&
-    JSON.parse(useSelector((state: RootState) => state.auth.member));
+  const memberInfo = getStoredMember();
 
   // snackbar 오픈 여부
   const [snackBarOpen, setSnackBarOpen] = useState(false);

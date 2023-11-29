@@ -8,7 +8,7 @@ interface PropsType {
   src?: string;
 }
 
-const PostBookInfo = (props: PropsType) => {
+const PostBookInfo = ({ bookAuthor, bookTitle, src }: PropsType) => {
   return (
     <Box
       sx={{
@@ -21,7 +21,7 @@ const PostBookInfo = (props: PropsType) => {
         my: 4,
       }}
     >
-      <CommonBookImage width={150} height={180} src={props.src} />
+      <CommonBookImage width={150} height={180} src={src} />
       <Box
         sx={{
           width: "100%",
@@ -37,20 +37,9 @@ const PostBookInfo = (props: PropsType) => {
             mr: 2,
           }}
         >
-          <CommonTypography value={props.bookTitle} variant="h6" bold={true} />
-          <CommonTypography
-            value={props.bookAuthor}
-            variant="body1"
-            bold={true}
-          />
+          <CommonTypography text={bookTitle} variant="h6" bold={true} />
+          <CommonTypography text={bookAuthor} variant="body1" bold={true} />
         </Box>
-        {/* <Box sx={{ my: 1 }}>
-          <CommonTypography
-            value="책 줄거리 한줄 소개"
-            variant="body1"
-            bold={false}
-          />
-        </Box> */}
       </Box>
     </Box>
   );

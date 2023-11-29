@@ -1,33 +1,13 @@
 import { Box } from "@mui/material";
-import { getAllBooks, getBook } from "apis/books";
 import CommonButton from "components/common/CommonButton";
 import CommonTypography from "components/common/CommonTypography";
-import { useQuery } from "react-query";
 
 type PropsType = {
   handleSelectPlan: (planInfo: PlanInfo) => void;
-  // bookId: number;
-  // bookTitle: string;
   planInfo: PlanInfo;
 };
 
-const WritePostBookItem = (props: PropsType) => {
-  // react-query 책 정보
-  // const { data: bookInfo } = useQuery(
-  //   ["getBook", props.bookId],
-  //   () => getBook(props.bookId),
-  //   {
-  //     enabled: !!props.bookId,
-  //   },
-  // );
-
-  // 임시 query 책 정보
-  // const { data: bookInfo } = useQuery(
-  //   ["getBook", props.bookTitle],
-  //   () => getAllBooks({ page: 1, size: 1, title: props.bookTitle }),
-  //   { enabled: !!props.bookTitle },
-  // );
-
+const WritePostBookItem = ({ handleSelectPlan, planInfo }: PropsType) => {
   return (
     <Box
       sx={{
@@ -41,20 +21,16 @@ const WritePostBookItem = (props: PropsType) => {
         },
       }}
     >
-      {props.planInfo && (
+      {planInfo && (
         <Box
           sx={{
             display: "flex",
             flexDirection: { xs: "column", md: "row" },
           }}
         >
+          <CommonTypography text={planInfo.title} variant="body1" bold={true} />
           <CommonTypography
-            value={props.planInfo.title}
-            variant="body1"
-            bold={true}
-          />
-          <CommonTypography
-            value={props.planInfo.author}
+            text={planInfo.author}
             variant="body1"
             bold={false}
           />
@@ -68,13 +44,12 @@ const WritePostBookItem = (props: PropsType) => {
           alignItems: { xs: "end", md: "center" },
         }}
       >
-        {/* 임시 */}
-        {props.planInfo && (
+        {planInfo && (
           <CommonButton
-            value="✔선택하기"
+            buttonText="✔선택하기"
             outline={false}
-            onClick={() => {
-              props.handleSelectPlan(props.planInfo);
+            handleClickEvent={() => {
+              handleSelectPlan(planInfo);
             }}
           />
         )}

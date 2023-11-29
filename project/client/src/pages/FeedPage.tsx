@@ -1,34 +1,25 @@
 import { Box, Pagination } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
-import { getAllPosts } from "apis/posts";
 import CommonLink from "components/common/CommonLink";
 import CommonTabMenu from "components/common/CommonTabMenu";
 import CommonTypography from "components/common/CommonTypography";
 import FeedPostCard from "components/feed/FeedPostCard";
-import { useState } from "react";
-import { useQuery } from "react-query";
-
-// 피드 서브 탭 메뉴 리스트 - 팔로잉 데이터는 나중에
-const feedTabMenus: TabMenuType[] = [
-  { label: "전체", value: "ALL" },
-  { label: "팔로잉", value: "FOLLOWING" },
-];
-
-// 피드 데이터 정렬 탭 메뉴 리스트
-const feedOptionMenus: TabMenuType[] = [
-  { label: "최신순", value: "DATE" },
-  { label: "댓글순", value: "COMMENT" },
-  { label: "추천순", value: "LIKE" },
-];
+import { feedOptionMenus } from "constants/menus";
+import usePostsQuery from "hooks/queries/posts/usePostsQuery";
+import { useEffect, useState } from "react";
+import { getStoredToken } from "utils/get";
 
 const FeedPage = () => {
+  const memberToken = getStoredToken();
+
   // pagination state
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
 
   // 해당 state값에 따라서 피드 데이터를 바꿈
   // 현재 선택된 서브 탭 메뉴
-  const [nowTab, setNowTab] = useState(feedTabMenus[0]);
+  // 팔로잉 모아보기 나중에 추가
+  // const [nowTab, setNowTab] = useState(feedTabMenus[0]);
   // 현재 선택된 정렬 옵션 탭 메뉴
   const [nowOptionTab, setNowOptionTab] = useState(feedOptionMenus[0]);
 
@@ -38,13 +29,14 @@ const FeedPage = () => {
     size: 10,
     sortType: nowOptionTab.value,
   });
+
   // 데이터 response가 저장될 state
   const [posts, setPosts] = useState<PostInfo[]>();
 
   // 선택된 서브 탭 메뉴 변경 함수
-  const handleTabFocus = (newTab: TabMenuType) => {
-    setNowTab(newTab);
-  };
+  // const handleTabFocus = (newTab: TabMenuType) => {
+  //   setNowTab(newTab);
+  // };
 
   // 선택된 정렬 옵션 탭 메뉴 변경 함수
   const handleOptionTabFocus = (newTab: TabMenuType) => {
@@ -69,20 +61,20 @@ const FeedPage = () => {
   };
 
   // react-query - get posts
-  const { data } = useQuery(
-    ["getAllPosts", params],
-    () => getAllPosts(params),
+  const { data: postsData, isSuccess: isPostsSuccess } = usePostsQuery(
+    params,
+    memberToken,
     {
-      onSuccess(data) {
-        if (data) {
-          setPosts(data.data.content);
-          setTotalPages(data.data.totalPages);
-        }
-      },
       enabled: !!params,
-      retry: false,
     },
   );
+
+  useEffect(() => {
+    if (isPostsSuccess && postsData) {
+      setPosts(postsData.data.content);
+      setTotalPages(postsData.data.totalPages);
+    }
+  }, [isPostsSuccess]);
 
   return (
     <Box
@@ -93,22 +85,22 @@ const FeedPage = () => {
       {/* post 작성 버튼 */}
       <Box sx={{ position: "fixed", top: "100px", right: "50px" }}>
         <CommonLink to="../write">
-          <CommonTypography value="✏POST" variant="body1" bold={true} />
+          <CommonTypography text="✏POST" variant="body1" bold={true} />
         </CommonLink>
       </Box>
 
-      {/* 피드 페이지 상단바 */}
-      <CommonTabMenu
+      {/* 피드 페이지 상단바 / 팔로잉 모아보기 구현되면 */}
+      {/* <CommonTabMenu
         handelTabFocus={handleTabFocus}
         nowTab={nowTab}
         tabMenus={feedTabMenus}
-      />
+      /> */}
 
       {/* 피드 상단(정렬) */}
       <CommonTabMenu
         handelTabFocus={handleOptionTabFocus}
         nowTab={nowOptionTab}
-        tabMenus={feedOptionMenus}
+        allTabs={feedOptionMenus}
       />
 
       {/* 피드 container 영역 */}

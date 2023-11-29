@@ -32,7 +32,14 @@ declare global {
 
   type DialogType = "read" | "progress" | "submit";
 
-  type BookStatus =
+  type PlanStatusForReq =
+    | "READING"
+    | "COMPLETED"
+    | "NOT_CREATED_POST"
+    | "NOT_STARTED"
+    | "OVERDUE";
+
+  type PlanStatusForRes =
     | "reading"
     | "completed"
     | "not_created_post"
@@ -45,6 +52,11 @@ declare global {
     | "readingPlansCount";
 
   // type PostSortType = "DATE" | "COMMENT" | "LIKE";
+
+  interface MutationCallbackType {
+    successCallback?: () => void;
+    errorCallback?: () => void;
+  }
 
   // ------ Members API 관련 데이터 타입
   interface MemberData {
@@ -210,7 +222,8 @@ declare global {
     planId: number;
     title: string;
     author: string;
-    status: string;
+    bookImage?: string;
+    status: PlanStatusForRes;
     startDate: string;
     endDate: string;
     totalPage: number;

@@ -1,14 +1,12 @@
 import { Box } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
-import { getMemberPlans, getMyPlans } from "apis/members";
 import CommonBookImage from "components/common/CommonBookImage";
-
 import CommonTitle from "components/common/CommonTitle";
 import CommonTypography from "components/common/CommonTypography";
-import { useState } from "react";
-import { useQuery } from "react-query";
-import { useSelector } from "react-redux";
-import { RootState } from "store/store";
+import useMemberPlansQuery from "hooks/queries/members/useMemberPlansQuery";
+import useMyPlansQuery from "hooks/queries/members/useMyPlansQuery";
+import { useEffect, useState } from "react";
+import { getStoredToken } from "utils/get";
 
 interface PropsType {
   memberInfo: MemberInfo | OtherMemberInfo;
@@ -17,58 +15,49 @@ interface PropsType {
   isPreview: boolean;
 }
 
-const UserPlanList = (props: PropsType) => {
-  const memberToken = useSelector((state: RootState) => state.auth.token);
+const UserPlanList = ({
+  memberInfo,
+  memberId,
+  isMyPage,
+  isPreview,
+}: PropsType) => {
+  const memberToken = getStoredToken();
 
   // 데이터 요청에 필요한 params
+  // 무한 스크롤 구현 필요
   const [params, setParams] = useState<MemberPostsAndBooksParams>({
     id: null,
     size: 10,
   });
 
-  // 데이터가 담길 state
-  const [memberPlans, setMemberPlans] = useState<MemberPlansInfo[]>();
+  // 받아온 데이터
+  const [memberPlans, setMemberPlans] = useState<MemberPlansInfo[] | null>(
+    null,
+  );
 
   // react-query - GET my plans
-  const { data: myPlnasData } = useQuery(
-    ["getMyPlans", params, memberToken],
-    () => getMyPlans({ params, accessToken: memberToken }),
+  const { data: myPlansData, isSuccess: isMyPlansSuccess } = useMyPlansQuery(
+    params,
+    memberToken,
     {
-      onSuccess: (data) => {
-        // 성공했을 때
-        if (data) {
-          setMemberPlans(data.data.data);
-        }
-      },
-      onError: (error) => {
-        console.log(error);
-      },
-      enabled: !!params && !!props.isMyPage,
+      enabled: !!memberToken && !!params && isMyPage,
     },
   );
 
   // react-query - GET member plans
-  const { data: memberPlnasData } = useQuery(
-    ["getMemberPlans", params, memberToken, props.memberId],
-    () =>
-      getMemberPlans({
-        params,
-        accessToken: memberToken,
-        memberId: props.memberId ? props.memberId : 0,
-      }),
-    {
-      onSuccess: (data) => {
-        // 성공했을 때
-        if (data) {
-          setMemberPlans(data.data.data);
-        }
-      },
-      onError: (error) => {
-        console.log(error);
-      },
-      enabled: !!params && !!props.memberId,
-    },
-  );
+  const { data: memberPlansData, isSuccess: isMemberPlansSuccess } =
+    useMemberPlansQuery(params, memberToken, memberId, {
+      enabled: !!memberToken && !!params && !!memberId,
+    });
+
+  useEffect(() => {
+    if (isMyPage && isMyPlansSuccess) {
+      setMemberPlans(myPlansData.data.data);
+    }
+    if (memberId && isMemberPlansSuccess) {
+      setMemberPlans(memberPlansData.data.data);
+    }
+  }, []);
 
   return (
     <Box>
@@ -81,14 +70,12 @@ const UserPlanList = (props: PropsType) => {
         }}
       >
         <CommonTitle
-          value={
+          text={
             "📚 " +
-              props.memberInfo.nickname +
-              "님의 서재에 총 " +
-              props.memberInfo.countBookMark ===
-            null
-              ? "0"
-              : props.memberInfo.countBookMark + "권의 책이 있어요"
+            memberInfo.nickname +
+            "님의 서재에 총 " +
+            memberInfo.countBookMark +
+            "권의 책이 있어요"
           }
         />
       </Box>
@@ -105,9 +92,7 @@ const UserPlanList = (props: PropsType) => {
         {/* 유저 서재 도서, Plans item */}
         {memberPlans &&
           memberPlans
-            .filter((planItem, index) =>
-              props.isPreview ? index < 3 : planItem,
-            )
+            .filter((planItem, index) => (isPreview ? index < 3 : planItem))
             .map((planItem) => (
               <Grid xs={1} md={1} key={planItem.readingPlanId}>
                 <Box
@@ -138,12 +123,12 @@ const UserPlanList = (props: PropsType) => {
                     }}
                   >
                     <CommonTypography
-                      value={planItem.title}
+                      text={planItem.title}
                       variant="h6"
                       bold={true}
                     />
                     <CommonTypography
-                      value={planItem.author}
+                      text={planItem.author}
                       variant="body2"
                       bold={false}
                     />

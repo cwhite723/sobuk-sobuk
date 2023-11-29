@@ -7,7 +7,7 @@ interface PropsType {
   memberId: number | null;
 }
 
-const UserIntroProfile = (props: PropsType) => {
+const UserIntroProfile = ({ memberInfo, memberId }: PropsType) => {
   // 유저 프로필 section
   return (
     <Box
@@ -23,9 +23,9 @@ const UserIntroProfile = (props: PropsType) => {
     >
       {/* 유저 정보 및 팔로우 버튼 */}
       <CommonUserProfile
-        memberInfo={props.memberInfo}
+        memberInfo={memberInfo}
         avatarSize={80}
-        memberId={props.memberId}
+        memberId={memberId}
       />
 
       {/* 자기소개 영역 */}
@@ -38,7 +38,7 @@ const UserIntroProfile = (props: PropsType) => {
         }}
       >
         <CommonTypography
-          value={props.memberInfo.introduction}
+          text={memberInfo.introduction}
           variant="body1"
           bold={true}
         />

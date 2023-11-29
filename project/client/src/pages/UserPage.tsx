@@ -1,23 +1,14 @@
 import { Box } from "@mui/material";
-import { getMember } from "apis/members";
 import CommonTabMenu from "components/common/CommonTabMenu";
 import UserPlanList from "components/user/UserPlanList";
 import UserIntroProfile from "components/user/UserIntroProfile";
 import UserPostList from "components/user/UserPostList";
 import UserSetting from "components/user/UserSetting";
 import { useEffect, useState } from "react";
-import { useQuery } from "react-query";
-import { useSelector } from "react-redux";
 import { useLocation, useParams } from "react-router-dom";
-import { RootState } from "store/store";
-
-// 내 서재 서브 탭 메뉴 데이터
-const userTabMenus: TabMenuType[] = [
-  { label: "⛄소개", value: "INTRO" },
-  { label: "📚서재", value: "LIB" },
-  { label: "📓독서기록", value: "POST" },
-  { label: "🔐계정정보/탈퇴", value: "SETTING" },
-];
+import { getStoredMember, getStoredToken } from "utils/get";
+import { userTabMenus } from "constants/menus";
+import useMemberInfoQuery from "hooks/queries/members/useMemberInfoQuery";
 
 const UserPage = () => {
   // 해당 UserPage의 path값 가져오기(my 페이지 인지 확인)
@@ -25,16 +16,11 @@ const UserPage = () => {
 
   // 해당 UserPage의 주인 정보 가져오기
   const { userid } = useParams() as { userid: string };
-  const memberId = userid ? parseInt(userid) : null;
-
-  // 해당 UserPage의 주인 정보가 담긴 state
-  const [owner, setOwner] = useState<OtherMemberInfo | MemberInfo>();
+  const memberId = userid ? parseInt(userid, 10) : null;
 
   // 로그인 여부 확인 token
-  const memberToken = useSelector((state: RootState) => state.auth.token);
-  const storedMemberInfo = JSON.parse(
-    useSelector((state: RootState) => state.auth.member),
-  );
+  const memberToken = getStoredToken();
+  const memberInfo = getStoredMember();
 
   // my 페이지 확인
   const isMyPage = pathname === "/my";
@@ -42,23 +28,14 @@ const UserPage = () => {
   // 현재 선택된 탭 메뉴
   const [nowTab, setNowTab] = useState(userTabMenus[0]);
 
+  // 현재 페이지의 주인 유저 정보
+  const [owner, setOwner] = useState<MemberInfo | OtherMemberInfo | null>(null);
+
   // react-query - GET member info - myPage가 아닐 경우
-  const { data: memberInfoData } = useQuery(
-    ["getMemberInfo", memberId, memberToken],
-    () => getMember({ memberId, accessToken: memberToken }),
-    {
-      onSuccess: (data) => {
-        // 성공했을 때
-        if (data) {
-          setOwner(data.data);
-        }
-      },
-      onError: (error) => {
-        console.log(error);
-      },
+  const { data: memberInfoData, isSuccess: isMemberInfoSuccess } =
+    useMemberInfoQuery(memberId, memberToken, {
       enabled: !!memberId && !!memberToken,
-    },
-  );
+    });
 
   // 선택된 탭 메뉴를 변경하는 함수
   const handelTabFocus = (newSelectMenu: TabMenuType) => {
@@ -66,9 +43,11 @@ const UserPage = () => {
   };
 
   useEffect(() => {
-    if (isMyPage) {
-      // my 페이지 인 경우 - redux에 저장된 정보 가져오기
-      setOwner(storedMemberInfo);
+    if (isMyPage && memberInfo) {
+      setOwner(memberInfo);
+    }
+    if (isMemberInfoSuccess && memberInfoData) {
+      setOwner(memberInfoData.data);
     }
   }, []);
 
@@ -77,7 +56,7 @@ const UserPage = () => {
       {/* 유저(내서재) 페이지 상단바 */}
       <CommonTabMenu
         handelTabFocus={handelTabFocus}
-        tabMenus={userTabMenus}
+        allTabs={userTabMenus}
         nowTab={nowTab}
       />
 

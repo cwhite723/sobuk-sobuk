@@ -13,7 +13,7 @@ export const postPost = async ({
   planId: number;
   data: PostData;
   accessToken: string | null;
-}): Promise<PostIdResponse | undefined> => {
+}): Promise<PostIdResponse> => {
   if (accessToken) {
     try {
       const response = await Api.post(`/posts/${planId}`, data, {
@@ -25,6 +25,7 @@ export const postPost = async ({
       throw new Error("Failed to Write Post");
     }
   }
+  throw new Error("Missing Access Token");
 };
 
 /**
@@ -40,7 +41,7 @@ export const patchPost = async ({
   postId: number;
   data: PostData;
   accessToken: string | null;
-}): Promise<PostIdResponse | undefined> => {
+}): Promise<PostIdResponse> => {
   if (accessToken) {
     try {
       const response = await Api.patch(`/posts/${postId}`, data, {
@@ -52,6 +53,7 @@ export const patchPost = async ({
       throw new Error("Failed to Modify Post");
     }
   }
+  throw new Error("Missing Access Token");
 };
 
 /**
@@ -63,7 +65,7 @@ export const deletePost = async ({
   postId,
   accessToken,
 }: {
-  postId: number;
+  postId: number | null;
   accessToken: string | null;
 }) => {
   if (accessToken) {
@@ -76,6 +78,7 @@ export const deletePost = async ({
       throw new Error("Failed to Delete Post");
     }
   }
+  throw new Error("Missing Aceess Token or Post Id");
 };
 
 /**
@@ -87,10 +90,10 @@ export const getPost = async ({
   postId,
   accessToken,
 }: {
-  postId: number;
+  postId: number | null;
   accessToken: string | null;
-}): Promise<PostResponse | undefined> => {
-  if (accessToken) {
+}): Promise<PostResponse> => {
+  if (accessToken && postId) {
     try {
       const response = await Api.get(`/posts/${postId}`, {
         headers: { Authorization: `${accessToken}` },
@@ -101,6 +104,7 @@ export const getPost = async ({
       throw new Error("Failed to Check Post Info");
     }
   }
+  throw new Error("Missing Aceess Token or Post Id");
 };
 
 /**
@@ -114,7 +118,7 @@ export const getAllPosts = async ({
 }: {
   params: PostParams;
   accessToken: string | null;
-}): Promise<PostsResponse | undefined> => {
+}): Promise<PostsResponse> => {
   if (accessToken) {
     try {
       const response = await Api.get("/posts", {
@@ -127,6 +131,7 @@ export const getAllPosts = async ({
       throw new Error("Failed to Check All Posts");
     }
   }
+  throw new Error("Missing Aceess Token");
 };
 
 /**
@@ -138,10 +143,10 @@ export const postLikePost = async ({
   postId,
   accessToken,
 }: {
-  postId: number;
+  postId: number | null;
   accessToken: string | null;
 }) => {
-  if (accessToken) {
+  if (accessToken && postId) {
     try {
       return await Api.post(`/posts/${postId}/like`, null, {
         headers: { Authorization: `${accessToken}` },
@@ -151,4 +156,5 @@ export const postLikePost = async ({
       throw new Error("Failed to Post Like");
     }
   }
+  throw new Error("Missing Aceess Token or Post Id");
 };

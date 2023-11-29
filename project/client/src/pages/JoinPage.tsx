@@ -1,6 +1,4 @@
 import { Box, Input } from "@mui/material";
-import { postImage } from "apis/images";
-import { postIdCheck, postNicknameCheck, postSignUp } from "apis/members";
 import CommonAvaratImage from "components/common/CommonAvatarImage";
 import CommonBigButton from "components/common/CommonBigButton";
 import CommonButton from "components/common/CommonButton";
@@ -10,12 +8,13 @@ import CommonSnackBar from "components/common/CommonSnackBar";
 import CommonTextField from "components/common/CommonTextField";
 import CommonTitle from "components/common/CommonTitle";
 import CommonTypography from "components/common/CommonTypography";
-import React, { useEffect, useState } from "react";
+import useIdCheckMutation from "hooks/mutates/members/useIdCheckMutation";
+import useNicknameCheckMutation from "hooks/mutates/members/useNicknameCheckMutation";
+import useSignUpMutation from "hooks/mutates/members/useSignUpMutation";
+import useImageMutation from "hooks/mutates/useImageMutation";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useMutation } from "react-query";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { setLoading } from "store/auth";
 
 interface FormValue {
   id: string;
@@ -28,7 +27,6 @@ interface FormValue {
 }
 
 const JoinPage = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   // 회원가입 성공
@@ -44,7 +42,7 @@ const JoinPage = () => {
   const [nicknameChecked, setNicknameChecked] = useState(false);
 
   // react hook form
-  const { getValues, control, handleSubmit, formState, trigger } =
+  const { getValues, setValue, control, handleSubmit, formState, trigger } =
     useForm<FormValue>({
       defaultValues: {
         id: "",
@@ -59,54 +57,17 @@ const JoinPage = () => {
     });
 
   // react-query - POST signup
-  const { mutate, isLoading, isError, isSuccess } = useMutation(postSignUp, {
-    onSuccess: () => {
-      // 회원가입 성공
-      setSuccessSnackBarOpen(true);
-    },
-    onError: (error) => {
-      // 회원가입 에러
-      setErrorSnackBarOpen(true);
-      console.log(error);
-    },
-  });
+  const { mutate: signUpMutate, isSuccess: signUpSuccess } =
+    useSignUpMutation();
 
   // react-query - POST id check
-  const { mutate: idCheckMutate } = useMutation(postIdCheck, {
-    onSuccess: () => {
-      // 아이디확인 성공 - 사용가능
-      setIdChecked(true);
-    },
-    onError: (error) => {
-      // 아이디확인 실패 - 사용불가능
-      setIdChecked(false);
-      console.log(error);
-    },
-  });
+  const { mutate: idCheckMutate } = useIdCheckMutation();
 
   // react-query - POST nickname check
-  const { mutate: nicknameCheckMutate } = useMutation(postNicknameCheck, {
-    onSuccess: () => {
-      // 닉네임확인 성공 - 사용가능
-      setNicknameChecked(true);
-    },
-    onError: (error) => {
-      // 닉네임확인 실패 - 사용불가능
-      setNicknameChecked(false);
-      console.log(error);
-    },
-  });
+  const { mutate: nicknameCheckMutate } = useNicknameCheckMutation();
 
-  // react-query - POST image
-  const { mutate: imageMutate } = useMutation(postImage, {
-    onSuccess: (data) => {
-      // 성공
-      console.log(data);
-    },
-    onError: (error) => {
-      console.log(error);
-    },
-  });
+  // react-query - POST image 프로필 이미지 필드는 아직 구현안됨
+  const { mutate: imageMutate } = useImageMutation();
 
   // 프로필 이미지 변경 함수
   const handleChangeImg = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -117,7 +78,11 @@ const JoinPage = () => {
       // 이미지 url을 얻기위한 요청에 필요한 데이터 형식으로 변경
       const formData = new FormData();
       formData.append("file", event.target.files[0]);
-      imageMutate(formData);
+      imageMutate(formData, {
+        onSuccess: (data) => {
+          setValue("img", data);
+        },
+      });
     }
   };
 
@@ -129,7 +94,17 @@ const JoinPage = () => {
     event.preventDefault();
     const isValid = await trigger("id");
     if (isValid) {
-      idCheckMutate({ userName });
+      idCheckMutate(
+        { userName },
+        {
+          onSuccess: () => {
+            setIdChecked(true);
+          },
+          onError: () => {
+            setIdChecked(false);
+          },
+        },
+      );
     }
   };
 
@@ -141,7 +116,17 @@ const JoinPage = () => {
     event.preventDefault();
     const isValid = await trigger("id");
     if (isValid) {
-      nicknameCheckMutate({ nickname });
+      nicknameCheckMutate(
+        { nickname },
+        {
+          onSuccess: () => {
+            setNicknameChecked(true);
+          },
+          onError: () => {
+            setNicknameChecked(false);
+          },
+        },
+      );
     }
   };
 
@@ -149,18 +134,23 @@ const JoinPage = () => {
   const handleJoin = (data: FormValue) => {
     data.img = profileImg;
     if (idChecked && nicknameChecked) {
-      mutate({
-        userName: data.id,
-        password: data.passwordCheck,
-        nickname: data.nickname,
-        email: data.email,
-        introduction: data.introduce,
-      });
-    }
-    if (isLoading) {
-      dispatch(setLoading(true));
-    } else {
-      dispatch(setLoading(false));
+      signUpMutate(
+        {
+          userName: data.id,
+          password: data.passwordCheck,
+          nickname: data.nickname,
+          email: data.email,
+          introduction: data.introduce,
+        },
+        {
+          onSuccess: () => {
+            setSuccessSnackBarOpen(true);
+          },
+          onError: () => {
+            setErrorSnackBarOpen(true);
+          },
+        },
+      );
     }
   };
 
@@ -169,7 +159,7 @@ const JoinPage = () => {
     setSuccessSnackBarOpen(false);
     setErrorSnackBarOpen(false);
 
-    if (isSuccess) {
+    if (signUpSuccess) {
       navigate("../login");
     }
   };
