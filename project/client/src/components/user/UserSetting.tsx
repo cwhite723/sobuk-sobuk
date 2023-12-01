@@ -1,6 +1,7 @@
 import { Box, Input } from "@mui/material";
 import CommonAvaratImage from "components/common/CommonAvatarImage";
 import CommonBigButton from "components/common/CommonBigButton";
+import CommonButton from "components/common/CommonButton";
 import CommonFormHelperText from "components/common/CommonFormHelperText";
 import CommonSnackBar from "components/common/CommonSnackBar";
 import CommonTextField from "components/common/CommonTextField";
@@ -8,7 +9,8 @@ import CommonTitle from "components/common/CommonTitle";
 import useLogOutMutation from "hooks/mutates/members/useLogOutMutaion";
 import useMemberDeleteMutation from "hooks/mutates/members/useMemberDeleteMutation";
 import useMemberPatchMutation from "hooks/mutates/members/useMemberPatchMutation";
-import React, { useState } from "react";
+import useNicknameCheckMutation from "hooks/mutates/members/useNicknameCheckMutation";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -31,38 +33,27 @@ const UserSetting = () => {
   // 로그인한 유저의 프로필 이미지
   const [profileImg, setProfileImg] = useState("");
 
+  // 닉네임 중복확인
+  const [nicknameChecked, setNicknameChecked] = useState(false);
+
   // store 토큰 값 가져오기
   const memberToken = getStoredToken();
   // store 값 가져오기
   const memberInfo = getStoredMember();
 
   // react hook form
-  const { control, handleSubmit, formState } = useForm<FormValue>({
-    defaultValues: {
-      nickname: memberInfo?.nickname ?? "",
-      introduction: memberInfo?.introduction ?? "",
-      img: "",
-    },
-    mode: "onSubmit",
-  });
+  const { control, handleSubmit, formState, trigger, watch, getValues } =
+    useForm<FormValue>({
+      defaultValues: {
+        nickname: memberInfo?.nickname ?? "",
+        introduction: memberInfo?.introduction ?? "",
+        img: "",
+      },
+      mode: "onSubmit",
+    });
 
-  // react-query - get myInfo
-  // const { data: myPage, refetch } = useQuery(
-  //   ["getMyPage", memberToken],
-  //   () => getMyPage(memberToken),
-  //   {
-  //     onSuccess(data) {
-  //       if (data) {
-  //         // 수정된 데이터로 redux 업데이트
-  //         dispatch(setMember(data.data));
-  //       }
-  //     },
-  //     onError(error) {
-  //       console.log("getMyPage Error", error);
-  //     },
-  //     enabled: !!snackBarOpen,
-  //   },
-  // );
+  // react-query - POST nickname check
+  const { mutate: nicknameCheckMutate } = useNicknameCheckMutation();
 
   // react-query POST log out
   const { mutate: logOutMutate } = useLogOutMutation();
@@ -81,30 +72,54 @@ const UserSetting = () => {
     }
   };
 
+  // 닉네임 중복확인 함수
+  const handleNicknameCheck = async (
+    nickname: string,
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    event.preventDefault();
+    const isValid = await trigger("nickname");
+    if (isValid) {
+      nicknameCheckMutate(
+        { nickname },
+        {
+          onSuccess: () => {
+            setNicknameChecked(true);
+          },
+          onError: () => {
+            setNicknameChecked(false);
+          },
+        },
+      );
+    }
+  };
+
   // 정보 수정 완료 버튼 함수
   const handleSetting = (data: FormValue) => {
     data.img = profileImg;
-    memberPatchMutate(
-      {
-        data: {
-          nickname: data.nickname,
-          introduction: data.introduction,
+    if (nicknameChecked) {
+      memberPatchMutate(
+        {
+          data: {
+            nickname: data.nickname,
+            introduction: data.introduction,
+          },
+          token: memberToken,
         },
-        token: memberToken,
-      },
-      {
-        onSuccess: () => {
-          setSuccessSnackBarOpen(true);
+        {
+          onSuccess: () => {
+            setSuccessSnackBarOpen(true);
+          },
         },
-      },
-    );
+      );
+    }
   };
 
   // 회원탈퇴 버튼 함수
   const handleDropOut = () => {
+    logOutMutate(memberToken);
     memberDeleteMutate(memberToken, {
       onSuccess: () => {
-        logOutMutate(memberToken);
         dispatch(logout());
         navigate("../login");
       },
@@ -113,7 +128,14 @@ const UserSetting = () => {
 
   const handleSnackBarClose = () => {
     setSuccessSnackBarOpen(false);
+    navigate(0);
   };
+
+  useEffect(() => {
+    if (watch("nickname")) {
+      setNicknameChecked(false);
+    }
+  }, [watch("nickname")]);
 
   return (
     <Box>
@@ -154,26 +176,54 @@ const UserSetting = () => {
             <Input type="file" onChange={handleChangeImg} />
           </Box>
 
-          <CommonTextField
-            name="nickname"
-            control={control}
-            rules={{
-              required: true,
-              minLength: {
-                value: 2,
-                message: "닉네임은 2자 이상 입력해주세요.",
-              },
-              maxLength: {
-                value: 10,
-                message: "닉네임은 10자가 넘지 않게 입력해주세요.",
-              },
+          <Box
+            sx={{
+              width: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
             }}
-            textFieldProps={{
-              id: "user-name",
-              label: "닉네임",
-            }}
-          />
+          >
+            <CommonTextField
+              name="nickname"
+              control={control}
+              rules={{
+                required: true,
+                minLength: {
+                  value: 2,
+                  message: "닉네임은 2자 이상 입력해주세요.",
+                },
+                maxLength: {
+                  value: 10,
+                  message: "닉네임은 10자가 넘지 않게 입력해주세요.",
+                },
+              }}
+              textFieldProps={{
+                id: "user-name",
+                label: "닉네임",
+              }}
+            />
+
+            <CommonButton
+              buttonText="중복확인"
+              outline={false}
+              handleClickEvent={(event) =>
+                handleNicknameCheck(getValues("nickname"), event)
+              }
+            />
+          </Box>
           <CommonFormHelperText text={formState.errors.nickname?.message} />
+
+          {!nicknameChecked && (
+            <CommonFormHelperText text="중복된 닉네임이거나 중복확인이 되지 않았습니다." />
+          )}
+
+          {nicknameChecked && (
+            <CommonFormHelperText
+              text="닉네임 중복확인이 완료되었습니다."
+              status="success"
+            />
+          )}
 
           <CommonTextField
             name="introduction"

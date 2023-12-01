@@ -12,7 +12,7 @@ import useIdCheckMutation from "hooks/mutates/members/useIdCheckMutation";
 import useNicknameCheckMutation from "hooks/mutates/members/useNicknameCheckMutation";
 import useSignUpMutation from "hooks/mutates/members/useSignUpMutation";
 import useImageMutation from "hooks/mutates/useImageMutation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
@@ -42,19 +42,26 @@ const JoinPage = () => {
   const [nicknameChecked, setNicknameChecked] = useState(false);
 
   // react hook form
-  const { getValues, setValue, control, handleSubmit, formState, trigger } =
-    useForm<FormValue>({
-      defaultValues: {
-        id: "",
-        password: "",
-        passwordCheck: "",
-        nickname: "",
-        email: "",
-        introduce: "",
-        img: "",
-      },
-      mode: "onChange",
-    });
+  const {
+    getValues,
+    setValue,
+    control,
+    handleSubmit,
+    formState,
+    trigger,
+    watch,
+  } = useForm<FormValue>({
+    defaultValues: {
+      id: "",
+      password: "",
+      passwordCheck: "",
+      nickname: "",
+      email: "",
+      introduce: "",
+      img: "",
+    },
+    mode: "onChange",
+  });
 
   // react-query - POST signup
   const { mutate: signUpMutate, isSuccess: signUpSuccess } =
@@ -130,20 +137,6 @@ const JoinPage = () => {
     }
   };
 
-  // Id 필드 값이 변경될 때 중복확인 state를 초기화
-  const handleChangeId = () => {
-    if (idChecked) {
-      setIdChecked(false);
-    }
-  };
-
-  // Nickname 필드 값이 변경될 때 중복확인 state를 초기화
-  const handleChangeNickname = () => {
-    if (nicknameChecked) {
-      setNicknameChecked(false);
-    }
-  };
-
   // 회원가입 버튼 함수
   const handleJoin = (data: FormValue) => {
     data.img = profileImg;
@@ -177,6 +170,18 @@ const JoinPage = () => {
       navigate("../login");
     }
   };
+
+  useEffect(() => {
+    if (watch("id")) {
+      setIdChecked(false);
+    }
+  }, [watch("id")]);
+
+  useEffect(() => {
+    if (watch("nickname")) {
+      setNicknameChecked(false);
+    }
+  }, [watch("nickname")]);
 
   return (
     <Box
@@ -238,7 +243,6 @@ const JoinPage = () => {
               id: "user-id",
               label: "아이디",
               placeholder: "아이디를 입력하세요.",
-              onChange: handleChangeId,
             }}
           />
           <CommonButton
@@ -328,7 +332,6 @@ const JoinPage = () => {
               id: "user-name",
               label: "닉네임",
               placeholder: "닉네임을 입력하세요.",
-              onChange: handleChangeNickname,
             }}
           />
 

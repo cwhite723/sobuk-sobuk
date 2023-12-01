@@ -27,7 +27,7 @@ const UserPlanList = ({
   // 무한 스크롤 구현 필요
   const [params, setParams] = useState<MemberPostsAndBooksParams>({
     id: null,
-    size: 10,
+    size: isPreview ? 3 : 10,
   });
 
   // 받아온 데이터
@@ -57,7 +57,7 @@ const UserPlanList = ({
     if (memberId && isMemberPlansSuccess) {
       setMemberPlans(memberPlansData.data.data);
     }
-  }, []);
+  }, [isMyPlansSuccess, isMemberPlansSuccess]);
 
   return (
     <Box>
@@ -91,51 +91,49 @@ const UserPlanList = ({
       >
         {/* 유저 서재 도서, Plans item */}
         {memberPlans &&
-          memberPlans
-            .filter((planItem, index) => (isPreview ? index < 3 : planItem))
-            .map((planItem) => (
-              <Grid xs={1} md={1} key={planItem.readingPlanId}>
+          memberPlans.map((planItem) => (
+            <Grid xs={1} md={1} key={planItem.readingPlanId}>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  backgroundColor: "background.default",
+                  borderRadius: 5,
+                  boxShadow: "0px 0px 5px rgba(0,0,0,0.3)",
+                  p: 2,
+                  m: 4,
+                }}
+              >
+                {/* 이미지 나중에 수정 */}
+                <CommonBookImage
+                  width={100}
+                  height={150}
+                  src={planItem.imageUrl}
+                />
                 <Box
                   sx={{
                     display: "flex",
                     flexDirection: "column",
-                    justifyContent: "center",
                     alignItems: "center",
-                    backgroundColor: "background.default",
-                    borderRadius: 5,
-                    boxShadow: "0px 0px 5px rgba(0,0,0,0.3)",
-                    p: 2,
-                    m: 4,
+                    ml: 2,
                   }}
                 >
-                  {/* 이미지 나중에 수정 */}
-                  <CommonBookImage
-                    width={100}
-                    height={150}
-                    src={planItem.imageUrl}
+                  <CommonTypography
+                    text={planItem.title}
+                    variant="h6"
+                    bold={true}
                   />
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      ml: 2,
-                    }}
-                  >
-                    <CommonTypography
-                      text={planItem.title}
-                      variant="h6"
-                      bold={true}
-                    />
-                    <CommonTypography
-                      text={planItem.author}
-                      variant="body2"
-                      bold={false}
-                    />
-                  </Box>
+                  <CommonTypography
+                    text={planItem.author}
+                    variant="body2"
+                    bold={false}
+                  />
                 </Box>
-              </Grid>
-            ))}
+              </Box>
+            </Grid>
+          ))}
       </Grid>
     </Box>
   );

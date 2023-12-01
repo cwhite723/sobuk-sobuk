@@ -17,7 +17,9 @@ const MainPlanProgressBar = ({ planItem }: PropsType) => {
           <CommonTypography
             text={
               "오늘은 " +
-              (planItem.readPage + planItem.todayPage) +
+              (planItem.readPage === 0
+                ? planItem.todayPage
+                : planItem.readPage + planItem.todayPage) +
               "쪽까지 읽어야 해요"
             }
             variant="body1"
