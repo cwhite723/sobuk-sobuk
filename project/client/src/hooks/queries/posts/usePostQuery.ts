@@ -8,7 +8,7 @@ const usePostQuery = <TData = PostResponse>(
   options?: UseQueryOptions<PostResponse, Error, TData>,
 ): UseQueryResult<TData, Error> => {
   return useQuery(
-    queryKeys.POSTS_BY_POST_ID(postId, accessToken),
+    queryKeys.POST_BY_POST_ID(postId, accessToken),
     () => getPost({ postId, accessToken }),
     options,
   );

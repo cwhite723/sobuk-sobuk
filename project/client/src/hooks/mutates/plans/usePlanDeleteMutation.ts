@@ -10,7 +10,7 @@ const usePlanDeleteMutation = () => {
       deletePlan({ planId, accessToken }),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries(queryKeys.PLANS_ALL);
+        return queryClient.invalidateQueries(queryKeys.PLANS_ALL);
       },
       onError: (error) => {
         console.log(error);

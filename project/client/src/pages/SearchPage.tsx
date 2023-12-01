@@ -79,7 +79,7 @@ const SearchPage = () => {
     setOpenSubmitDialog(true);
   };
 
-  // Dialog 닫기
+  // 등록 Dialog 닫기
   const handleSubmitClose = () => {
     setOpenSubmitDialog(false);
   };

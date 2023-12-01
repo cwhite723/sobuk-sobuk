@@ -114,7 +114,7 @@ const JoinPage = () => {
     event: React.MouseEvent<HTMLButtonElement>,
   ) => {
     event.preventDefault();
-    const isValid = await trigger("id");
+    const isValid = await trigger("nickname");
     if (isValid) {
       nicknameCheckMutate(
         { nickname },
@@ -127,6 +127,20 @@ const JoinPage = () => {
           },
         },
       );
+    }
+  };
+
+  // Id 필드 값이 변경될 때 중복확인 state를 초기화
+  const handleChangeId = () => {
+    if (idChecked) {
+      setIdChecked(false);
+    }
+  };
+
+  // Nickname 필드 값이 변경될 때 중복확인 state를 초기화
+  const handleChangeNickname = () => {
+    if (nicknameChecked) {
+      setNicknameChecked(false);
     }
   };
 
@@ -224,6 +238,7 @@ const JoinPage = () => {
               id: "user-id",
               label: "아이디",
               placeholder: "아이디를 입력하세요.",
+              onChange: handleChangeId,
             }}
           />
           <CommonButton
@@ -313,6 +328,7 @@ const JoinPage = () => {
               id: "user-name",
               label: "닉네임",
               placeholder: "닉네임을 입력하세요.",
+              onChange: handleChangeNickname,
             }}
           />
 

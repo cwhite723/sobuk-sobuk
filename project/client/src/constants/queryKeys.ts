@@ -37,7 +37,7 @@ export const queryKeys = {
   PLANS_BY_STATUS: (status: string) => ["getPlans", status] as QueryKey,
 
   // POST_QUERY_KEYS
-  POSTS_BY_POST_ID: (postId: number | null, token: string | null) =>
+  POST_BY_POST_ID: (postId: number | null, token: string | null) =>
     ["getPost", { postId, token }] as QueryKey,
   POSTS_BY_POST_PARAMS: (params: PostParams, token: string | null) =>
     ["getAllPosts", { params, token }] as QueryKey,

@@ -182,7 +182,7 @@ declare global {
     author: string;
     publisher: string;
     imageUrl: string | null;
-    publicationDate?: string;
+    publicationDate: string;
   }
 
   interface BookParams {

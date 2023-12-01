@@ -7,7 +7,7 @@ const useBookSubmitMutation = () => {
 
   return useMutation((data: BookData) => postBook(data), {
     onSuccess: () => {
-      queryClient.invalidateQueries(
+      return queryClient.invalidateQueries(
         queryKeys.BOOKS_BY_BOOK_PARAMS({
           page: 1,
           size: 10,

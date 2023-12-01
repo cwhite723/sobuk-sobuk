@@ -1,6 +1,5 @@
 import Grid from "@mui/material/Unstable_Grid2";
 import MainPlanBox from "components/main/MainPlanBox";
-import CommonLink from "components/common/CommonLink";
 import CommonTypography from "components/common/CommonTypography";
 import { getStoredToken } from "utils/get";
 import usePlansQuery from "hooks/queries/plans/usePlansQuery";

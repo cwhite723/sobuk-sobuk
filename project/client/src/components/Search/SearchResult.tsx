@@ -33,7 +33,7 @@ const SerarchReasult = ({ queryParams, queryType }: PropsType) => {
 
   // pagination 상태값
   const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(0);
+  const [totalPages, setTotalPages] = useState<number | null>(null);
 
   // pagination 함수
   // page값에 따라 데이터 변경
@@ -78,9 +78,7 @@ const SerarchReasult = ({ queryParams, queryType }: PropsType) => {
         title: book.title,
         author: book.author,
         publisher: book.publisher,
-        publicationDate: book.publicationDate
-          ? book.publicationDate
-          : "정보없음",
+        publicationDate: book.publicationDate,
         isUserInput: false,
         imageUrl: book.imageUrl,
       },
@@ -96,8 +94,27 @@ const SerarchReasult = ({ queryParams, queryType }: PropsType) => {
 
   // 책 찜하기
   // 찜 요청에 따른 데이터 변경 or UI 변경 추가 필요
-  const handleBookmark = (book: BookInfoSimple, token: string) => {
-    bookmarkMutate({ bookId: book.bookId, accessToken: token });
+  const handleBookmark = (book: BookInfoSimple) => {
+    if (queryType === "kakao") {
+      bookSubmitMutate(
+        {
+          title: book.title,
+          author: book.author,
+          publisher: book.publisher,
+          publicationDate: book.publicationDate,
+          isUserInput: false,
+          imageUrl: book.imageUrl,
+        },
+        {
+          onSuccess: (data) => {
+            if (data) {
+              bookmarkMutate({ bookId: data?.data, accessToken: memberToken });
+            }
+          },
+        },
+      );
+    }
+    bookmarkMutate({ bookId: book.bookId, accessToken: memberToken });
   };
 
   // Dialog 닫기
@@ -206,9 +223,7 @@ const SerarchReasult = ({ queryParams, queryType }: PropsType) => {
                 <CommonButton
                   buttonText="📌찜하기"
                   outline={false}
-                  handleClickEvent={() =>
-                    memberToken && handleBookmark(bookItem, memberToken)
-                  }
+                  handleClickEvent={() => handleBookmark(bookItem)}
                 />
               </Box>
             )}
@@ -216,22 +231,28 @@ const SerarchReasult = ({ queryParams, queryType }: PropsType) => {
         ))}
 
       {/* 전체페이지 값이 넘어온 경우만 표출 */}
-      {totalPages && (
-        <Box
-          sx={{
-            width: "100%",
-            display: "flex",
-            justifyContent: "center",
-            mt: 4,
-          }}
-        >
+      <Box
+        sx={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          mt: 4,
+        }}
+      >
+        {totalPages ? (
           <Pagination
             count={totalPages}
             page={page}
             onChange={handlePageChange}
           />
-        </Box>
-      )}
+        ) : (
+          <CommonTypography
+            text="검색 결과가 없습니다."
+            variant="h5"
+            bold={true}
+          />
+        )}
+      </Box>
     </Box>
   );
 };
