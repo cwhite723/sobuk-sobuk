@@ -5,15 +5,15 @@ const theme = responsiveFontSizes(
   createTheme({
     palette: {
       background: {
-        default: grey[300],
+        default: grey[100],
       },
       primary: {
-        main: blueGrey[200],
+        main: grey[300],
         light: blueGrey[100],
         dark: blueGrey[900],
       },
       text: {
-        primary: grey[900],
+        primary: "#293847",
         secondary: grey[50],
       },
       error: {

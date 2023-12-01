@@ -1,5 +1,4 @@
 import { Box } from "@mui/material";
-import { patchMemberFollow } from "apis/members";
 import CommonAvaratImage from "components/common/CommonAvatarImage";
 import CommonButton from "components/common/CommonButton";
 import CommonLink from "components/common/CommonLink";

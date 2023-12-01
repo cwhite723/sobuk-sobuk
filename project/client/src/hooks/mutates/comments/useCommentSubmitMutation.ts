@@ -17,8 +17,8 @@ const useCommentSubmitMutation = () => {
     }) => postComment({ postId, data, accessToken }),
     {
       onSuccess: (data, variables) => {
-        queryClient.invalidateQueries(
-          queryKeys.POSTS_BY_POST_ID(variables.postId, variables.accessToken),
+        return queryClient.invalidateQueries(
+          queryKeys.POST_BY_POST_ID(variables.postId, variables.accessToken),
         );
       },
       onError: (error) => {

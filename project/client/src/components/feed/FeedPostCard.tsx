@@ -3,7 +3,7 @@ import Grid from "@mui/material/Unstable_Grid2";
 import FeedPostCardInfo from "./FeedPostCardInfo";
 import FeedPostCardReaction from "./FeedPostCardReaction";
 import CommonUserProfile from "components/common/CommonUserProfile";
-import { getStoredToken } from "utils/get";
+import { getStoredMember, getStoredToken } from "utils/get";
 import useMemberInfoQuery from "hooks/queries/members/useMemberInfoQuery";
 
 interface PropsType {
@@ -13,10 +13,11 @@ interface PropsType {
 const FeedPostCard = ({ postItem }: PropsType) => {
   // 현재 로그인 유저
   const memberToken = getStoredToken();
+  const memberInfo = getStoredMember();
 
   // react-query - get member
   // 해당 포스트 유저 프로필 get
-  const { data: memberInfo } = useMemberInfoQuery(
+  const { data: memberInfoData } = useMemberInfoQuery(
     postItem.memberId,
     memberToken,
     {
@@ -39,10 +40,14 @@ const FeedPostCard = ({ postItem }: PropsType) => {
         }}
       >
         {/* user profile */}
-        {memberInfo && (
+        {memberInfoData && (
           <CommonUserProfile
-            memberInfo={memberInfo.data}
-            memberId={postItem.memberId}
+            memberInfo={memberInfoData.data}
+            memberId={
+              memberInfo?.userName === memberInfoData.data.userName
+                ? null
+                : postItem.memberId
+            }
             avatarSize={50}
           />
         )}

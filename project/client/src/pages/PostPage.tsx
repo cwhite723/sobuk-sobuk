@@ -13,7 +13,7 @@ import useMemberInfoQuery from "hooks/queries/members/useMemberInfoQuery";
 import usePostQuery from "hooks/queries/posts/usePostQuery";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getStoredToken } from "utils/get";
+import { getStoredMember, getStoredToken } from "utils/get";
 
 const PostPage = () => {
   // 현재 url에서 postId 추출
@@ -22,6 +22,7 @@ const PostPage = () => {
 
   // redux에 저장된 토큰 가져오기
   const memberToken = getStoredToken();
+  const memberInfo = getStoredMember();
 
   // 현재 포스트 유저 id
   const [memberId, setMemberId] = useState<number | null>(null);
@@ -37,7 +38,7 @@ const PostPage = () => {
 
   // react-query get member
   // 현재 포스트 유저 프로필 get
-  const { data: memberInfo } = useMemberInfoQuery(memberId, memberToken, {
+  const { data: memberInfoData } = useMemberInfoQuery(memberId, memberToken, {
     enabled: !!memberId && !!memberToken,
   });
 
@@ -71,10 +72,14 @@ const PostPage = () => {
       </CommonLink>
 
       {/* 사용자 정보 */}
-      {memberInfo && postInfo && (
+      {memberInfoData && postInfo && (
         <CommonUserProfile
-          memberInfo={memberInfo.data}
-          memberId={postInfo.data.postResponse.memberId}
+          memberInfo={memberInfoData.data}
+          memberId={
+            memberInfoData.data.userName === memberInfo?.userName
+              ? null
+              : memberId
+          }
           avatarSize={50}
         />
       )}

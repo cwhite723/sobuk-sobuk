@@ -16,10 +16,10 @@ const usePostEditMutation = () => {
       accessToken: string | null;
     }) => patchPost({ postId, data, accessToken }),
     {
-      onSuccess: () => {
-        // get post
-        // queryClient.invalidateQueries(queryKeys.PLANS_ALL);
-        console.log("포스트 수정 성공");
+      onSuccess: (data, variables) => {
+        return queryClient.invalidateQueries(
+          queryKeys.POST_BY_POST_ID(variables.postId, variables.accessToken),
+        );
       },
       onError: (error) => {
         console.log(error);

@@ -16,10 +16,10 @@ const usePostSubmitMutation = () => {
       accessToken: string | null;
     }) => postPost({ planId, data, accessToken }),
     {
-      onSuccess: () => {
-        // get post
-        // queryClient.invalidateQueries(queryKeys.PLANS_ALL);
-        console.log("포스트 등록 성공");
+      onSuccess: (data, variables) => {
+        return queryClient.invalidateQueries(
+          queryKeys.POST_BY_POST_ID(data.data, variables.accessToken),
+        );
       },
       onError: (error) => {
         console.log(error);

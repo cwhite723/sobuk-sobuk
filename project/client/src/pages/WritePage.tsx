@@ -49,7 +49,7 @@ const WritePage = () => {
         bold={true}
       />
 
-      {notCreatedPostPlan === undefined && (
+      {notCreatedPostPlan?.data.length === 0 && (
         <Box sx={{ m: 5 }}>
           <CommonTypography
             text="완독 도서가 없어요😥"
