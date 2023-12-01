@@ -175,31 +175,32 @@ const SerarchReasult = ({ queryParams, queryType }: PropsType) => {
               },
             }}
           >
-            <CommonBookImage src={bookItem.imageUrl} width={50} height={80} />
+            <CommonBookImage src={bookItem.imageUrl} width={70} height={90} />
             <Box
               sx={{
+                width: "100%",
                 display: "flex",
                 flexDirection: "column",
               }}
             >
               <CommonTypography
                 text={bookItem.title}
-                variant="body1"
+                variant="h6"
                 bold={true}
               />
               <Box
                 sx={{
                   display: "flex",
-                  justifyContent: "space-between",
+                  gap: 2,
                 }}
               >
                 <CommonTypography
-                  text={bookItem.author}
+                  text={"📝" + (bookItem.author ?? "정보없음")}
                   variant="body1"
                   bold={false}
                 />
                 <CommonTypography
-                  text={bookItem.publisher}
+                  text={"💼" + (bookItem.publisher ?? "정보없음")}
                   variant="body1"
                   bold={false}
                 />

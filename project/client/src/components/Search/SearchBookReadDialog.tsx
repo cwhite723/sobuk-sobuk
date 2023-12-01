@@ -113,7 +113,11 @@ const SearchBookReadDialog = ({
                 bold={true}
               />
               <CommonTypography
-                text={selectedBook.author + " | " + selectedBook.publisher}
+                text={
+                  (selectedBook.author ?? "정보없음") +
+                  " | " +
+                  (selectedBook.publisher ?? "정보없음")
+                }
                 variant="body1"
                 bold={false}
               />

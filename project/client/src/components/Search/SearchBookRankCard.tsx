@@ -23,22 +23,24 @@ const SearchBookRankCard = ({ bookItem }: PropsType) => {
           m: 1,
         }}
       >
-        {bookItem.imageUrl && (
+        <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
           <CommonBookImage width={100} height={150} src={bookItem.imageUrl} />
-        )}
+        </Box>
 
-        <Box sx={{ ml: 2, borderTop: "1px solid" }}>
+        <Box sx={{ borderTop: "1px solid" }}>
           <CommonTypography text={bookItem.title} variant="h6" bold={true} />
-          <CommonTypography
-            text={bookItem.author}
-            variant="body2"
-            bold={false}
-          />
-          <CommonTypography
-            text={bookItem.publisher}
-            variant="body2"
-            bold={false}
-          />
+          <Box sx={{ display: "flex", gap: 2 }}>
+            <CommonTypography
+              text={"📝" + (bookItem.author ?? "정보없음")}
+              variant="body2"
+              bold={false}
+            />
+            <CommonTypography
+              text={"💼" + (bookItem.publisher ?? "정보없음")}
+              variant="body2"
+              bold={false}
+            />
+          </Box>
         </Box>
       </Box>
     </Grid>

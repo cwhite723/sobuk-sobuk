@@ -11,8 +11,14 @@ const MainPlanProgressBar = ({ planItem }: PropsType) => {
   const percent = getPercent(planItem.readPage, planItem.totalPage);
 
   return (
-    <>
-      <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}>
+    <Box
+      sx={{
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
         {planItem.status === "reading" && (
           <CommonTypography
             text={
@@ -30,25 +36,32 @@ const MainPlanProgressBar = ({ planItem }: PropsType) => {
       </Box>
       <Box
         sx={{
-          position: "relative",
           width: "100%",
-          height: "25px",
-          backgroundColor: "primary.main",
-          borderRadius: 5,
-          mt: 1,
+          display: "flex",
         }}
       >
         <Box
           sx={{
-            position: "absolute",
-            width: percent + "%",
+            position: "relative",
+            width: "100%",
             height: "25px",
-            backgroundColor: "text.primary",
+            backgroundColor: "primary.main",
             borderRadius: 5,
+            my: 1,
           }}
-        />
+        >
+          <Box
+            sx={{
+              position: "absolute",
+              width: percent + "%",
+              height: "25px",
+              backgroundColor: "text.primary",
+              borderRadius: 5,
+            }}
+          />
+        </Box>
       </Box>
-    </>
+    </Box>
   );
 };
 

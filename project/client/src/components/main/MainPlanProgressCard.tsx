@@ -1,4 +1,4 @@
-import { Box, Button } from "@mui/material";
+import { Box } from "@mui/material";
 import CommonBookImage from "components/common/CommonBookImage";
 import CommonTypography from "components/common/CommonTypography";
 import MainPlanProgressCover from "./MainPlanProgressCover";
@@ -105,75 +105,90 @@ const MainPlanProgressCard = ({ planItem }: PropsType) => {
           flex: "1 0 auto",
         }}
       >
-        <Box sx={{ display: "flex", flexDirection: "column", ml: 2, mr: 2 }}>
+        <Box sx={{ display: "flex", flexDirection: "column", mx: 2 }}>
           <Box
             sx={{
               position: "relative",
               display: "flex",
-              alignItems: "end",
+              alignItems: "center",
               borderBottom: "1px solid",
-              pb: 1,
+              gap: 2,
               mb: 1,
+              overflow: "hidden",
             }}
           >
+            <CommonTypography text={planItem.title} variant="h6" bold={true} />
             <CommonTypography
-              text={planItem.title + " |"}
-              variant="h5"
+              text={"📝" + (planItem.author ?? "정보없음")}
+              variant="body1"
               bold={true}
             />
-            <CommonTypography text={planItem.author} variant="h6" bold={true} />
-            <Button
-              sx={{
-                position: "absolute",
-                bottom: "5px",
-                right: "0px",
-                color: "text.primary",
-                fontWeight: "bold",
-                border: "1px solid",
-                borderRadius: 5,
-                p: 1,
-              }}
-              onClick={handleEditPlan}
-            >
-              {(planItem.status === "completed" ||
-                planItem.status === "not_created_post") &&
-                "완독"}
-              {planItem.status === "reading" && "읽는 중"}
-              {planItem.status === "overdue" && "기간 설정"}
-              {planItem.status === "not_started" && "예정"}
-            </Button>
           </Box>
 
-          {/* 설정된 독서 기간 표출 */}
-          {planItem.status === "not_started" && (
-            <CommonTypography
-              text={planItem.startDate + "부터 읽을 예정이에요"}
-              variant="body2"
-              bold={true}
-            />
-          )}
-          {planItem.status === "overdue" && (
-            <CommonTypography
-              text={"설정한 기간이 지났어요. 다시 기간을 설정해주세요"}
-              variant="body2"
-              bold={true}
-            />
-          )}
-          {planItem.status === "reading" && (
-            <CommonTypography
-              text={planItem.startDate + " ~ " + planItem.endDate}
-              variant="body2"
-              bold={true}
-            />
-          )}
+          <Box
+            sx={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "start",
+            }}
+          >
+            {/* 설정된 독서 기간 표출 */}
+            {planItem.status === "not_started" && (
+              <CommonTypography
+                text={planItem.startDate + "부터 읽을 예정이에요"}
+                variant="body1"
+                bold={true}
+              />
+            )}
+            {planItem.status === "overdue" && (
+              <CommonTypography
+                text={"설정한 기간이 지났어요. 다시 기간을 설정해주세요"}
+                variant="body1"
+                bold={true}
+              />
+            )}
+            {planItem.status === "reading" && (
+              <CommonTypography
+                text={planItem.startDate + " ~ " + planItem.endDate}
+                variant="body1"
+                bold={true}
+              />
+            )}
+
+            {/* 설정 버튼 */}
+            <Box
+              sx={{
+                display: "flex",
+              }}
+            >
+              <CommonButton
+                buttonText="삭제하기"
+                handleClickEvent={hadleDeletePlan}
+                outline={true}
+              />
+
+              <CommonButton
+                buttonText={
+                  planItem.status === "completed" ||
+                  planItem.status === "not_created_post"
+                    ? "완독"
+                    : planItem.status === "reading"
+                    ? "읽는 중"
+                    : planItem.status === "overdue"
+                    ? "기간 설정"
+                    : planItem.status === "not_started"
+                    ? "예정"
+                    : "정보없음"
+                }
+                handleClickEvent={handleEditPlan}
+                outline={true}
+              />
+            </Box>
+          </Box>
 
           {/* 진행률 그래프 부분 */}
           <MainPlanProgressBar planItem={planItem} />
-          <CommonButton
-            buttonText="삭제"
-            handleClickEvent={hadleDeletePlan}
-            outline={true}
-          />
         </Box>
       </Box>
     </Box>

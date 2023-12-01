@@ -117,16 +117,15 @@ const UserPlanList = ({
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
-                    ml: 2,
                   }}
                 >
                   <CommonTypography
                     text={planItem.title}
-                    variant="h6"
+                    variant="body1"
                     bold={true}
                   />
                   <CommonTypography
-                    text={planItem.author}
+                    text={"📝" + (planItem.author ?? "정보없음")}
                     variant="body2"
                     bold={false}
                   />
