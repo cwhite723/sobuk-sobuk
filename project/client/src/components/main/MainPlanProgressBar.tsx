@@ -53,11 +53,28 @@ const MainPlanProgressBar = ({ planItem }: PropsType) => {
           <Box
             sx={{
               position: "absolute",
+              top: 0,
+              left: 0,
               width: percent + "%",
               height: "25px",
               backgroundColor: "text.primary",
               borderRadius: 5,
             }}
+          />
+          <Box
+            component="img"
+            sx={{
+              position: "absolute",
+              top: -2,
+              right: -5,
+              width: 25,
+            }}
+            src={
+              process.env.PUBLIC_URL +
+              ((percent >= 90 && "img/step3.png") ||
+                (percent < 90 && 29 < percent && "img/step2.png") ||
+                "img/step1.png")
+            }
           />
         </Box>
       </Box>
