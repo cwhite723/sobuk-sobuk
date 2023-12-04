@@ -28,8 +28,8 @@ public class ReadingPlanRepositoryImpl implements ReadingPlanRepositoryCustom {
                         readingPlan.startDate,
                         readingPlan.endDate,
                         readingPlan.todayPage,
-                        readingPlan.totalPage,
-                        readingPlan.readPageNumber
+                        readingPlan.readPageNumber,
+                        readingPlan.totalPage
                 ))
                 .from(readingPlan)
                 .innerJoin(readingPlan.book, book)
