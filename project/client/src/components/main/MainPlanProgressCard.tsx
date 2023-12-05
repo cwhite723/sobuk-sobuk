@@ -134,21 +134,19 @@ const MainPlanProgressCard = ({ planItem }: PropsType) => {
             }}
           >
             {/* 설정된 독서 기간 표출 */}
-            {planItem.status === "not_started" && (
+            {planItem.status === "not_started" ? (
               <CommonTypography
                 text={planItem.startDate + "부터 읽을 예정이에요"}
                 variant="body1"
                 bold={true}
               />
-            )}
-            {planItem.status === "overdue" && (
+            ) : planItem.status === "overdue" ? (
               <CommonTypography
                 text={"설정한 기간이 지났어요. 다시 기간을 설정해주세요"}
                 variant="body1"
                 bold={true}
               />
-            )}
-            {planItem.status === "reading" && (
+            ) : (
               <CommonTypography
                 text={planItem.startDate + " ~ " + planItem.endDate}
                 variant="body1"

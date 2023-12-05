@@ -9,9 +9,7 @@ import PostCommentForm from "components/post/PostCommentForm";
 import PostCommentItem from "components/post/PostCommentItem";
 import PostContents from "components/post/PostContents";
 import PostReaction from "components/post/PostReaction";
-import useMemberInfoQuery from "hooks/queries/members/useMemberInfoQuery";
 import usePostQuery from "hooks/queries/posts/usePostQuery";
-import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getStoredMember, getStoredToken } from "utils/get";
 
@@ -24,29 +22,10 @@ const PostPage = () => {
   const memberToken = getStoredToken();
   const memberInfo = getStoredMember();
 
-  // 현재 포스트 유저 id
-  const [memberId, setMemberId] = useState<number | null>(null);
-
   // react-query - get post 현재 포스트 정보 요청
-  const { data: postInfo, isSuccess: isPostInfoSuccess } = usePostQuery(
-    postId,
-    memberToken,
-    {
-      enabled: !!postId && !!memberToken,
-    },
-  );
-
-  // react-query get member
-  // 현재 포스트 유저 프로필 get
-  const { data: memberInfoData } = useMemberInfoQuery(memberId, memberToken, {
-    enabled: !!memberId && !!memberToken,
+  const { data: postInfo } = usePostQuery(postId, memberToken, {
+    enabled: !!postId && !!memberToken,
   });
-
-  useEffect(() => {
-    if (postInfo && isPostInfoSuccess) {
-      setMemberId(postInfo.data.postResponse.memberId);
-    }
-  }, [isPostInfoSuccess]);
 
   return (
     <Box
@@ -60,6 +39,7 @@ const PostPage = () => {
         py: { xs: 4, md: 6 },
         px: { xs: 4, md: 6 },
         mt: 4,
+        gap: 2,
       }}
     >
       {/* 피드로 돌아가기 버튼 */}
@@ -72,21 +52,29 @@ const PostPage = () => {
       </CommonLink>
 
       {/* 사용자 정보 */}
-      {memberInfoData && postInfo && (
-        <CommonUserProfile
-          memberInfo={memberInfoData.data}
-          memberId={
-            memberInfoData.data.userName === memberInfo?.userName
-              ? null
-              : memberId
-          }
-          avatarSize={50}
-        />
+      {postInfo && (
+        <Box sx={{ py: 2 }}>
+          <CommonUserProfile
+            memberId={
+              memberInfo?.userName === postInfo?.data.postResponse.userName
+                ? null
+                : postInfo?.data.postResponse.memberId
+            }
+            avatarSize={50}
+          />
+        </Box>
       )}
 
       {postInfo && (
-        <Box>
-          <CommonTitle text={postInfo.data.postResponse.postTitle} />
+        <Box sx={{ py: 2, borderTop: "1px solid", borderBottom: "1px solid" }}>
+          <Box
+            sx={{
+              display: "flex",
+              my: 2,
+            }}
+          >
+            <CommonTitle text={"📢 " + postInfo.data.postResponse.postTitle} />
+          </Box>
 
           {/* 책 정보 */}
           <PostBookInfo
@@ -104,20 +92,19 @@ const PostPage = () => {
             }
           />
 
-          {/* 독서기록 내용 */}
-          <CommonBookImage
-            width={100}
-            height={150}
-            src={postInfo.data.postResponse.imageUrl}
-          />
+          {/* 독서기록 */}
           <PostContents
             title="독서기록 내용"
             contents={postInfo.data.postResponse.content}
           />
+          <CommonBookImage
+            width={100}
+            src={postInfo.data.postResponse.imageUrl}
+          />
 
           {/* 독서기록 reaction and buttons */}
-          {postInfo.data.postResponse.myPost &&
-            postInfo.data.postResponse.myLike && (
+          {postInfo.data.postResponse.myPost !== undefined &&
+            postInfo.data.postResponse.myLike !== undefined && (
               <PostReaction
                 countComments={postInfo.data.postResponse.countComments}
                 countLikes={postInfo.data.postResponse.countLikes}
@@ -135,7 +122,7 @@ const PostPage = () => {
           sx={{
             display: "flex",
             flexDirection: "column",
-            "&:nth-of-type(odd)": { backgroundColor: "background.default" },
+            backgroundColor: "background.default",
           }}
         >
           {/* 댓글 item */}

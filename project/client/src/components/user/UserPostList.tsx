@@ -57,7 +57,7 @@ const UserPostList = ({
     if (memberId && isMemberPostsSuccess) {
       setMemberPosts(memberPostsData.data.data);
     }
-  }, []);
+  }, [isMyPostsSuccess, isMemberPostsSuccess]);
 
   return (
     <Box>
@@ -110,7 +110,6 @@ const UserPostList = ({
                     m: 4,
                   }}
                 >
-                  {/* 이미지 수정 필요 */}
                   <CommonBookImage
                     width={100}
                     height={150}
@@ -121,18 +120,17 @@ const UserPostList = ({
                       display: "flex",
                       flexDirection: "column",
                       alignItems: "center",
-                      ml: 2,
                     }}
                   >
                     <CommonTypography
                       text={postItem.bookTitle}
-                      variant="h6"
+                      variant="body1"
                       bold={true}
                     />
                     <CommonTypography
                       text={postItem.title}
-                      variant="body2"
-                      bold={false}
+                      variant="h6"
+                      bold={true}
                     />
                     <Box sx={{ display: "flex", mt: 2 }}>
                       <CommonTypography

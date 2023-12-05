@@ -73,7 +73,7 @@ const JoinPage = () => {
   // react-query - POST nickname check
   const { mutate: nicknameCheckMutate } = useNicknameCheckMutation();
 
-  // react-query - POST image 프로필 이미지 필드는 아직 구현안됨
+  // react-query - POST image
   const { mutate: imageMutate } = useImageMutation();
 
   // 프로필 이미지 변경 함수
@@ -87,7 +87,7 @@ const JoinPage = () => {
       formData.append("file", event.target.files[0]);
       imageMutate(formData, {
         onSuccess: (data) => {
-          setValue("img", data);
+          setValue("img", data.data);
         },
       });
     }
@@ -139,7 +139,6 @@ const JoinPage = () => {
 
   // 회원가입 버튼 함수
   const handleJoin = (data: FormValue) => {
-    data.img = profileImg;
     if (idChecked && nicknameChecked) {
       signUpMutate(
         {
@@ -148,6 +147,7 @@ const JoinPage = () => {
           nickname: data.nickname,
           email: data.email,
           introduction: data.introduce,
+          image: data.img,
         },
         {
           onSuccess: () => {

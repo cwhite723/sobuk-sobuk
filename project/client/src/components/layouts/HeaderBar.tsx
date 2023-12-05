@@ -22,6 +22,7 @@ import { useMutation } from "react-query";
 import { postLogOut } from "apis/members";
 import { pages } from "constants/menus";
 import { getStoredMember, getStoredToken } from "utils/get";
+import CommonAvaratImage from "components/common/CommonAvatarImage";
 
 const HeaderBar = () => {
   const dispatch = useDispatch();
@@ -185,18 +186,23 @@ const HeaderBar = () => {
               alignItems: "center",
             }}
           >
+            {memberInfo && (
+              <CommonLink to="../my">
+                <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+                  <CommonAvaratImage size={30} src={memberInfo.image} />
+                  <CommonTypography
+                    text={memberInfo.nickname + "님"}
+                    bold={true}
+                    variant="body1"
+                  />
+                </Box>
+              </CommonLink>
+            )}
             <CommonButton
               buttonText={memberToken ? "LOGOUT" : "LOGIN"}
               outline={true}
               handleClickEvent={handleUserStatus}
             />
-            {memberInfo && (
-              <CommonTypography
-                text={memberInfo.nickname + "님"}
-                bold={true}
-                variant="body1"
-              />
-            )}
           </Box>
         </Toolbar>
       </Container>

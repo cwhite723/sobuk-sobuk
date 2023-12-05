@@ -41,14 +41,15 @@ const SearchBookReadDialog = ({
   const memberToken = getStoredToken();
 
   // react hook form
-  const { control, handleSubmit, reset, formState } = useForm<FormValue>({
-    defaultValues: {
-      totalPages: 0,
-      startDate: getStringDate(new Date()),
-      endDate: getStringDate(new Date()),
-    },
-    mode: "onSubmit",
-  });
+  const { control, handleSubmit, reset, formState, getValues } =
+    useForm<FormValue>({
+      defaultValues: {
+        totalPages: 0,
+        startDate: getStringDate(new Date()),
+        endDate: getStringDate(new Date()),
+      },
+      mode: "onSubmit",
+    });
 
   // react-query - post plan
   const { mutate: planSubmitMutate } = usePlanSubmitMutation();
@@ -143,11 +144,7 @@ const SearchBookReadDialog = ({
               name="startDate"
               control={control}
               rules={{
-                required: true,
-                min: {
-                  value: getStringDate(new Date()),
-                  message: "오늘 날짜부터 선택할 수 있어요.",
-                },
+                required: { value: true, message: "시작일은 꼭 입력해주세요." },
               }}
               textFieldProps={{
                 id: "start-date",
@@ -163,8 +160,8 @@ const SearchBookReadDialog = ({
               rules={{
                 required: true,
                 min: {
-                  value: getStringDate(new Date()),
-                  message: "오늘 날짜부터 선택할 수 있어요.",
+                  value: getValues("startDate"),
+                  message: "종료일은 시작일보다 빠를 수 없어요.",
                 },
               }}
               textFieldProps={{
