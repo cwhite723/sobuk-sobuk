@@ -14,7 +14,7 @@ const FeedPage = () => {
 
   // pagination state
   const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(0);
+  const [totalPages, setTotalPages] = useState<number | null>(null);
 
   // 해당 state값에 따라서 피드 데이터를 바꿈
   // 현재 선택된 서브 탭 메뉴
@@ -26,7 +26,7 @@ const FeedPage = () => {
   // 데이터 요청에 필요한 params
   const [params, setParams] = useState<PostParams>({
     page: page,
-    size: 10,
+    size: 4,
     sortType: nowOptionTab.value,
   });
 
@@ -41,8 +41,8 @@ const FeedPage = () => {
   // 선택된 정렬 옵션 탭 메뉴 변경 함수
   const handleOptionTabFocus = (newTab: TabMenuType) => {
     setNowOptionTab(newTab);
-    setParams((prevData) => ({
-      ...prevData,
+    setParams((prevParams) => ({
+      ...prevParams,
       sortType: newTab.value,
     }));
   };
@@ -54,10 +54,6 @@ const FeedPage = () => {
     value: number,
   ) => {
     setPage(value);
-    setParams((prevData) => ({
-      ...prevData,
-      page: value,
-    }));
   };
 
   // react-query - get posts
@@ -69,12 +65,21 @@ const FeedPage = () => {
     },
   );
 
+  // 페이지네이션
+  useEffect(() => {
+    setParams((prevParams) => ({
+      ...prevParams,
+      page: page,
+    }));
+    setPosts([]);
+  }, [page]);
+
   useEffect(() => {
     if (isPostsSuccess && postsData) {
       setPosts(postsData.data.content);
       setTotalPages(postsData.data.totalPages);
     }
-  }, [isPostsSuccess]);
+  }, [isPostsSuccess, postsData]);
 
   return (
     <Box
@@ -116,11 +121,19 @@ const FeedPage = () => {
       <Box
         sx={{ width: "100%", display: "flex", justifyContent: "center", mt: 4 }}
       >
-        <Pagination
-          count={totalPages}
-          page={page}
-          onChange={handlePageChange}
-        />
+        {totalPages ? (
+          <Pagination
+            count={totalPages}
+            page={page}
+            onChange={handlePageChange}
+          />
+        ) : (
+          <CommonTypography
+            text="피드가 존재하지 않습니다."
+            variant="h5"
+            bold={true}
+          />
+        )}
       </Box>
     </Box>
   );

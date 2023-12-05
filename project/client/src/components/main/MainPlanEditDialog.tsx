@@ -43,16 +43,17 @@ const MainPlanEditDialog = ({
   const memberToken = getStoredToken();
 
   // react hook form
-  const { control, handleSubmit, reset, formState } = useForm<FormValue>({
-    defaultValues: {
-      // 기본값은 기존 date 정보
-      // ?? : null, undefined인 경우 오른쪽 값을 반환
-      startDate: selectedPlan.startDate ?? getStringDate(new Date()),
-      endDate: selectedPlan.endDate ?? getStringDate(new Date()),
-      todayPage: 0,
-    },
-    mode: "onSubmit",
-  });
+  const { control, handleSubmit, reset, formState, getValues } =
+    useForm<FormValue>({
+      defaultValues: {
+        // 기본값은 기존 date 정보
+        // ?? : null, undefined인 경우 오른쪽 값을 반환
+        startDate: selectedPlan.startDate ?? getStringDate(new Date()),
+        endDate: selectedPlan.endDate ?? getStringDate(new Date()),
+        todayPage: 0,
+      },
+      mode: "onSubmit",
+    });
 
   // react-query - patch plan
   const { mutate: planEditMutate } = usePlanEditMutation();
@@ -63,13 +64,17 @@ const MainPlanEditDialog = ({
     const numbericTodayPage = Number(formData.todayPage);
     // 입력받은 formData로 plan patch 요청
     // props가 정상적으로 넘어왔을 때만 mutate 실행
+    // 조기 완독 시 해당 날짜로 데이터 넘기기
     planEditMutate(
       {
         planId: selectedPlan.planId,
         accessToken: memberToken,
         data: {
           startDate: formData.startDate,
-          endDate: formData.endDate,
+          endDate:
+            numbericTodayPage === selectedPlan.totalPage
+              ? getStringDate(new Date())
+              : formData.endDate,
           totalPage: selectedPlan.totalPage,
           readPageNumber: numbericTodayPage,
         },
@@ -140,6 +145,15 @@ const MainPlanEditDialog = ({
                 variant="body1"
                 bold={false}
               />
+              <CommonTypography
+                text={
+                  "오늘은" +
+                  (selectedPlan.readPage + selectedPlan.todayPage) +
+                  " 쪽 까지 읽어야 해요."
+                }
+                variant="body1"
+                bold={false}
+              />
             </Box>
 
             {/* 페이지 입력 필드 */}
@@ -149,7 +163,9 @@ const MainPlanEditDialog = ({
               control={control}
               rules={{
                 required: true,
-                validate: (value) => value > selectedPlan.readPage,
+                validate: (value) =>
+                  selectedPlan.totalPage >= value &&
+                  value > selectedPlan.readPage,
               }}
               textFieldProps={{
                 disabled:
@@ -164,7 +180,7 @@ const MainPlanEditDialog = ({
               }}
             />
             {formState.errors.todayPage && (
-              <CommonFormHelperText text="오늘 읽은 페이지가 지금까지 읽은 페이지보다 작을 수 없어요." />
+              <CommonFormHelperText text="오늘 읽은 페이지가 읽은 페이지보다 작거나 전체 페이지보다 클 수 없어요" />
             )}
 
             {/* overdue, not_started일 때만 수정이 가능한 시작 날짜 */}
@@ -172,10 +188,9 @@ const MainPlanEditDialog = ({
               name="startDate"
               control={control}
               rules={{
-                required: true,
-                min: {
-                  value: getStringDate(new Date()),
-                  message: "오늘 날짜부터 선택할 수 있어요.",
+                required: {
+                  value: true,
+                  message: "시작일은 꼭 선택해주세요.",
                 },
               }}
               textFieldProps={{
@@ -197,8 +212,8 @@ const MainPlanEditDialog = ({
               rules={{
                 required: true,
                 min: {
-                  value: getStringDate(new Date()),
-                  message: "오늘 날짜부터 선택할 수 있어요.",
+                  value: getValues("startDate"),
+                  message: "종료일은 시작일보다 빠를 수 없어요.",
                 },
               }}
               textFieldProps={{

@@ -24,6 +24,7 @@ const useMemberPatchMutation = () => {
               ...prevData,
               nickname: variables.data.nickname,
               introduction: variables.data.introduction,
+              image: variables.data.image,
             }),
           );
           return queryClient.invalidateQueries(

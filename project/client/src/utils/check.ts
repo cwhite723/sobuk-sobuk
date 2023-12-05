@@ -1,5 +1,8 @@
 // 팔로우 여부를 확인하는 함수
-export const isFollow = (otherMemberInfo: OtherMemberInfo) => {
+export const isFollow = (otherMemberInfo: OtherMemberInfo | null) => {
+  if (otherMemberInfo === null) {
+    return;
+  }
   if (otherMemberInfo.following) {
     // 팔로우 상태면
     return true;

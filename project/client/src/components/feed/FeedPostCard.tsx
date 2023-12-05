@@ -3,8 +3,7 @@ import Grid from "@mui/material/Unstable_Grid2";
 import FeedPostCardInfo from "./FeedPostCardInfo";
 import FeedPostCardReaction from "./FeedPostCardReaction";
 import CommonUserProfile from "components/common/CommonUserProfile";
-import { getStoredMember, getStoredToken } from "utils/get";
-import useMemberInfoQuery from "hooks/queries/members/useMemberInfoQuery";
+import { getStoredMember } from "utils/get";
 
 interface PropsType {
   postItem: PostInfo;
@@ -12,18 +11,9 @@ interface PropsType {
 
 const FeedPostCard = ({ postItem }: PropsType) => {
   // 현재 로그인 유저
-  const memberToken = getStoredToken();
   const memberInfo = getStoredMember();
 
-  // react-query - get member
-  // 해당 포스트 유저 프로필 get
-  const { data: memberInfoData } = useMemberInfoQuery(
-    postItem.memberId,
-    memberToken,
-    {
-      enabled: !!memberToken && !!postItem.memberId,
-    },
-  );
+  const isMyPost = memberInfo?.userName === postItem.userName;
 
   return (
     <Grid xs="auto" md={5} sx={{ width: "100%" }}>
@@ -40,17 +30,10 @@ const FeedPostCard = ({ postItem }: PropsType) => {
         }}
       >
         {/* user profile */}
-        {memberInfoData && (
-          <CommonUserProfile
-            memberInfo={memberInfoData.data}
-            memberId={
-              memberInfo?.userName === memberInfoData.data.userName
-                ? null
-                : postItem.memberId
-            }
-            avatarSize={50}
-          />
-        )}
+        <CommonUserProfile
+          memberId={isMyPost ? null : postItem.memberId}
+          avatarSize={50}
+        />
 
         {/* 책, 게시글 정보 영역 */}
         <FeedPostCardInfo postItem={postItem} />

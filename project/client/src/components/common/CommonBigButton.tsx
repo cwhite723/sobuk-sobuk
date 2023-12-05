@@ -20,7 +20,7 @@ const CommonBigButton = ({
       sx={{
         display: "block",
         backgroundColor: disabled ? "primary.light" : "text.primary",
-        color: disabled ? "text.primary" : "text.secondary",
+        color: disabled ? "text.primary" : "primary.light",
         my: 1,
       }}
       onClick={handleClickEvent}

@@ -6,10 +6,10 @@ import CommonFormHelperText from "components/common/CommonFormHelperText";
 import CommonSnackBar from "components/common/CommonSnackBar";
 import CommonTextField from "components/common/CommonTextField";
 import CommonTitle from "components/common/CommonTitle";
-import useLogOutMutation from "hooks/mutates/members/useLogOutMutaion";
 import useMemberDeleteMutation from "hooks/mutates/members/useMemberDeleteMutation";
 import useMemberPatchMutation from "hooks/mutates/members/useMemberPatchMutation";
 import useNicknameCheckMutation from "hooks/mutates/members/useNicknameCheckMutation";
+import useImageMutation from "hooks/mutates/useImageMutation";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
@@ -34,7 +34,7 @@ const UserSetting = () => {
   const [profileImg, setProfileImg] = useState("");
 
   // 닉네임 중복확인
-  const [nicknameChecked, setNicknameChecked] = useState(false);
+  const [nicknameChecked, setNicknameChecked] = useState(true);
 
   // store 토큰 값 가져오기
   const memberToken = getStoredToken();
@@ -42,21 +42,25 @@ const UserSetting = () => {
   const memberInfo = getStoredMember();
 
   // react hook form
-  const { control, handleSubmit, formState, trigger, watch, getValues } =
-    useForm<FormValue>({
-      defaultValues: {
-        nickname: memberInfo?.nickname ?? "",
-        introduction: memberInfo?.introduction ?? "",
-        img: "",
-      },
-      mode: "onSubmit",
-    });
+  const {
+    control,
+    handleSubmit,
+    formState,
+    trigger,
+    watch,
+    getValues,
+    setValue,
+  } = useForm<FormValue>({
+    defaultValues: {
+      nickname: memberInfo?.nickname ?? "",
+      introduction: memberInfo?.introduction ?? "",
+      img: "",
+    },
+    mode: "onSubmit",
+  });
 
   // react-query - POST nickname check
   const { mutate: nicknameCheckMutate } = useNicknameCheckMutation();
-
-  // react-query POST log out
-  const { mutate: logOutMutate } = useLogOutMutation();
 
   // react-query DELETE member
   const { mutate: memberDeleteMutate } = useMemberDeleteMutation();
@@ -64,11 +68,23 @@ const UserSetting = () => {
   // react-query PATCH member
   const { mutate: memberPatchMutate } = useMemberPatchMutation();
 
+  // react-query - POST image
+  const { mutate: imageMutate } = useImageMutation();
+
   // 로그인한 유저의 프로필 이미지 변경 함수
   // 아직 member 쪽은 필드 없음
   const handleChangeImg = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       setProfileImg(URL.createObjectURL(event.target.files[0]));
+
+      // 이미지 url을 얻기위한 요청에 필요한 데이터 형식으로 변경
+      const formData = new FormData();
+      formData.append("file", event.target.files[0]);
+      imageMutate(formData, {
+        onSuccess: (data) => {
+          setValue("img", data.data);
+        },
+      });
     }
   };
 
@@ -96,13 +112,13 @@ const UserSetting = () => {
 
   // 정보 수정 완료 버튼 함수
   const handleSetting = (data: FormValue) => {
-    data.img = profileImg;
     if (nicknameChecked) {
       memberPatchMutate(
         {
           data: {
             nickname: data.nickname,
             introduction: data.introduction,
+            image: data.img,
           },
           token: memberToken,
         },
@@ -117,7 +133,6 @@ const UserSetting = () => {
 
   // 회원탈퇴 버튼 함수
   const handleDropOut = () => {
-    logOutMutate(memberToken);
     memberDeleteMutate(memberToken, {
       onSuccess: () => {
         dispatch(logout());
@@ -132,7 +147,7 @@ const UserSetting = () => {
   };
 
   useEffect(() => {
-    if (watch("nickname")) {
+    if (watch("nickname") !== memberInfo?.nickname) {
       setNicknameChecked(false);
     }
   }, [watch("nickname")]);

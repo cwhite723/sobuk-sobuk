@@ -9,6 +9,7 @@ import { useLocation, useParams } from "react-router-dom";
 import { getStoredMember, getStoredToken } from "utils/get";
 import { userTabMenus } from "constants/menus";
 import useMemberInfoQuery from "hooks/queries/members/useMemberInfoQuery";
+import CommonTypography from "components/common/CommonTypography";
 
 const UserPage = () => {
   // 해당 UserPage의 path값 가져오기(my 페이지 인지 확인)
@@ -23,7 +24,7 @@ const UserPage = () => {
   const memberInfo = getStoredMember();
 
   // my 페이지 확인
-  const isMyPage = pathname === "/my";
+  const isMyPage = pathname === "/my" ? true : false;
 
   // 현재 선택된 탭 메뉴
   const [nowTab, setNowTab] = useState(userTabMenus[0]);
@@ -49,7 +50,7 @@ const UserPage = () => {
     if (isMemberInfoSuccess && memberInfoData) {
       setOwner(memberInfoData.data);
     }
-  }, []);
+  }, [isMemberInfoSuccess]);
 
   return (
     <Box sx={{ width: "100%" }}>
@@ -111,7 +112,16 @@ const UserPage = () => {
       )}
 
       {/* 유저페이지 수정 선택시 표출 영역 */}
-      {isMyPage && nowTab.value === "SETTING" && <UserSetting />}
+      {nowTab.value === "SETTING" &&
+        (isMyPage ? (
+          <UserSetting />
+        ) : (
+          <CommonTypography
+            text="정보 수정은 내 서재에서만 가능합니다."
+            variant="body1"
+            bold={true}
+          />
+        ))}
     </Box>
   );
 };

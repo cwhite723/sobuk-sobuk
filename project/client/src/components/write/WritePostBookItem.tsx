@@ -26,13 +26,16 @@ const WritePostBookItem = ({ handleSelectPlan, planInfo }: PropsType) => {
           sx={{
             display: "flex",
             flexDirection: { xs: "column", md: "row" },
+            alignItems: { xs: "start", md: "center" },
+
+            gap: 1,
           }}
         >
-          <CommonTypography text={planInfo.title} variant="body1" bold={true} />
+          <CommonTypography text={planInfo.title} variant="h6" bold={true} />
           <CommonTypography
-            text={planInfo.author}
+            text={"📝" + planInfo.author}
             variant="body1"
-            bold={false}
+            bold={true}
           />
         </Box>
       )}

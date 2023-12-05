@@ -22,11 +22,7 @@ const UserIntroProfile = ({ memberInfo, memberId }: PropsType) => {
       }}
     >
       {/* 유저 정보 및 팔로우 버튼 */}
-      <CommonUserProfile
-        memberInfo={memberInfo}
-        avatarSize={80}
-        memberId={memberId}
-      />
+      <CommonUserProfile avatarSize={80} memberId={memberId} />
 
       {/* 자기소개 영역 */}
       <Box

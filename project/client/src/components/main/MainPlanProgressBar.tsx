@@ -21,13 +21,7 @@ const MainPlanProgressBar = ({ planItem }: PropsType) => {
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
         {planItem.status === "reading" && (
           <CommonTypography
-            text={
-              "오늘은 " +
-              (planItem.readPage === 0
-                ? planItem.todayPage
-                : planItem.readPage + planItem.todayPage) +
-              "쪽까지 읽어야 해요"
-            }
+            text={"오늘은 " + planItem.todayPage + "쪽을 읽어야 해요"}
             variant="body1"
             bold={true}
           />

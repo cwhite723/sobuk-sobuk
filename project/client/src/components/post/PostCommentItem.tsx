@@ -10,6 +10,7 @@ import useCommentDeleteMutation from "hooks/mutates/comments/useCommentDeleteMut
 import useCommentEditMutation from "hooks/mutates/comments/useCommentEditMutation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { getStoredToken } from "utils/get";
 
 interface PropsType {
@@ -21,6 +22,8 @@ interface FormValue {
 }
 
 const PostCommentItem = ({ commentItem }: PropsType) => {
+  const navigate = useNavigate();
+
   const memberToken = getStoredToken();
 
   // 스낵바 상태값
@@ -74,86 +77,27 @@ const PostCommentItem = ({ commentItem }: PropsType) => {
 
   const handleSnackBarClose = () => {
     setSuccessSnackBarOpen(false);
+    setOpenEditForm(false);
+    navigate(0);
   };
 
   return (
     <Box>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: { xs: "column", md: "row" },
-          alignItems: { xs: "baseline", md: "center" },
-          borderBottom: "1px solid",
-          p: 2,
-        }}
-      >
-        <CommonSnackBar
-          text="완료되었습니다."
-          severity="success"
-          open={successSnackBarOpen}
-          handleSnackBarClose={handleSnackBarClose}
-        />
+      <CommonSnackBar
+        text="완료되었습니다."
+        severity="success"
+        open={successSnackBarOpen}
+        handleSnackBarClose={handleSnackBarClose}
+      />
 
-        {/* 작성자 profile */}
-        <Box
-          sx={{ display: "flex", alignItems: "center", mb: { xs: 1, md: 0 } }}
-        >
-          <CommonAvaratImage size={35} />
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: { xs: "row", md: "column" },
-              mx: 1,
-              flexShrink: 0,
-            }}
-          >
-            <CommonTypography
-              text={commentItem.nickname}
-              variant="body2"
-              bold={true}
-            />
-            <CommonTypography
-              text={commentItem.userName}
-              variant="body2"
-              bold={false}
-            />
-          </Box>
-        </Box>
-
-        {/* 댓글 내용 */}
-        <Box sx={{ ml: 1, p: 2 }}>
-          <CommonTypography
-            text={commentItem.content}
-            variant="body1"
-            bold={true}
-          />
-        </Box>
-
-        {/* 댓글 수정 삭제 버튼 */}
-        {commentItem.myComment && (
-          <Box>
-            <CommonButton
-              buttonText="수정"
-              outline={false}
-              handleClickEvent={handleCommentEditForm}
-            />
-            <CommonButton
-              buttonText="삭제"
-              outline={false}
-              handleClickEvent={handleDeleteComment}
-            />
-          </Box>
-        )}
-      </Box>
-      {openEditForm && (
+      {openEditForm ? (
         <form>
           <Box
             sx={{
               width: "100%",
-              flexGrow: 1,
               display: "flex",
               flexDirection: "column",
-              alignItems: "center",
+              my: 1,
             }}
           >
             <CommonTextField
@@ -164,17 +108,90 @@ const PostCommentItem = ({ commentItem }: PropsType) => {
               }}
               textFieldProps={{
                 id: "comment",
-                label: "댓글",
+                label: "댓글 수정",
               }}
             />
             <CommonFormHelperText text={formState.errors.comment?.message} />
 
             <CommonBigButton
-              buttonText="입력"
+              buttonText="수정"
               handleClickEvent={handleSubmit(handleEditComment)}
             />
           </Box>
         </form>
+      ) : (
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: { xs: "column", md: "row" },
+            alignItems: { xs: "baseline", md: "center" },
+            borderBottom: "1px solid",
+            p: 2,
+            gap: 2,
+          }}
+        >
+          {/* 작성자 profile */}
+          <Box
+            sx={{ display: "flex", alignItems: "center", mb: { xs: 1, md: 0 } }}
+          >
+            <CommonAvaratImage size={35} />
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: { xs: "row", md: "column" },
+                alignItems: { xs: "center", md: "start" },
+                mx: 1,
+                flexShrink: 0,
+              }}
+            >
+              <CommonTypography
+                text={commentItem.nickname}
+                variant="body1"
+                bold={true}
+              />
+              <CommonTypography
+                text={commentItem.userName}
+                variant="body2"
+                bold={false}
+              />
+            </Box>
+          </Box>
+
+          {/* 댓글 내용 */}
+          <Box
+            sx={{
+              width: "100%",
+              display: "flex",
+              flexDirection: { xs: "column", md: "row" },
+              justifyContent: "space-between",
+              alignItems: { xs: "start", md: "center" },
+            }}
+          >
+            <Box sx={{ p: 2 }}>
+              <CommonTypography
+                text={commentItem.content}
+                variant="body1"
+                bold={true}
+              />
+            </Box>
+
+            {/* 댓글 수정 삭제 버튼 */}
+            {commentItem.myComment && (
+              <Box sx={{ display: "flex" }}>
+                <CommonButton
+                  buttonText="수정"
+                  outline={false}
+                  handleClickEvent={handleCommentEditForm}
+                />
+                <CommonButton
+                  buttonText="삭제"
+                  outline={false}
+                  handleClickEvent={handleDeleteComment}
+                />
+              </Box>
+            )}
+          </Box>
+        </Box>
       )}
     </Box>
   );

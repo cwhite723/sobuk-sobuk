@@ -52,9 +52,7 @@ const PostReaction = ({
         display: "flex",
         justifyContent: "space-between",
         alignItems: "baseline",
-        borderBottom: "1px solid",
         mt: 4,
-        pb: 1,
       }}
     >
       {/* comment and like */}
@@ -87,9 +85,9 @@ const PostReaction = ({
             />
           </Box>
         )}
-        {memberToken && (
+        {memberToken && !myPost && (
           <CommonButton
-            buttonText={myLike ? "🤎" : "🤍"}
+            buttonText={myLike ? "💖완료" : "🤍좋아요"}
             outline={false}
             handleClickEvent={handlePostLike}
           />
