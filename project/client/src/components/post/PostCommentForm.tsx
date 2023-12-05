@@ -26,7 +26,7 @@ const PostCommentForm = ({ postId }: PropsType) => {
   // 스낵바 상태값
   const [snackBarOpen, setSnackBarOpen] = useState(false);
 
-  const { control, handleSubmit, formState } = useForm<FormValue>({
+  const { control, handleSubmit, formState, reset } = useForm<FormValue>({
     defaultValues: {
       comment: "",
     },
@@ -48,6 +48,7 @@ const PostCommentForm = ({ postId }: PropsType) => {
       },
       {
         onSuccess: () => {
+          reset();
           setSnackBarOpen(true);
         },
       },

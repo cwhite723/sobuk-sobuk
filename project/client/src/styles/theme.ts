@@ -9,7 +9,7 @@ const theme = responsiveFontSizes(
       },
       primary: {
         main: grey[300],
-        light: blueGrey[100],
+        light: grey[200],
         dark: blueGrey[900],
       },
       text: {

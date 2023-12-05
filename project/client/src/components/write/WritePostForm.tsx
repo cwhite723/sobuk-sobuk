@@ -75,6 +75,7 @@ const WritePostForm = ({ handleChangePlan, planInfo }: PropsType) => {
         data: {
           title: data.postTitle,
           content: data.postContents,
+          imageUrl: data.postImg,
         },
         accessToken: memberToken,
       },
@@ -102,14 +103,14 @@ const WritePostForm = ({ handleChangePlan, planInfo }: PropsType) => {
 
       {/* 선택된 플랜 정보 */}
       {planInfo && (
-        <Box sx={{ display: "flex", alignItems: "baseline" }}>
+        <Box sx={{ display: "flex", alignItems: "baseline", gap: 1 }}>
           <CommonTypography
             text={"👉" + planInfo.title}
             variant="h5"
             bold={true}
           />
           <CommonTypography
-            text={planInfo.author}
+            text={"📝" + planInfo.author}
             variant="body1"
             bold={true}
           />
@@ -178,6 +179,7 @@ const WritePostForm = ({ handleChangePlan, planInfo }: PropsType) => {
         handleClickEvent={() => {
           handleChangePlan(null);
         }}
+        disabled={true}
       />
     </Box>
   );

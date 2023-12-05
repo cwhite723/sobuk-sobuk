@@ -72,7 +72,7 @@ const SearchBookSubmitDialog = ({
       formData.append("file", event.target.files[0]);
       imageMutate(formData, {
         onSuccess: (data) => {
-          setValue("img", data);
+          setValue("img", data.data);
         },
       });
     }
@@ -82,6 +82,7 @@ const SearchBookSubmitDialog = ({
   const { mutate: bookSubmitMutate } = useBookSubmitMutation();
 
   const handleDialogData = (data: FormValue) => {
+    console.log(data);
     bookSubmitMutate(
       {
         title: data.title,

@@ -12,7 +12,7 @@ import useIdCheckMutation from "hooks/mutates/members/useIdCheckMutation";
 import useNicknameCheckMutation from "hooks/mutates/members/useNicknameCheckMutation";
 import useSignUpMutation from "hooks/mutates/members/useSignUpMutation";
 import useImageMutation from "hooks/mutates/useImageMutation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
@@ -42,19 +42,26 @@ const JoinPage = () => {
   const [nicknameChecked, setNicknameChecked] = useState(false);
 
   // react hook form
-  const { getValues, setValue, control, handleSubmit, formState, trigger } =
-    useForm<FormValue>({
-      defaultValues: {
-        id: "",
-        password: "",
-        passwordCheck: "",
-        nickname: "",
-        email: "",
-        introduce: "",
-        img: "",
-      },
-      mode: "onChange",
-    });
+  const {
+    getValues,
+    setValue,
+    control,
+    handleSubmit,
+    formState,
+    trigger,
+    watch,
+  } = useForm<FormValue>({
+    defaultValues: {
+      id: "",
+      password: "",
+      passwordCheck: "",
+      nickname: "",
+      email: "",
+      introduce: "",
+      img: "",
+    },
+    mode: "onChange",
+  });
 
   // react-query - POST signup
   const { mutate: signUpMutate, isSuccess: signUpSuccess } =
@@ -66,7 +73,7 @@ const JoinPage = () => {
   // react-query - POST nickname check
   const { mutate: nicknameCheckMutate } = useNicknameCheckMutation();
 
-  // react-query - POST image 프로필 이미지 필드는 아직 구현안됨
+  // react-query - POST image
   const { mutate: imageMutate } = useImageMutation();
 
   // 프로필 이미지 변경 함수
@@ -80,7 +87,7 @@ const JoinPage = () => {
       formData.append("file", event.target.files[0]);
       imageMutate(formData, {
         onSuccess: (data) => {
-          setValue("img", data);
+          setValue("img", data.data);
         },
       });
     }
@@ -146,7 +153,6 @@ const JoinPage = () => {
 
   // 회원가입 버튼 함수
   const handleJoin = (data: FormValue) => {
-    data.img = profileImg;
     if (idChecked && nicknameChecked) {
       signUpMutate(
         {
@@ -155,6 +161,7 @@ const JoinPage = () => {
           nickname: data.nickname,
           email: data.email,
           introduction: data.introduce,
+          image: data.img,
         },
         {
           onSuccess: () => {
@@ -177,6 +184,18 @@ const JoinPage = () => {
       navigate("../login");
     }
   };
+
+  useEffect(() => {
+    if (watch("id")) {
+      setIdChecked(false);
+    }
+  }, [watch("id")]);
+
+  useEffect(() => {
+    if (watch("nickname")) {
+      setNicknameChecked(false);
+    }
+  }, [watch("nickname")]);
 
   return (
     <Box
