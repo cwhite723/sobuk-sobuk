@@ -10,8 +10,8 @@ interface PropsType {
 const PostContents = ({ title, contents }: PropsType) => {
   return (
     <Box sx={{ my: 4 }}>
-      <CommonTitle text={title} />
-      <CommonTypography text={contents} variant="body1" bold={false} />
+      <CommonTitle text={"✅ " + title} />
+      <CommonTypography text={contents} variant="body1" bold={true} />
     </Box>
   );
 };

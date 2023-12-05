@@ -77,7 +77,6 @@ const LoginPage = () => {
   useEffect(() => {
     // get myInfo 성공시
     if (isLogInSuccess && isMyPageSuccess && myPage) {
-      console.log("성공", myPage.data);
       dispatch(setMember(myPage.data));
     }
   }, [isLogInSuccess, isMyPageSuccess]);

@@ -13,41 +13,58 @@ const FeedPostCardInfo = ({ postItem }: PropsType) => {
       <Box
         sx={{
           display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
           backgroundColor: "background.default",
           borderRadius: 5,
           boxShadow: "0px 0px 5px rgba(0,0,0,0.3)",
           my: 2,
-          py: 2,
+          p: 1,
         }}
       >
+        {/* 책정보 */}
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 1,
+            pt: 1,
+          }}
+        >
+          <CommonTypography
+            text={postItem.bookTitle}
+            variant="body1"
+            bold={true}
+          />
+          <CommonTypography
+            text={"📝" + postItem.bookAuthor}
+            variant="body2"
+            bold={true}
+          />
+        </Box>
+
         {/* post 이미지 */}
         <CommonBookImage width={100} height={150} src={postItem.imageUrl} />
 
-        <Box>
-          <Box sx={{ display: "flex", alignItems: "baseline", my: 2 }}>
-            <CommonTypography
-              text={postItem.bookTitle}
-              variant="h6"
-              bold={true}
-            />
-            <CommonTypography
-              text={postItem.bookAuthor}
-              variant="body2"
-              bold={true}
-            />
-          </Box>
-          <Box>
-            <CommonTypography
-              text={postItem.postTitle}
-              variant="body2"
-              bold={true}
-            />
-            <CommonTypography
-              text={postItem.content}
-              variant="body2"
-              bold={false}
-            />
-          </Box>
+        {/* 포스트 정보 */}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            mb: 2,
+          }}
+        >
+          <CommonTypography
+            text={postItem.postTitle}
+            variant="h5"
+            bold={true}
+          />
+          <CommonTypography
+            text={postItem.content.substring(0, 20)}
+            variant="body2"
+            bold={false}
+          />
         </Box>
       </Box>
     </CommonLink>

@@ -48,34 +48,34 @@ const MainPage = () => {
       columns={{ xs: 1, md: 10 }}
       sx={{ width: "100%" }}
     >
-      {readingPlans && (
+      {readingPlans && readingPlans.data.length !== 0 && (
         <MainPlanBox
           plans={readingPlans.data}
           boxTitle={titleByPlanStatus.READING}
         />
       )}
-      {completedPlans && (
-        <MainPlanBox
-          plans={completedPlans.data}
-          boxTitle={titleByPlanStatus.COMPLETED}
-        />
-      )}
-      {notCreatedPostPlans && (
+      {notCreatedPostPlans && notCreatedPostPlans.data.length !== 0 && (
         <MainPlanBox
           plans={notCreatedPostPlans.data}
           boxTitle={titleByPlanStatus.NOT_CREATED_POST}
         />
       )}
-      {notStartedPlans && (
+      {notStartedPlans && notStartedPlans.data.length !== 0 && (
         <MainPlanBox
           plans={notStartedPlans.data}
           boxTitle={titleByPlanStatus.NOT_STARTED}
         />
       )}
-      {overduePlans && (
+      {overduePlans && overduePlans.data.length !== 0 && (
         <MainPlanBox
           plans={overduePlans.data}
           boxTitle={titleByPlanStatus.OVERDUE}
+        />
+      )}
+      {completedPlans && completedPlans.data.length !== 0 && (
+        <MainPlanBox
+          plans={completedPlans.data}
+          boxTitle={titleByPlanStatus.COMPLETED}
         />
       )}
 
@@ -92,6 +92,20 @@ const MainPage = () => {
           />
         </Box>
       )}
+
+      {!readingPlans?.data &&
+        !completedPlans?.data &&
+        !notCreatedPostPlans?.data &&
+        !notStartedPlans?.data &&
+        !overduePlans?.data && (
+          <Box sx={{ m: 5 }}>
+            <CommonTypography
+              text="등록된 독서 정보가 없어요."
+              variant="h5"
+              bold={true}
+            />
+          </Box>
+        )}
     </Grid>
   );
 };
