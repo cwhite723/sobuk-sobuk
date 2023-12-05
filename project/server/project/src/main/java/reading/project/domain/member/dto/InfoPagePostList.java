@@ -11,18 +11,20 @@ public class InfoPagePostList {
     private String author;
     private String title;
     private String content;
+    private String imageUrl;
     private int countComment;
     private int countLike;
 
 
     @QueryProjection
     public InfoPagePostList(long postId, String bookTitle, String author,
-                            String title, String content, int countComment, int countLike) {
+                            String title, String content, String imageUrl, int countComment, int countLike) {
         this.postId = postId;
         this.bookTitle = bookTitle;
         this.author = author;
         this.title = title;
         this.content = content;
+        this.imageUrl = imageUrl;
         this.countComment = countComment;
         this.countLike = countLike;
     }

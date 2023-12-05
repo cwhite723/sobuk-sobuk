@@ -110,6 +110,7 @@ public class MemberRepositoryImpl implements MemberRepositoryCustom{
                         book.author,
                         post.title,
                         post.content,
+                        post.imageUrl,
                         post.comments.size(),
                         post.likes.size()
                         ))
