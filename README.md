@@ -14,13 +14,28 @@
 ![React-hook-form](https://img.shields.io/badge/reacthookform-EC5990?style=for-the-badge&logo=reacthookform&logoColor=fff)
 ![Redux](https://img.shields.io/badge/redux-764ABC?style=for-the-badge&logo=redux&logoColor=fff)
 
+---
+
+![JAVA](https://img.shields.io/badge/java-CA4245?style=for-the-badge&logo=java&logoColor=fff)
+![Spring Boot](https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=fff)
+![Spring Security](https://img.shields.io/badge/springsecurity-6DB33F?style=for-the-badge&logo=springsecurity&logoColor=fff)
+![JSON Web Tokens](https://img.shields.io/badge/jsonwebtokens-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=fff)
+![Redis](https://img.shields.io/badge/redis-DC382D?style=for-the-badge&logo=redis&logoColor=fff)
+![MySQL](https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=fff)
+![QueryDSL](https://img.shields.io/badge/querydsl-4479A1?style=for-the-badge&logo=querydsl&logoColor=fff)
+![Amazon EC2](https://img.shields.io/badge/amazonec2-FF9900?style=for-the-badge&logo=amazonec2&logoColor=fff)
+![Amazon S3](https://img.shields.io/badge/amazons3-569A31?style=for-the-badge&logo=amazons3&logoColor=fff)
+![Amazon RDS](https://img.shields.io/badge/amazonrds-527FFF?style=for-the-badge&logo=amazonrds&logoColor=fff)
+
 📚나의 독서 기록을 소북히 쌓아보세요!
 
 </div>
 
 ## 📚소북소북을 둘러보세요!
 
-`서비스 주소` : [https://d1evsu2bilsn4.cloudfront.net](https://d1evsu2bilsn4.cloudfront.net "소북소북")
+`서비스 주소1` : [http://sobuk-sobuk-app-2023.s3-website.ap-northeast-2.amazonaws.com](http://sobuk-sobuk-app-2023.s3-website.ap-northeast-2.amazonaws.com "소북소북")
+
+`서비스 주소2` : [https://d1evsu2bilsn4.cloudfront.net](https://d1evsu2bilsn4.cloudfront.net "소북소북")
 
 `프로젝트 저장소` : [https://github.com/cwhite723/sobuksobuk](https://github.com/cwhite723/sobuksobuk)
 
@@ -30,7 +45,7 @@
 
 |                                        [김윤정(FE)](https://github.com/codekyz)                                        |                                       [조하얀(BE)](https://github.com/cwhite723)                                       |                                      [황호준(BE)](https://github.com/hwanghojun)                                       |
 | :--------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------: |
-| <img src="https://github.com/cwhite723/sobuksobuk/assets/61897795/2d53e917-7403-43a3-a7dc-ed017886229c" width="150" /> | <img src="https://github.com/cwhite723/sobuksobuk/assets/61897795/2d53e917-7403-43a3-a7dc-ed017886229c" width="150" /> | <img src="https://github.com/cwhite723/sobuksobuk/assets/61897795/2d53e917-7403-43a3-a7dc-ed017886229c" width="150" /> |
+| <img src="https://github.com/cwhite723/sobuksobuk/assets/61897795/2d53e917-7403-43a3-a7dc-ed017886229c" width="150" /> | <img src="https://github.com/cwhite723/sobuksobuk/assets/61897795/02192bb4-45ba-4ede-a3ba-9289207c52a8" width="150" /> | <img src="https://github.com/cwhite723/sobuksobuk/assets/61897795/1471e81e-b2b6-47ed-932d-75abb3ee3b9d" width="150" /> |
 |                                                          후기                                                          |                                                          후기                                                          |                                                          후기                                                          |
 
 ## 📚만들게 된 이유를 알려드려요!
