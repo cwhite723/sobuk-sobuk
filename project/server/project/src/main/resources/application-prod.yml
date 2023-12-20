@@ -1,9 +1,9 @@
 spring:
   datasource:
-    url: jdbc:mysql://soboksobuk.chrp3bkonfze.ap-northeast-2.rds.amazonaws.com:13306/sobuksobuk?serverTimezone=Asia/Seoul
+    url: ENC(9VRBkrGl1RQbgzUzQ5FOFEU316UcFdIu8NXC3l0YXpbC5EBc9mrsvSb90lk4niXrs41axSurGAZqe8wGfLzcIYEX/yanhnezItn+gjdUvXP87dU1GZaXxH59ROaIkIoX/3kEbFUO+/+PdrUy2jkUboXHyqkIL5JX8for/o75wCA=)
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: admin
-    password: ${MYSQL_PASSWORD}
+    username: ENC(Z/oPy9lunlEgt0l3VCQ2FQ==)
+    password: ENC(U/QkEYTVzdyUzWXa168FJDvYzoIWyWWM)
   jpa:
     hibernate:
       ddl-auto: update
@@ -25,7 +25,7 @@ spring:
         min-idle: 2
     port: 6379
     host: 127.0.0.1
-    password: 'abcde'
+    password: ENC(b0vQOQXNwKy4EYHCZdqmOQ==)
   servlet:
     multipart:
       max-file-size: 10MB
@@ -35,18 +35,22 @@ logging.level:
   org.hibernate.SQL: debug
 
 jwt:
-  key: ${JWT_SECRET_KEY}
+  key: ENC(3N7gG4NqPpaxoHsi8n4G3QNMxp/TSYynRnaTaSb/eeapstTBIVDwoE9+FzmVzx6DdSrBvpKx7yespVqM+nd6oZCBnJGuUd+4)
   access-token-expiration-minutes: 30
   refresh-token-expiration-minutes: 420
 
 cloud:
   aws:
     credentials:
-      access-key: ${AWS_ACCESS_KEY}
-      secret-key: ${AWS_SECRET_KEY}
+      access-key: ENC(ctUaGsiLozPv3FjPBjOuYIayiH0KeQCsakOZpUG4z2E=)
+      secret-key: ENC(sdQsTeFjujoBxixQr/QN4/uL0JVy5kf0izQUyjq/9FKLsvLNyEcDDAAmr5iz0dGWhkons2VedsY=)
     region:
       static: ap-northeast-2
     s3:
       bucket: mainproject.bucket
     stack:
       auto: false
+
+jasypt:
+  encryptor:
+    password: ${JASYPT_PASSWORD}
