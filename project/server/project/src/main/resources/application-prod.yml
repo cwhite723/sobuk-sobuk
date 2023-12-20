@@ -1,3 +1,7 @@
+jasypt:
+  encryptor:
+    password: ${JASYPT_PASSWORD}
+
 spring:
   datasource:
     url: ENC(9VRBkrGl1RQbgzUzQ5FOFEU316UcFdIu8NXC3l0YXpbC5EBc9mrsvSb90lk4niXrs41axSurGAZqe8wGfLzcIYEX/yanhnezItn+gjdUvXP87dU1GZaXxH59ROaIkIoX/3kEbFUO+/+PdrUy2jkUboXHyqkIL5JX8for/o75wCA=)
@@ -50,7 +54,3 @@ cloud:
       bucket: mainproject.bucket
     stack:
       auto: false
-
-jasypt:
-  encryptor:
-    password: ${JASYPT_PASSWORD}
