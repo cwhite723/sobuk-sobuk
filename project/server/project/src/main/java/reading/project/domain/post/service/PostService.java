@@ -79,7 +79,7 @@ public class PostService {
 
     public Page<PostResponse> getFollowingPosts(Long loginId, Pageable pageable, SortType sortType) {
 
-        return postRepository.getPosts(loginId, pageable, sortType);
+        return postRepository.getFollowingPosts(loginId, pageable, sortType);
     }
 
     @Transactional
