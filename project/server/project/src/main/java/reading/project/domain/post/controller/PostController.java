@@ -79,7 +79,7 @@ public class PostController {
     @ResponseStatus(OK)
     public ApplicationResponse<Page<PostResponse>> getFollowingPosts(CommonPageRequest pageRequest, SortType sortType) {
         Long loginId = JwtParseInterceptor.getAuthenticatedUserId();
-        Page<PostResponse> responses = postService.getPosts(loginId, pageRequest.of(), sortType);
+        Page<PostResponse> responses = postService.getFollowingPosts(loginId, pageRequest.of(), sortType);
 
         return ApplicationResponse.ok(responses);
     }
