@@ -77,6 +77,11 @@ public class PostService {
         return postRepository.getPosts(loginId, pageable, sortType);
     }
 
+    public Page<PostResponse> getFollowingPosts(Long loginId, Pageable pageable, SortType sortType) {
+
+        return postRepository.getPosts(loginId, pageable, sortType);
+    }
+
     @Transactional
     public void toggleLike(Long loginId, Long postId) {
         Post post = findPostById(postId);

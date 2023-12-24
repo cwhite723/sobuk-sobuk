@@ -1,6 +1,6 @@
 jasypt:
   encryptor:
-    password: ${JASYPT_PASSWORD}
+    password: thqnr123thqnr!@
 
 spring:
   datasource:

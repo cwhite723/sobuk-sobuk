@@ -75,6 +75,15 @@ public class PostController {
         return ApplicationResponse.ok(responses);
     }
 
+    @GetMapping("/followings")
+    @ResponseStatus(OK)
+    public ApplicationResponse<Page<PostResponse>> getFollowingPosts(CommonPageRequest pageRequest, SortType sortType) {
+        Long loginId = JwtParseInterceptor.getAuthenticatedUserId();
+        Page<PostResponse> responses = postService.getPosts(loginId, pageRequest.of(), sortType);
+
+        return ApplicationResponse.ok(responses);
+    }
+
     @PostMapping("/{post-id}/like")
     @ResponseStatus(OK)
     public ApplicationResponse<Void> toggleLike(@PathVariable("post-id") Long postId) {

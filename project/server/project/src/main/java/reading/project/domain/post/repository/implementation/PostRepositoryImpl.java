@@ -105,6 +105,42 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
         return new PageImpl<>(responses, pageable, count == null ? 0 : count);
     }
 
+    @Override
+    public Page<PostResponse> getFollowingPosts(Long loginId, Pageable pageable, SortType sortType) {
+        List<PostResponse> responses = queryFactory
+                .select(new QPostResponse(
+                        member.id,
+                        member.userName,
+                        member.nickname,
+                        book.title,
+                        book.author,
+                        post.id,
+                        post.title,
+                        post.content,
+                        post.imageUrl,
+                        post.comments.size(),
+                        post.likes.size(),
+                        post.createdAt,
+                        post.updatedAt
+                ))
+                .from(post)
+                .innerJoin(post.member, member)
+                .innerJoin(post.book, book)
+                .leftJoin(member.followings, follow)
+                .where(follow.followerId.id.eq(loginId))
+                .orderBy(postSort(sortType))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        Long count = queryFactory
+                .select(post.count())
+                .from(post)
+                .fetchOne();
+
+        return new PageImpl<>(responses, pageable, count == null ? 0 : count);
+    }
+
     private OrderSpecifier<?> postSort(SortType sortType) {
         switch (sortType) {
             case DATE:
