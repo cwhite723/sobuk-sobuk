@@ -9,4 +9,5 @@ import reading.project.domain.post.dto.response.PostResponse;
 public interface PostRepositoryCustom {
     PostDetailResponse getPostById(Long memberId, Long postId);
     Page<PostResponse> getPosts(Long loginId, Pageable pageable, SortType sortType);
+    Page<PostResponse> getFollowingPosts(Long loginId, Pageable pageable, SortType sortType);
 }
