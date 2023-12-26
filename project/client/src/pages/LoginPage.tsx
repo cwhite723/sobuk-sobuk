@@ -5,14 +5,13 @@ import CommonLink from "components/common/CommonLink";
 import CommonTypography from "components/common/CommonTypography";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
 import CommonSnackBar from "components/common/CommonSnackBar";
 import CommonTitle from "components/common/CommonTitle";
 import CommonFormHelperText from "components/common/CommonFormHelperText";
 import useMyPageQuery from "hooks/queries/members/useMyPageQuery";
 import useLogInMutation from "hooks/mutates/members/useLogInMutation";
 import { getStoredToken } from "utils/get";
-import { setMember } from "store/auth";
+import useMemberStore from "store/store";
 
 interface FormValue {
   id: string;
@@ -20,7 +19,7 @@ interface FormValue {
 }
 
 const LoginPage = () => {
-  const dispatch = useDispatch();
+  const { setMember, setToken } = useMemberStore();
   const memberToken = getStoredToken();
 
   // 스낵바 상태값
@@ -77,7 +76,7 @@ const LoginPage = () => {
   useEffect(() => {
     // get myInfo 성공시
     if (isLogInSuccess && isMyPageSuccess && myPage) {
-      dispatch(setMember(myPage.data));
+      setMember(myPage.data);
     }
   }, [isLogInSuccess, isMyPageSuccess]);
 
