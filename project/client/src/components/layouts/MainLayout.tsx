@@ -1,18 +1,18 @@
 import { Box } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import { Outlet } from "react-router-dom";
-import HeaderBar from "./HeaderBar";
-import Footer from "./Footer";
-import CommonBackDrop from "components/common/CommonBackDrop";
+import HeaderBar from "../blocks/HeaderBar";
+import Footer from "../blocks/Footer";
+import BackDrop from "components/blocks/BackDrop";
 
 const MainLayout = () => {
   return (
-    // main, feed, group, post, user, write 페이지에 적용되는 레이아웃
+    // plan, feed, group, post, member, write, books 페이지에 적용되는 레이아웃
     <Box sx={{ flexGrow: 1 }}>
       {/* loading */}
-      <CommonBackDrop />
+      <BackDrop />
 
-      {/* 공용 HeaderBar */}
+      {/* HeaderBar */}
       <HeaderBar />
       <Grid container spacing={2} disableEqualOverflow>
         {/* 사이드 영역 */}
@@ -33,7 +33,7 @@ const MainLayout = () => {
         {/* 사이드 영역 */}
         <Grid xs />
       </Grid>
-      {/* 공용 Footer */}
+      {/* Footer */}
       <Footer />
     </Box>
   );

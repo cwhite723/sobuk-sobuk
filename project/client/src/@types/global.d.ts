@@ -12,23 +12,10 @@ declare global {
     | "POST"
     | "SETTING";
 
-  // type DataFilterType = "DATE" | "COMMENT" | "LIKE" | "ALL" | "FOLLOWING";
-  // type UserTabType = "INTRO" | "LIB" | "POST" | "SETTING";
-
   interface TabMenuType {
     label: string;
     value: TabMenuTypeValues;
   }
-
-  // interface TabMenuType {
-  //   label: string;
-  //   value: DataFilterType;
-  // }
-
-  // interface UserTabMenuType {
-  //   label: string;
-  //   value: UserTabType;
-  // }
 
   type DialogType = "read" | "progress" | "submit";
 

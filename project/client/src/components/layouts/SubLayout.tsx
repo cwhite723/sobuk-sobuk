@@ -1,13 +1,14 @@
 import { Box } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
-import CommonBackDrop from "components/common/CommonBackDrop";
+import BackDrop from "components/blocks/BackDrop";
 import { Outlet } from "react-router-dom";
 
 const SubLayout = () => {
   return (
+    // login, signup 페이지에 적용되는 레이아웃
     <Grid container spacing={2} sx={{ width: "100%" }}>
       {/* loading */}
-      <CommonBackDrop />
+      <BackDrop />
 
       {/* 사이드 영역 */}
       <Grid xs />
