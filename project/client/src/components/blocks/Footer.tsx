@@ -20,7 +20,7 @@ const Footer = () => {
           display: "flex",
           mr: 2,
         }}
-        src={process.env.PUBLIC_URL + "img/logo.png"}
+        src={import.meta.env.BASE_URL + "img/logo.png"}
       />
       {/* copyright */}
       <CustomTypography

@@ -74,7 +74,7 @@ const HeaderBar = () => {
     }
 
     // 로그인 페이지로 이동
-    navigate("../login");
+    navigate("../log-in");
   };
 
   return (
@@ -142,7 +142,7 @@ const HeaderBar = () => {
                   display: "flex",
                   mr: 2,
                 }}
-                src={process.env.PUBLIC_URL + "img/logo.png"}
+                src={import.meta.env.BASE_URL + "img/logo.png"}
               />
             </CustomLink>
           </Box>

@@ -32,7 +32,7 @@ const SubLayout = () => {
               mt: 10,
               mb: 5,
             }}
-            src={process.env.PUBLIC_URL + "img/logo.png"}
+            src={import.meta.env.BASE_URL + "img/logo.png"}
           />
           <Outlet />
         </Box>

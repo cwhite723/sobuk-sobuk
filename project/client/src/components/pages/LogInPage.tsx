@@ -160,7 +160,7 @@ const LogInPage = () => {
           paddingBottom: "25px",
         }}
       >
-        <CustomLink to="../join">
+        <CustomLink to="../sign-up">
           <CustomTypography text="👋회원가입" variant="body2" bold={false} />
         </CustomLink>
         <CustomLink to="#">

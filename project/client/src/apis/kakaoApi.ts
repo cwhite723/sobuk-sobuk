@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const apiKey = import.meta.env.VITE_APP_KAKAO_API_KEY;
+const apiKey = import.meta.env.VITE_KAKAO_API_KEY;
 
 // kakao api axios 기본 세팅
 const KakaoApi = axios.create({

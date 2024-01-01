@@ -4,6 +4,9 @@ import { defineConfig } from "vite";
 
 export default defineConfig({
   plugins: [react(), tsconfigPaths()],
+  optimizeDeps: {
+    include: ["@emotion/styled"],
+  },
   server: {
     port: 3000,
   },

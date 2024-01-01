@@ -424,7 +424,7 @@ const SignUpPage = () => {
         {/* 취소 버튼 */}
         <BigButton
           text="취소"
-          handleClickEvent={() => navigate("../login")}
+          handleClickEvent={() => navigate("../log-in")}
           disabled={true}
         />
       </form>
