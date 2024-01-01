@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import Grid from "@mui/material/Unstable_Grid2";
+import Grid from "@mui/system/Unstable_Grid";
 import RankCard from "components/blocks/search/RankCard";
 import ReadDialog from "components/blocks/search/ReadDialog";
 import SubmitDialog from "components/blocks/search/SubmitDialog";

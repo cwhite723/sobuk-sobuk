@@ -1,4 +1,4 @@
-import Grid from "@mui/material/Unstable_Grid2";
+import Grid from "@mui/system/Unstable_Grid";
 import PlansSection from "components/blocks/plan/PlansSection";
 import CustomTypography from "components/atoms/CustomTypography";
 import { getStoredToken } from "utils/get";

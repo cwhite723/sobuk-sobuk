@@ -1,5 +1,5 @@
 import { Box, Pagination } from "@mui/material";
-import Grid from "@mui/material/Unstable_Grid2";
+import Grid from "@mui/system/Unstable_Grid";
 import CustomLink from "components/atoms/CustomLink";
 import TabMenu from "components/blocks/TabMenu";
 import CustomTypography from "components/atoms/CustomTypography";

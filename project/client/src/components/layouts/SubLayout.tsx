@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import Grid from "@mui/material/Unstable_Grid2";
+import Grid from "@mui/system/Unstable_Grid";
 import BackDrop from "components/blocks/BackDrop";
 import { Outlet } from "react-router-dom";
 
