@@ -8,7 +8,7 @@ import CommentForm from "components/blocks/post/CommentForm";
 import CommentItem from "components/blocks/post/CommentItem";
 import Contents from "components/blocks/post/Contents";
 import Reactions from "components/blocks/post/Reactions";
-import usePostQuery from "hooks/queries/posts/usePostQuery";
+import { usePostQuery } from "hooks/queries/usePostQueries";
 import { useParams } from "react-router-dom";
 import { getStoredMember, getStoredToken } from "utils/get";
 

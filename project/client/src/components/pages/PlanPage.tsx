@@ -2,7 +2,7 @@ import Grid from "@mui/system/Unstable_Grid";
 import PlansSection from "components/blocks/plan/PlansSection";
 import CustomTypography from "components/atoms/CustomTypography";
 import { getStoredToken } from "utils/get";
-import usePlansQuery from "hooks/queries/plans/usePlansQuery";
+import { usePlansQuery } from "hooks/queries/usePlanQueries";
 import { textByPlanStatus } from "constants/texts";
 import { Box } from "@mui/material";
 

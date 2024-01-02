@@ -5,10 +5,12 @@ import SmallButton from "components/atoms/SmallButton";
 import HelperText from "components/atoms/HelperText";
 import CustomSnackBar from "components/blocks/CustomSnackBar";
 import CustomTextField from "components/atoms/CustomTextField";
-import useMemberDeleteMutation from "hooks/mutates/members/useMemberDeleteMutation";
-import useMemberPatchMutation from "hooks/mutates/members/useMemberPatchMutation";
-import useNicknameCheckMutation from "hooks/mutates/members/useNicknameCheckMutation";
-import useImageMutation from "hooks/mutates/useImageMutation";
+import {
+  useMemberDelete,
+  useMemberPatch,
+  useNicknameCheck,
+} from "hooks/mutates/useMemberMutations";
+import { useImage } from "hooks/mutates/useImageMutation";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -57,16 +59,16 @@ const Setting = () => {
   });
 
   // react-query - POST nickname check
-  const { mutate: nicknameCheckMutate } = useNicknameCheckMutation();
+  const { mutate: nicknameCheckMutate } = useNicknameCheck();
 
   // react-query DELETE member
-  const { mutate: memberDeleteMutate } = useMemberDeleteMutation();
+  const { mutate: memberDeleteMutate } = useMemberDelete();
 
   // react-query PATCH member
-  const { mutate: memberPatchMutate } = useMemberPatchMutation();
+  const { mutate: memberPatchMutate } = useMemberPatch();
 
   // react-query - POST image
-  const { mutate: imageMutate } = useImageMutation();
+  const { mutate: imageMutate } = useImage();
 
   // 로그인한 유저의 프로필 이미지 변경 함수
   // 아직 member 쪽은 필드 없음

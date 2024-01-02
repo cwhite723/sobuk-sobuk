@@ -6,10 +6,11 @@ import ReadDialog from "./ReadDialog";
 import { convertBookResponse } from "utils/format";
 import BookImage from "components/atoms/BookImage";
 import { getStoredToken } from "utils/get";
-import useBooksQuery from "hooks/queries/books/useBooksQuery";
-import useBooksKakaoQuery from "hooks/queries/books/useBooksKakaoQuery";
-import useBookSubmitMutation from "hooks/mutates/books/useBookSubmitMutation";
-import useBookmarkMutation from "hooks/mutates/books/useBookmarkMutation";
+import {
+  useBooksQuery,
+  useBooksKakaoQuery,
+} from "hooks/queries/useBookQueries";
+import { useBookSubmit, useBookmark } from "hooks/mutates/useBookMutations";
 
 interface PropsType {
   queryParams: BookParams;
@@ -61,10 +62,10 @@ const Reasult = ({ queryParams, queryType }: PropsType) => {
   );
 
   // react-query - POST book
-  const { mutate: bookSubmitMutate } = useBookSubmitMutation();
+  const { mutate: bookSubmitMutate } = useBookSubmit();
 
   // react-query - post bookmark
-  const { mutate: bookmarkMutate } = useBookmarkMutation();
+  const { mutate: bookmarkMutate } = useBookmark();
 
   // 책 읽기
   const handleReadBook = (book: BookInfoSimple) => {

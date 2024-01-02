@@ -11,7 +11,7 @@ import {
 import HelperText from "components/atoms/HelperText";
 import CustomTextField from "components/atoms/CustomTextField";
 import CustomTypography from "components/atoms/CustomTypography";
-import usePlanEditMutation from "hooks/mutates/plans/usePlanEditMutation";
+import { usePlanEdit } from "hooks/mutates/usePlanMutations";
 import { useForm } from "react-hook-form";
 import theme from "styles/theme";
 import { getStringDate } from "utils/format";
@@ -52,7 +52,7 @@ const EditDialog = ({ selectedPlan, isOpen, handleDialogClose }: PropsType) => {
     });
 
   // react-query - patch plan
-  const { mutate: planEditMutate } = usePlanEditMutation();
+  const { mutate: planEditMutate } = usePlanEdit();
 
   const handleDialogData = (formData: FormValue) => {
     // html 폼 요소의 입력값은 기본적으로 문자열

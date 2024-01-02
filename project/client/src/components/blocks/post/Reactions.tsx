@@ -1,8 +1,7 @@
 import { Box } from "@mui/material";
 import SmallButton from "components/atoms/SmallButton";
 import CustomTypography from "components/atoms/CustomTypography";
-import usePostDeleteMutation from "hooks/mutates/posts/usePostDeleteMutation";
-import usePostLikeMutation from "hooks/mutates/posts/usePostLikeMutation";
+import { usePostDelete, usePostLike } from "hooks/mutates/usePostMutations";
 import { useNavigate } from "react-router-dom";
 import { getStoredToken } from "utils/get";
 
@@ -26,10 +25,10 @@ const Reactions = ({
   const memberToken = getStoredToken();
 
   // react-query POST like post
-  const { mutate: likeMutate } = usePostLikeMutation();
+  const { mutate: likeMutate } = usePostLike();
 
   // react-query DELETE post
-  const { mutate: deleteMutate } = usePostDeleteMutation();
+  const { mutate: deleteMutate } = usePostDelete();
 
   // 포스트 삭제 버튼 함수
   const handlePostDelete = () => {

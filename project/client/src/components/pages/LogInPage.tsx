@@ -7,8 +7,8 @@ import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import CustomSnackBar from "components/blocks/CustomSnackBar";
 import HelperText from "components/atoms/HelperText";
-import useMyPageQuery from "hooks/queries/members/useMyPageQuery";
-import useLogInMutation from "hooks/mutates/members/useLogInMutation";
+import { useMyPageQuery } from "hooks/queries/useMemberQueries";
+import { useLogIn } from "hooks/mutates/useMemberMutations";
 import { getStoredToken } from "utils/get";
 import useMemberStore from "store/store";
 
@@ -35,7 +35,7 @@ const LogInPage = () => {
   });
 
   // react-query - post log-in
-  const { mutate: logInMutate, isSuccess: isLogInSuccess } = useLogInMutation();
+  const { mutate: logInMutate, isSuccess: isLogInSuccess } = useLogIn();
 
   // react-query - get myInfo
   const { data: myPage, isSuccess: isMyPageSuccess } = useMyPageQuery(

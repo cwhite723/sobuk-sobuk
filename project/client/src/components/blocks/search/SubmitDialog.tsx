@@ -12,8 +12,8 @@ import {
 import BookImage from "components/atoms/BookImage";
 import HelperText from "components/atoms/HelperText";
 import CustomTextField from "components/atoms/CustomTextField";
-import useBookSubmitMutation from "hooks/mutates/books/useBookSubmitMutation";
-import useImageMutation from "hooks/mutates/useImageMutation";
+import { useBookSubmit } from "hooks/mutates/useBookMutations";
+import { useImage } from "hooks/mutates/useImageMutation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import theme from "styles/theme";
@@ -55,7 +55,7 @@ const SubmitDialog = ({ isOpen, setNewBook, handleDialogClose }: PropsType) => {
     });
 
   // react-query - POST image
-  const { mutate: imageMutate } = useImageMutation();
+  const { mutate: imageMutate } = useImage();
 
   // 이미지 변경 함수
   const handleChangeImg = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -75,7 +75,7 @@ const SubmitDialog = ({ isOpen, setNewBook, handleDialogClose }: PropsType) => {
   };
 
   // react-query - post book
-  const { mutate: bookSubmitMutate } = useBookSubmitMutation();
+  const { mutate: bookSubmitMutate } = useBookSubmit();
 
   const handleDialogData = (data: FormValue) => {
     console.log(data);

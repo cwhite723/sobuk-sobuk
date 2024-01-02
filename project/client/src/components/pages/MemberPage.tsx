@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { getStoredMember, getStoredToken } from "utils/get";
 import { userTabMenus } from "constants/menus";
-import useMemberInfoQuery from "hooks/queries/members/useMemberInfoQuery";
+import { useMemberInfoQuery } from "hooks/queries/useMemberQueries";
 import CustomTypography from "components/atoms/CustomTypography";
 
 const MemberPage = () => {

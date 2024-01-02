@@ -2,7 +2,8 @@ import { getPlans } from "apis/plans";
 import { queryKeys } from "constants/queryKeys";
 import { UseQueryOptions, UseQueryResult, useQuery } from "react-query";
 
-const usePlansQuery = <TData = PlansResponse>(
+// 전체 플랜 조회
+export const usePlansQuery = <TData = PlansResponse>(
   status: PlanStatusForReq,
   accessToken: string | null,
   options?: UseQueryOptions<PlansResponse, Error, TData>,
@@ -13,5 +14,3 @@ const usePlansQuery = <TData = PlansResponse>(
     options,
   );
 };
-
-export default usePlansQuery;

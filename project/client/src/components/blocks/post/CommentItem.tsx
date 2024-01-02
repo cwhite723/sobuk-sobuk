@@ -6,8 +6,10 @@ import HelperText from "components/atoms/HelperText";
 import CustomSnackBar from "components/blocks/CustomSnackBar";
 import CustomTextField from "components/atoms/CustomTextField";
 import CustomTypography from "components/atoms/CustomTypography";
-import useCommentDeleteMutation from "hooks/mutates/comments/useCommentDeleteMutation";
-import useCommentEditMutation from "hooks/mutates/comments/useCommentEditMutation";
+import {
+  useCommentEdit,
+  useCommentDelete,
+} from "hooks/mutates/useCommentMutations";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -38,9 +40,9 @@ const CommentItem = ({ commentItem }: PropsType) => {
     mode: "onSubmit",
   });
 
-  const { mutate: editMutate } = useCommentEditMutation();
+  const { mutate: editMutate } = useCommentEdit();
 
-  const { mutate: deleteMutate } = useCommentDeleteMutation();
+  const { mutate: deleteMutate } = useCommentDelete();
 
   const handleEditComment = (data: FormValue) => {
     editMutate(

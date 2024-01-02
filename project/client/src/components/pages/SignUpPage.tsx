@@ -7,10 +7,12 @@ import CustomLink from "components/atoms/CustomLink";
 import CustomSnackBar from "components/blocks/CustomSnackBar";
 import CustomTextField from "components/atoms/CustomTextField";
 import CustomTypography from "components/atoms/CustomTypography";
-import useUserNameCheckMutation from "hooks/mutates/members/useUserNameCheckMutation";
-import useNicknameCheckMutation from "hooks/mutates/members/useNicknameCheckMutation";
-import useSignUpMutation from "hooks/mutates/members/useSignUpMutation";
-import useImageMutation from "hooks/mutates/useImageMutation";
+import {
+  useUserNameCheck,
+  useNicknameCheck,
+  useSignUp,
+} from "hooks/mutates/useMemberMutations";
+import { useImage } from "hooks/mutates/useImageMutation";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -63,17 +65,16 @@ const SignUpPage = () => {
   });
 
   // react-query - POST signup
-  const { mutate: signUpMutate, isSuccess: signUpSuccess } =
-    useSignUpMutation();
+  const { mutate: signUpMutate, isSuccess: signUpSuccess } = useSignUp();
 
   // react-query - POST id check
-  const { mutate: userNameCheckMutate } = useUserNameCheckMutation();
+  const { mutate: userNameCheckMutate } = useUserNameCheck();
 
   // react-query - POST nickname check
-  const { mutate: nicknameCheckMutate } = useNicknameCheckMutation();
+  const { mutate: nicknameCheckMutate } = useNicknameCheck();
 
   // react-query - POST image
-  const { mutate: imageMutate } = useImageMutation();
+  const { mutate: imageMutate } = useImage();
 
   // 프로필 이미지 변경 함수
   const handleChangeImg = (event: React.ChangeEvent<HTMLInputElement>) => {

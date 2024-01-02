@@ -3,7 +3,7 @@ import BigButton from "components/atoms/BigButton";
 import HelperText from "components/atoms/HelperText";
 import CustomSnackBar from "components/blocks/CustomSnackBar";
 import CustomTextField from "components/atoms/CustomTextField";
-import useCommentSubmitMutation from "hooks/mutates/comments/useCommentSubmitMutation";
+import { useCommentSubmit } from "hooks/mutates/useCommentMutations";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -34,7 +34,7 @@ const CommentForm = ({ postId }: PropsType) => {
   });
 
   // react-query - POST comment
-  const { mutate: submitMutate } = useCommentSubmitMutation();
+  const { mutate: submitMutate } = useCommentSubmit();
 
   // 댓글 작성 완료 버튼 함수
   const handleSubmitComment = (data: FormValue) => {

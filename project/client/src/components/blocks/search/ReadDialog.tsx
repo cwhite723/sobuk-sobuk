@@ -11,7 +11,7 @@ import {
 import HelperText from "components/atoms/HelperText";
 import CustomTextField from "components/atoms/CustomTextField";
 import CustomTypography from "components/atoms/CustomTypography";
-import usePlanSubmitMutation from "hooks/mutates/plans/usePlanSubmitMutation";
+import { usePlanSubmit } from "hooks/mutates/usePlanMutations";
 import { useForm } from "react-hook-form";
 import theme from "styles/theme";
 import { getStringDate } from "utils/format";
@@ -48,7 +48,7 @@ const ReadDialog = ({ isOpen, selectedBook, handleDialogClose }: PropsType) => {
     });
 
   // react-query - post plan
-  const { mutate: planSubmitMutate } = usePlanSubmitMutation();
+  const { mutate: planSubmitMutate } = usePlanSubmit();
 
   const handleDialogData = (data: FormValue) => {
     planSubmitMutate(

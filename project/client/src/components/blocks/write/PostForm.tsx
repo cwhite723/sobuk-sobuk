@@ -5,8 +5,8 @@ import HelperText from "components/atoms/HelperText";
 import CustomSnackBar from "components/blocks/CustomSnackBar";
 import CustomTextField from "components/atoms/CustomTextField";
 import CustomTypography from "components/atoms/CustomTypography";
-import usePostSubmitMutation from "hooks/mutates/posts/usePostSubmitMutation";
-import useImageMutation from "hooks/mutates/useImageMutation";
+import { usePostSubmit } from "hooks/mutates/usePostMutations";
+import { useImage } from "hooks/mutates/useImageMutation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -45,10 +45,10 @@ const PostForm = ({ handleChangePlan, planInfo }: PropsType) => {
   });
 
   // react-query - POST post
-  const { mutate: postSubmitMutate } = usePostSubmitMutation();
+  const { mutate: postSubmitMutate } = usePostSubmit();
 
   // react-query - POST image 프로필 이미지 필드는 아직 구현안됨
-  const { mutate: imageMutate } = useImageMutation();
+  const { mutate: imageMutate } = useImage();
 
   // 프로필 이미지 변경 함수
   const handleChangeImg = (event: React.ChangeEvent<HTMLInputElement>) => {

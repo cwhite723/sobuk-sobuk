@@ -9,8 +9,7 @@ import SearchBar from "components/blocks/SearchBar";
 import Section from "components/blocks/Section";
 import CustomSnackBar from "components/blocks/CustomSnackBar";
 import CustomTypography from "components/atoms/CustomTypography";
-import useBookQuery from "hooks/queries/books/useBookQuery";
-import useBooksQuery from "hooks/queries/books/useBooksQuery";
+import { useBookQuery, useBooksQuery } from "hooks/queries/useBookQueries";
 import { useEffect, useState } from "react";
 import { getStoredToken } from "utils/get";
 

@@ -4,8 +4,8 @@ import BookImage from "components/atoms/BookImage";
 import HelperText from "components/atoms/HelperText";
 import CustomSnackBar from "components/blocks/CustomSnackBar";
 import CustomTextField from "components/atoms/CustomTextField";
-import usePostEditMutation from "hooks/mutates/posts/usePostEditMutation";
-import useImageMutation from "hooks/mutates/useImageMutation";
+import { usePostEdit } from "hooks/mutates/usePostMutations";
+import { useImage } from "hooks/mutates/useImageMutation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
@@ -41,10 +41,10 @@ const EditPage = () => {
   });
 
   // react-query - PATCH post
-  const { mutate: postEditMutate } = usePostEditMutation();
+  const { mutate: postEditMutate } = usePostEdit();
 
   // react-query - POST image
-  const { mutate: imageMutate } = useImageMutation();
+  const { mutate: imageMutate } = useImage();
 
   // 프로필 이미지 변경 함수
   const handleChangeImg = (event: React.ChangeEvent<HTMLInputElement>) => {

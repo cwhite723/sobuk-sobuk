@@ -5,7 +5,7 @@ import TabMenu from "components/blocks/TabMenu";
 import CustomTypography from "components/atoms/CustomTypography";
 import PostCard from "components/blocks/feed/PostCard";
 import { feedOptionMenus } from "constants/menus";
-import usePostsQuery from "hooks/queries/posts/usePostsQuery";
+import { usePostsQuery } from "hooks/queries/usePostQueries";
 import { useEffect, useState } from "react";
 import { getStoredToken } from "utils/get";
 

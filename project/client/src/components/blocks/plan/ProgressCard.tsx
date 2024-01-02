@@ -8,7 +8,7 @@ import ProgressBar from "./ProgressBar";
 import SmallButton from "components/atoms/SmallButton";
 import CustomSnackBar from "components/blocks/CustomSnackBar";
 import { getStoredToken } from "utils/get";
-import usePlanDeleteMutation from "hooks/mutates/plans/usePlanDeleteMutation";
+import { usePlanDelete } from "hooks/mutates/usePlanMutations";
 
 interface PropsType {
   planItem: PlanInfo;
@@ -25,7 +25,7 @@ const ProgressCard = ({ planItem }: PropsType) => {
   const [openSuccessSnackBar, setOpenSuccessSnackBar] = useState(false);
 
   // react-query DELETE plan
-  const { mutate: planDeleteMutate } = usePlanDeleteMutation();
+  const { mutate: planDeleteMutate } = usePlanDelete();
 
   // 독서 정보(기간, 읽은 페이지) 수정하기
   // READING, OVERDUE, NOT_STARTED
@@ -172,12 +172,12 @@ const ProgressCard = ({ planItem }: PropsType) => {
                   planItem.status === "not_created_post"
                     ? "완독"
                     : planItem.status === "reading"
-                    ? "읽는 중"
-                    : planItem.status === "overdue"
-                    ? "기간 설정"
-                    : planItem.status === "not_started"
-                    ? "예정"
-                    : "정보없음"
+                      ? "읽는 중"
+                      : planItem.status === "overdue"
+                        ? "기간 설정"
+                        : planItem.status === "not_started"
+                          ? "예정"
+                          : "정보없음"
                 }
                 handleClickEvent={handleEditPlan}
                 outline={true}

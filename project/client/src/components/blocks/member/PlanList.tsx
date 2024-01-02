@@ -2,8 +2,10 @@ import { Box } from "@mui/material";
 import Grid from "@mui/system/Unstable_Grid";
 import BookImage from "components/atoms/BookImage";
 import CustomTypography from "components/atoms/CustomTypography";
-import useMemberPlansQuery from "hooks/queries/members/useMemberPlansQuery";
-import useMyPlansQuery from "hooks/queries/members/useMyPlansQuery";
+import {
+  useMemberPlansQuery,
+  useMyPlansQuery,
+} from "hooks/queries/useMemberQueries";
 import { useEffect, useState } from "react";
 import { getStoredToken } from "utils/get";
 
