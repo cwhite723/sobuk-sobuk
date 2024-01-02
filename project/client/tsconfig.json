@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "types": ["vite/client", "react", "react-dom", "node"],
+    "target": "ESNext",
     "lib": ["dom", "dom.iterable", "esnext"],
     "baseUrl": "./src",
     "allowJs": true,
@@ -17,5 +18,5 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["src"]
+  "include": ["vite.config.ts", "src"]
 }
