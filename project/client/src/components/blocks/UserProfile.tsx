@@ -3,8 +3,8 @@ import AvaratImage from "components/atoms/AvatarImage";
 import SmallButton from "components/atoms/SmallButton";
 import CustomLink from "components/atoms/CustomLink";
 import CustomTypography from "components/atoms/CustomTypography";
-import useMemberFollowMutation from "hooks/mutates/members/useMemberFollowMutation";
-import useMemberInfoQuery from "hooks/queries/members/useMemberInfoQuery";
+import { useMemberFollow } from "hooks/mutates/useMemberMutations";
+import { useMemberInfoQuery } from "hooks/queries/useMemberQueries";
 import { useEffect, useState } from "react";
 import { isFollow } from "utils/check";
 import { getStoredMember, getStoredToken } from "utils/get";
@@ -36,7 +36,7 @@ const UserProfile = ({ avatarSize, memberId }: PropsType) => {
     });
 
   // react-query PATCH member follow
-  const { mutate: followMutate } = useMemberFollowMutation();
+  const { mutate: followMutate } = useMemberFollow();
 
   // 팔로우 상태 변경 함수
   const handleUserFollow = () => {

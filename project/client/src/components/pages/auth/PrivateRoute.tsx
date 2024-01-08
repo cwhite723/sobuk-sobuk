@@ -10,7 +10,7 @@ const PrivateRoute = () => {
   const memberToken = getStoredToken();
 
   const handleSnackBarClose = () => {
-    navigate("../login");
+    navigate("../log-in");
   };
 
   return memberToken ? (

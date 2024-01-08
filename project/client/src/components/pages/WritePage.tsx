@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import CustomTypography from "components/atoms/CustomTypography";
 import BookItems from "components/blocks/write/BookItems";
 import PostForm from "components/blocks/write/PostForm";
-import usePlansQuery from "hooks/queries/usePlanQueries";
+import { usePlansQuery } from "hooks/queries/usePlanQueries";
 import { useState } from "react";
 import { getStoredToken } from "utils/get";
 

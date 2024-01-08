@@ -46,7 +46,6 @@ const SearchPage = () => {
   const allBooksParams: BookParams = {
     page: 1,
     size: 10,
-    sortType: "publicationDate",
   };
 
   // getbooks 요청 시 사용할 params - searchQuery가 전달되었을때
@@ -54,7 +53,6 @@ const SearchPage = () => {
   const searchBooksParams: BookParams = {
     page: 1,
     size: 5,
-    sortType: "publicationDate",
     title: searchQuery,
   };
 

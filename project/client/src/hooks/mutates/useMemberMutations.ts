@@ -51,7 +51,7 @@ export const useMemberDelete = () => {
 };
 
 // 팔로우 mutation
-export const useMemberFollowMutation = () => {
+export const useMemberFollow = () => {
   return useMutation(
     ({
       memberId,
