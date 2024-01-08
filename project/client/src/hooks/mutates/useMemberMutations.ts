@@ -34,7 +34,12 @@ export const useLogIn = () => {
 
 // 로그아웃 mutation
 export const useLogOut = () => {
+  const { clearAll } = useMemberStore();
+
   return useMutation((token: string | null) => postLogOut(token), {
+    onSuccess: () => {
+      clearAll();
+    },
     onError: (error) => {
       console.log(error);
     },

@@ -5,6 +5,5 @@ export const getStoredToken = (): string | null => {
 };
 
 export const getStoredMember = (): MemberInfo | null => {
-  const member = useMemberStore((state) => state.member);
-  return member ?? member;
+  return useMemberStore((state) => state.member);
 };

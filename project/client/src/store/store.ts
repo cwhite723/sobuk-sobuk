@@ -15,12 +15,16 @@ interface MemberAction {
   clearAll: () => void;
 }
 
+const initialState: MemberState = {
+  member: null,
+  token: null,
+};
+
 const useMemberStore = create(
   immer(
     persist<MemberState & MemberAction>(
       (set) => ({
-        member: null,
-        token: null,
+        ...initialState,
         setMember: (member: MemberInfo) => {
           set({ member });
         },
@@ -28,7 +32,7 @@ const useMemberStore = create(
           set({ token });
         },
         clearAll: () => {
-          set({ member: null, token: null });
+          set(initialState);
         },
       }),
       {

@@ -176,7 +176,7 @@ const SignUpPage = () => {
     setErrorSnackBarOpen(false);
 
     if (signUpSuccess) {
-      navigate("../login");
+      navigate("../log-in");
     }
   };
 

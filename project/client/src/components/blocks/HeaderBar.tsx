@@ -17,10 +17,11 @@ import { useNavigate } from "react-router-dom";
 import CustomSnackBar from "./CustomSnackBar";
 import CustomTypography from "../atoms/CustomTypography";
 import { useMutation } from "react-query";
-import { postLogOut } from "apis/members";
+import { useLogOut } from "hooks/mutates/useMemberMutations";
 import { pages } from "constants/menus";
 import { getStoredMember, getStoredToken } from "utils/get";
 import AvaratImage from "components/atoms/AvatarImage";
+import useMemberStore from "store/store";
 
 const HeaderBar = () => {
   const navigate = useNavigate();
@@ -38,17 +39,7 @@ const HeaderBar = () => {
   const [errorSnackBarOpen, setErrorSnackBarOpen] = useState(false);
 
   // react-query - POST logout
-  const { mutate } = useMutation(postLogOut, {
-    onSuccess: () => {
-      // 로그아웃 성공
-      setSnackBarOpen(true);
-    },
-    onError: (error) => {
-      // 로그아웃 실패
-      setErrorSnackBarOpen(true);
-      console.log(error);
-    },
-  });
+  const { mutate: logOutMutate } = useLogOut();
 
   // snackbar 닫기 함수
   const handleClose = () => {
@@ -70,7 +61,17 @@ const HeaderBar = () => {
   const handleUserStatus = () => {
     if (memberToken) {
       // 로그아웃 작동
-      mutate(memberToken);
+      logOutMutate(memberToken, {
+        onSuccess: () => {
+          // 로그아웃 성공
+          setSnackBarOpen(true);
+        },
+        onError: (error) => {
+          // 로그아웃 실패
+          setErrorSnackBarOpen(true);
+          console.log(error);
+        },
+      });
     }
 
     // 로그인 페이지로 이동
@@ -91,8 +92,8 @@ const HeaderBar = () => {
 
         {/* snackbar */}
         <CustomSnackBar
-          text="로그아웃 되었습니다."
-          severity="success"
+          text="로그아웃에 실패했습니다."
+          severity="error"
           open={errorSnackBarOpen}
           handleSnackBarClose={handleClose}
         />
