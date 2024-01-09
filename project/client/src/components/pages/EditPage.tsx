@@ -6,6 +6,7 @@ import CustomSnackBar from "components/blocks/CustomSnackBar";
 import CustomTextField from "components/atoms/CustomTextField";
 import { usePostEdit } from "hooks/mutates/usePostMutations";
 import { useImage } from "hooks/mutates/useImageMutation";
+import { usePostQuery } from "hooks/queries/usePostQueries";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
@@ -14,7 +15,7 @@ import { getStoredToken } from "utils/get";
 interface FormValue {
   postTitle: string;
   postContents: string;
-  imageUrl: string;
+  imageUrl: string | null;
 }
 
 const EditPage = () => {
@@ -30,12 +31,17 @@ const EditPage = () => {
   // 이미지 상태값
   const [postImg, setPostImg] = useState("");
 
+  // react-query - get post content
+  const { data: postInfo } = usePostQuery(postId, memberToken, {
+    enabled: !!postId && !!memberToken,
+  });
+
   // react hook form
   const { control, handleSubmit, formState, setValue } = useForm<FormValue>({
     defaultValues: {
-      postTitle: "",
-      postContents: "",
-      imageUrl: "",
+      postTitle: postInfo?.data.postResponse.postTitle,
+      postContents: postInfo?.data.postResponse.content,
+      imageUrl: postInfo?.data.postResponse.imageUrl,
     },
     mode: "onSubmit",
   });
