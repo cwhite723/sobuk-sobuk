@@ -3,12 +3,13 @@ import TabMenu from "components/blocks/TabMenu";
 import PlanList from "components/blocks/member/PlanList";
 import IntroProfile from "components/blocks/member/IntroProfile";
 import PostList from "components/blocks/member/PostList";
-import Setting from "components/blocks/member/Setting";
 import { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { getStoredMember, getStoredToken } from "utils/get";
 import { userTabMenus } from "constants/menus";
 import { useMemberInfoQuery } from "hooks/queries/useMemberQueries";
+import SmallButton from "components/atoms/SmallButton";
+import CustomLink from "components/atoms/CustomLink";
 import CustomTypography from "components/atoms/CustomTypography";
 
 const MemberPage = () => {
@@ -26,6 +27,9 @@ const MemberPage = () => {
   // my 페이지 확인
   const isMyPage = pathname === "/my" ? true : false;
 
+  // 수정/탈퇴 메뉴 선택 여부
+  const [memberEdit, setMemberEdit] = useState(false);
+
   // 현재 선택된 탭 메뉴
   const [nowTab, setNowTab] = useState(userTabMenus[0]);
 
@@ -41,6 +45,11 @@ const MemberPage = () => {
   // 선택된 탭 메뉴를 변경하는 함수
   const handelTabFocus = (newSelectMenu: TabMenuType) => {
     setNowTab(newSelectMenu);
+  };
+
+  // 회원 정보 수정 및 탈퇴 버튼 이벤트 함수
+  const handleSetting = () => {
+    setMemberEdit(true);
   };
 
   useEffect(() => {
@@ -60,6 +69,13 @@ const MemberPage = () => {
         allTabs={userTabMenus}
         nowTab={nowTab}
       />
+
+      {/* 회원 정보 수정 및 탈퇴 버튼 */}
+      <Box sx={{ position: "fixed", top: "100px", right: "50px" }}>
+        <CustomLink to="../my-setting">
+          <CustomTypography text="수정/탈퇴" variant="body1" bold={true} />
+        </CustomLink>
+      </Box>
 
       {/* 유저페이지 전체 container 영역(기본) */}
       {/* 상단 메뉴 선택에 따라 바뀌어야 하는 영역 */}
@@ -110,18 +126,6 @@ const MemberPage = () => {
           isPreview={false}
         />
       )}
-
-      {/* 유저페이지 수정 선택시 표출 영역 */}
-      {nowTab.value === "SETTING" &&
-        (isMyPage ? (
-          <Setting />
-        ) : (
-          <CustomTypography
-            text="정보 수정은 내 서재에서만 가능합니다."
-            variant="body1"
-            bold={true}
-          />
-        ))}
     </Box>
   );
 };

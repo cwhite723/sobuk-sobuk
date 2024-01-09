@@ -15,6 +15,7 @@ import NotPrivateRoute from "components/pages/auth/NotPrivateRoute";
 import SearchPage from "components/pages/SearchPage";
 import { QueryClient, QueryClientProvider } from "react-query";
 import EditPage from "components/pages/EditPage";
+import SettingPage from "components/pages/SettingPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -48,6 +49,7 @@ function App() {
             <Route path="write" element={<WritePage />} />
             <Route path="edit/:postid" element={<EditPage />} />
             <Route path="my" element={<MemberPage />} />
+            <Route path="my-setting" element={<SettingPage />} />
             <Route path="member/:memberid" element={<MemberPage />} />
           </Route>
         </Route>

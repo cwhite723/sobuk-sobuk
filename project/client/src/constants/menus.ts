@@ -11,7 +11,6 @@ export const userTabMenus: TabMenuType[] = [
   { label: "⛄소개", value: "INTRO" },
   { label: "📚서재", value: "LIB" },
   { label: "📓독서기록", value: "POST" },
-  { label: "🔐계정정보/탈퇴", value: "SETTING" },
 ];
 
 // 피드 서브 탭 메뉴 리스트 - 팔로잉 데이터는 나중에

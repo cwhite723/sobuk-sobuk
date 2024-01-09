@@ -23,7 +23,7 @@ interface FormValue {
   image?: string;
 }
 
-const Setting = () => {
+const SettingPage = () => {
   const navigate = useNavigate();
 
   // 스낵바 상태값
@@ -147,109 +147,115 @@ const Setting = () => {
   }, [watch("nickname")]);
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        backgroundColor: "primary.main",
-        borderRadius: 5,
-        boxShadow: "0px 0px 5px rgba(0,0,0,0.5)",
-        m: { xs: 4, md: 6 },
-        p: 4,
-      }}
-    >
-      {/* snackbar */}
-      <CustomSnackBar
-        text="정보수정이 완료되었습니다."
-        severity="success"
-        open={successSnackBarOpen}
-        handleSnackBarClose={handleSnackBarClose}
-      />
+    <Box sx={{ width: "100%" }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          backgroundColor: "primary.main",
+          borderRadius: 5,
+          boxShadow: "0px 0px 5px rgba(0,0,0,0.5)",
+          m: { xs: 4, md: 6 },
+          p: 4,
+        }}
+      >
+        {/* snackbar */}
+        <CustomSnackBar
+          text="정보수정이 완료되었습니다."
+          severity="success"
+          open={successSnackBarOpen}
+          handleSnackBarClose={handleSnackBarClose}
+        />
 
-      <CustomTypography text="😊 계정 정보 수정하기" variant="h5" bold={true} />
+        <CustomTypography
+          text="😊 계정 정보 수정하기"
+          variant="h5"
+          bold={true}
+        />
 
-      {/* 프로필 수정 폼 */}
-      {/* 프로필 이미지 업데이트 */}
-      <form>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            mt: 2,
-          }}
-        >
-          <AvaratImage size={100} src={profileImg} />
-          <Input type="file" onChange={handleChangeImg} />
-        </Box>
+        {/* 프로필 수정 폼 */}
+        {/* 프로필 이미지 업데이트 */}
+        <form>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              mt: 2,
+            }}
+          >
+            <AvaratImage size={100} src={profileImg} />
+            <Input type="file" onChange={handleChangeImg} />
+          </Box>
 
-        <Box
-          sx={{
-            width: "100%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
+          <Box
+            sx={{
+              width: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <CustomTextField
+              name="nickname"
+              control={control}
+              rules={{
+                required: true,
+                minLength: {
+                  value: 2,
+                  message: "닉네임은 2자 이상 입력해주세요.",
+                },
+                maxLength: {
+                  value: 10,
+                  message: "닉네임은 10자가 넘지 않게 입력해주세요.",
+                },
+              }}
+              textFieldProps={{
+                id: "user-name",
+                label: "닉네임",
+              }}
+            />
+
+            <SmallButton
+              buttonText="중복확인"
+              outline={false}
+              handleClickEvent={(event) =>
+                handleNicknameCheck(getValues("nickname"), event)
+              }
+            />
+          </Box>
+          <HelperText text={formState.errors.nickname?.message} />
+
+          {!nicknameChecked && (
+            <HelperText text="중복된 닉네임이거나 중복확인이 되지 않았습니다." />
+          )}
+
+          {nicknameChecked && (
+            <HelperText
+              text="닉네임 중복확인이 완료되었습니다."
+              status="success"
+            />
+          )}
+
           <CustomTextField
-            name="nickname"
+            name="introduction"
             control={control}
-            rules={{
-              required: true,
-              minLength: {
-                value: 2,
-                message: "닉네임은 2자 이상 입력해주세요.",
-              },
-              maxLength: {
-                value: 10,
-                message: "닉네임은 10자가 넘지 않게 입력해주세요.",
-              },
-            }}
             textFieldProps={{
-              id: "user-name",
-              label: "닉네임",
+              id: "user-introduction",
+              label: "자기소개",
             }}
           />
 
-          <SmallButton
-            buttonText="중복확인"
-            outline={false}
-            handleClickEvent={(event) =>
-              handleNicknameCheck(getValues("nickname"), event)
-            }
+          <BigButton
+            text="수정완료"
+            handleClickEvent={handleSubmit(handleSetting)}
           />
-        </Box>
-        <HelperText text={formState.errors.nickname?.message} />
-
-        {!nicknameChecked && (
-          <HelperText text="중복된 닉네임이거나 중복확인이 되지 않았습니다." />
-        )}
-
-        {nicknameChecked && (
-          <HelperText
-            text="닉네임 중복확인이 완료되었습니다."
-            status="success"
-          />
-        )}
-
-        <CustomTextField
-          name="introduction"
-          control={control}
-          textFieldProps={{
-            id: "user-introduction",
-            label: "자기소개",
-          }}
-        />
-
-        <BigButton
-          text="수정완료"
-          handleClickEvent={handleSubmit(handleSetting)}
-        />
-        <BigButton text="회원탈퇴" handleClickEvent={handleDropOut} />
-      </form>
+          <BigButton text="회원탈퇴" handleClickEvent={handleDropOut} />
+        </form>
+      </Box>
     </Box>
   );
 };
 
-export default Setting;
+export default SettingPage;

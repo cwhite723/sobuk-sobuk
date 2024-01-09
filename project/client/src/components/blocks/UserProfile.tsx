@@ -88,7 +88,7 @@ const UserProfile = ({ avatarSize, memberId }: PropsType) => {
     >
       {/* memberId 값이 있으면 해당 유저의 user페이지로 이동 */}
       {/* 없으면 자기 자신의 프로필 이므로 my페이지로 이동 */}
-      <CustomLink to={memberId ? "../user/" + memberId : "../my"}>
+      <CustomLink to={memberId ? "../member/" + memberId : "../my"}>
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <AvaratImage
             size={avatarSize}
