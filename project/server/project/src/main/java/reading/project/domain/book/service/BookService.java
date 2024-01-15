@@ -11,6 +11,7 @@ import reading.project.domain.book.dto.response.BookDetailResponse;
 import reading.project.domain.book.dto.response.BookResponse;
 import reading.project.domain.book.entity.Book;
 import reading.project.domain.book.entity.Bookmark;
+import reading.project.domain.book.entity.Genre;
 import reading.project.domain.book.repository.BookRepository;
 import reading.project.domain.book.repository.BookmarkRepository;
 import reading.project.global.exception.CustomException;
@@ -28,19 +29,21 @@ public class BookService {
     private final BookRepository bookRepository;
     private final BookmarkRepository bookmarkRepository;
     private final MemberService memberService;
+    private final GenreService genreService;
 
     @Transactional
     public Long registerBook(BookRequest request) {
+        Genre genre = genreService.getGenreById(request.getGenreId());
         Book findBook = bookRepository.findBookByTitleAndPublisherAndAuthor(request.getTitle(), request.getPublisher(), request.getAuthor())
-                .orElseGet(() -> bookRepository.save(request.toEntity()));
-
+                .orElseGet(() -> bookRepository.save(request.toEntity(genre)));
         return findBook.getId();
     }
 
     @Transactional
     public void updateBook(Long bookId, BookRequest request) {
         Book findBook = findBookById(bookId);
-        findBook.update(request.getTitle(), request.getPublisher(), request.getAuthor(), request.getPublicationDate(), request.isUserInput());
+        Genre genre = genreService.getGenreById(request.getGenreId());
+        findBook.update(request.getTitle(), request.getPublisher(), request.getAuthor(), request.getPublicationDate(), request.isUserInput(), genre);
     }
 
     @Transactional
