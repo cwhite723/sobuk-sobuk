@@ -20,6 +20,7 @@ import reading.project.domain.post.repository.PostRepositoryCustom;
 import java.util.List;
 
 import static reading.project.domain.book.entity.QBook.book;
+import static reading.project.domain.book.entity.QGenre.genre;
 import static reading.project.domain.member.entity.QFollow.follow;
 import static reading.project.domain.member.entity.QMember.member;
 import static reading.project.domain.post.entity.QComment.comment;
@@ -41,6 +42,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                         book.id,
                         book.title,
                         book.author,
+                        genre.name,
                         readingPlan.startDate,
                         readingPlan.endDate,
                         post.title,
@@ -67,6 +69,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .where(post.id.eq(postId))
                 .innerJoin(post.member, member)
                 .innerJoin(post.book, book)
+                .innerJoin(book.genre, genre)
                 .innerJoin(post.readingPlan, readingPlan)
                 .fetchOne();
     }
@@ -80,6 +83,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                         member.nickname,
                         book.title,
                         book.author,
+                        genre.name,
                         post.id,
                         post.title,
                         post.content,
@@ -92,6 +96,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .from(post)
                 .innerJoin(post.member, member)
                 .innerJoin(post.book, book)
+                .innerJoin(book.genre, genre)
                 .orderBy(postSort(sortType))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -114,6 +119,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                         member.nickname,
                         book.title,
                         book.author,
+                        genre.name,
                         post.id,
                         post.title,
                         post.content,
@@ -126,6 +132,7 @@ public class PostRepositoryImpl implements PostRepositoryCustom {
                 .from(post)
                 .innerJoin(post.member, member)
                 .innerJoin(post.book, book)
+                .innerJoin(book.genre, genre)
                 .leftJoin(member.followings, follow)
                 .where(follow.followerId.id.eq(loginId))
                 .orderBy(postSort(sortType))
