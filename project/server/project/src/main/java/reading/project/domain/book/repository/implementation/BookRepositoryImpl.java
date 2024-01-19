@@ -20,6 +20,7 @@ import reading.project.domain.book.repository.BookRepositoryCustom;
 import java.util.List;
 
 import static reading.project.domain.book.entity.QBook.book;
+import static reading.project.domain.book.entity.QGenre.genre;
 
 @RequiredArgsConstructor
 public class BookRepositoryImpl implements BookRepositoryCustom {
@@ -36,9 +37,12 @@ public class BookRepositoryImpl implements BookRepositoryCustom {
                         book.publicationDate,
                         book.createdAt,
                         book.isUserInput,
-                        book.imageUrl
+                        book.imageUrl,
+                        genre.id,
+                        genre.name
                 ))
                 .from(book)
+                .innerJoin(book.genre, genre)
                 .where(book.id.eq(bookId))
                 .fetchOne();
     }
@@ -51,9 +55,12 @@ public class BookRepositoryImpl implements BookRepositoryCustom {
                         book.title,
                         book.author,
                         book.publisher,
-                        book.imageUrl
+                        book.imageUrl,
+                        genre.id,
+                        genre.name
                 ))
                 .from(book)
+                .innerJoin(book.genre, genre)
                 .where(searchFilter(filterCondition))
                 .orderBy(sortConditions(filterCondition.getSortType()))
                 .offset(pageable.getOffset())
@@ -96,10 +103,6 @@ public class BookRepositoryImpl implements BookRepositoryCustom {
     private OrderSpecifier<?> sortConditions(String sortType) {
         if (StringUtils.isBlank(sortType)) {
             return book.createdAt.desc();
-        } else if (sortType.equals("publicationDate")) {
-            return book.publicationDate.desc();
-        } else if (sortType.equals("bookmarksCount")) {
-            return book.bookmarks.size().desc();
         } else if (sortType.equals("readingPlansCount")) {
             return book.readingPlans.size().desc();
         } else {

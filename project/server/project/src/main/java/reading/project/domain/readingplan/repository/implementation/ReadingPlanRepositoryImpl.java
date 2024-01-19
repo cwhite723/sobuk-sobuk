@@ -9,6 +9,7 @@ import reading.project.domain.readingplan.repository.ReadingPlanRepositoryCustom
 import java.util.List;
 
 import static reading.project.domain.book.entity.QBook.book;
+import static reading.project.domain.book.entity.QGenre.genre;
 import static reading.project.domain.readingplan.entity.QReadingPlan.readingPlan;
 import static reading.project.domain.readingplan.entity.ReadingPlan.Status;
 
@@ -24,6 +25,7 @@ public class ReadingPlanRepositoryImpl implements ReadingPlanRepositoryCustom {
                         book.title,
                         book.author,
                         book.imageUrl,
+                        genre.name,
                         readingPlan.status,
                         readingPlan.startDate,
                         readingPlan.endDate,
@@ -33,6 +35,7 @@ public class ReadingPlanRepositoryImpl implements ReadingPlanRepositoryCustom {
                 ))
                 .from(readingPlan)
                 .innerJoin(readingPlan.book, book)
+                .innerJoin(book.genre, genre)
                 .where(readingPlan.member.id.eq(memberId)
                         .and(readingPlan.status.in(statuses))
                 )
