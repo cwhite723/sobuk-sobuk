@@ -31,11 +31,9 @@ public class Challenge extends BaseEntity {
     @Column(name = "recruit_count")
     private int recruitCount;
 
-    // 챌린지 생성일
-    @Column(name = "recruit_start_date")
+    @Column(name = "recruit_start_date", updatable = false)
     private LocalDate recruitStartDate;
 
-    // 챌린지 시작 1일 전
     @Column(name = "recruit_end_date")
     private LocalDate recruitEndDate;
 
@@ -59,15 +57,17 @@ public class Challenge extends BaseEntity {
         this.recruitCount = recruitCount;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.recruitStartDate = LocalDate.from(this.getCreatedAt());
+        this.recruitEndDate = endDate.minusDays(1);
         this.book = book;
     }
 
     public void update(String content, int recruitCount, LocalDate startDate, LocalDate endDate) {
         this.content = content;
         this.recruitCount = recruitCount;
-        this.recruitStartDate = recruitStartDate;
-        this.recruitEndDate = recruitEndDate;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.recruitStartDate = LocalDate.from(this.getCreatedAt());
+        this.recruitEndDate = endDate.minusDays(1);
     }
 }
