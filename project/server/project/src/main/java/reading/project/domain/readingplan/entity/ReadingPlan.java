@@ -50,6 +50,9 @@ public class ReadingPlan extends BaseEntity {
     @Column(name = "today_page")
     private int todayPage;
 
+    @Column(name = "challenge_id")
+    private Integer challengeId;
+
     @Column(name = "read_status")
     private Status status;
 
@@ -92,21 +95,23 @@ public class ReadingPlan extends BaseEntity {
     }
 
     @Builder
-    public ReadingPlan(LocalDate startDate, LocalDate endDate, int totalPage, int readPageNumber, Status status, Book book, Member member) {
+    public ReadingPlan(LocalDate startDate, LocalDate endDate, int totalPage, int readPageNumber, Integer challengeId, Status status, Book book, Member member) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.totalPage = totalPage;
         this.readPageNumber = readPageNumber;
+        this.challengeId = challengeId;
         this.status = status;
         this.book = book;
         this.member = member;
     }
 
-    public void update(LocalDate startDate, LocalDate endDate, int totalPage, int readPageNumber) {
+    public void update(LocalDate startDate, LocalDate endDate, int totalPage, int readPageNumber, Integer challengeId) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.totalPage = totalPage;
         this.readPageNumber = readPageNumber;
+        this.challengeId = challengeId;
     }
 
     public void changeStatus(Status status) {

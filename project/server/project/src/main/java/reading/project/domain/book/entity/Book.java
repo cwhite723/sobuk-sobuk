@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
+import reading.project.domain.challenge.entity.Challenge;
 import reading.project.domain.post.entity.Post;
 import reading.project.domain.readingplan.entity.ReadingPlan;
 import reading.project.global.base.BaseEntity;
@@ -59,6 +60,10 @@ public class Book extends BaseEntity {
     @OnDelete(action = CASCADE)
     @OneToMany(mappedBy = "book", cascade = PERSIST)
     private List<Bookmark> bookmarks = new ArrayList<>();
+
+    @OnDelete(action = CASCADE)
+    @OneToMany(mappedBy = "book", cascade = PERSIST)
+    private List<Challenge> challenges = new ArrayList<>();
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "genre_id", nullable = false)
