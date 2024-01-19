@@ -27,6 +27,7 @@ public enum ErrorCode {
     NOT_FOUND_COMMENT(NOT_FOUND, "댓글이 존재하지 않습니다."),
     MEMBER_NOT_FOUND(NOT_FOUND,"회원이 존재하지 않습니다."),
     IMAGE_NOT_FOUND(NOT_FOUND, "이미지가 존재하지 않습니다."),
+    GENRE_NOT_FOUND(NOT_FOUND, "장르가 존재하지 않습니다."),
 
     // 409
     NOT_CREATOR(CONFLICT, "작성자가 아닙니다."),

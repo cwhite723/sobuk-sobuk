@@ -6,6 +6,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import reading.project.domain.book.entity.Book;
+import reading.project.domain.book.entity.Genre;
 
 import java.time.LocalDate;
 
@@ -21,8 +22,9 @@ public class BookRequest {
     private LocalDate publicationDate;
     private boolean isUserInput;
     private String imageUrl;
+    private Long genreId;
 
-    public Book toEntity() {
+    public Book toEntity(Genre genre) {
         return Book.builder()
                 .title(title)
                 .publisher(publisher)
@@ -30,6 +32,7 @@ public class BookRequest {
                 .publicationDate(publicationDate)
                 .isUserInput(isUserInput)
                 .imageUrl(imageUrl)
+                .genre(genre)
                 .build();
     }
 }
