@@ -35,6 +35,8 @@ public class ReadingPlanRequest {
     @Min(0)
     private int readPageNumber;
 
+    private Integer challengeId;
+
     public ReadingPlan toEntity(Member member, Book book) {
         return ReadingPlan.builder()
                 .startDate(startDate)
@@ -42,6 +44,7 @@ public class ReadingPlanRequest {
                 .status(READING)
                 .totalPage(totalPage)
                 .readPageNumber(readPageNumber)
+                .challengeId(challengeId)
                 .member(member)
                 .book(book)
                 .build();

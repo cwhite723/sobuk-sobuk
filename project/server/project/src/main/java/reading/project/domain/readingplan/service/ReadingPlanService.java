@@ -46,7 +46,7 @@ public class ReadingPlanService {
         ReadingPlan readingPlan = findReadingPlanById(planId);
         validateCreator(loginId, readingPlan.getMember().getId());
 
-        readingPlan.update(request.getStartDate(), request.getEndDate(), request.getTotalPage(), request.getReadPageNumber());
+        readingPlan.update(request.getStartDate(), request.getEndDate(), request.getTotalPage(), request.getReadPageNumber(), request.getChallengeId());
         changeStatus(readingPlan);
     }
 
