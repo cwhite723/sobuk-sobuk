@@ -50,6 +50,16 @@ public class MemberService {
 
         this.memberRepository.save(member);
     }
+    public Member createMember(Member member) {
+        verifyExistUserName(member.getUserName());
+        verifyExistsNickname(member.getNickname());
+        member.changePassword(passwordEncoder.encode(member.getPassword()));
+        //역할 부여 필요
+        List<String> roles = authorityUtils.createRoles(member.getUserName());
+        member.setRoles(roles);
+
+        return this.memberRepository.save(member);
+    }
 
     public MemberDto.Response updateMember(MemberDto.Patch requestBody) {
         long memberId = jwtParseInterceptor.getAuthenticatedUserId();

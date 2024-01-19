@@ -10,22 +10,21 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import reading.project.domain.auth.handler.*;
 import reading.project.domain.auth.interceptor.JwtParseInterceptor;
 import reading.project.domain.auth.utils.JwtUtils;
-import reading.project.domain.auth.handler.MemberAccessDeniedHandler;
-import reading.project.domain.auth.handler.MemberAuthenticationEntryPoint;
-import reading.project.domain.auth.handler.MemberAuthenticationFailureHandler;
-import reading.project.domain.auth.handler.MemberAuthenticationSuccessHandler;
 import reading.project.domain.auth.jwt.JwtAuthenticationFilter;
 import reading.project.domain.auth.jwt.JwtTokenizer;
 import reading.project.domain.auth.jwt.JwtVerificationFilter;
 import reading.project.domain.auth.user.MemberCustomAuthorityUtils;
+import reading.project.domain.member.service.MemberService;
 import reading.project.global.config.redis.util.RedisDao;
 
 import java.util.Arrays;
@@ -50,10 +49,11 @@ public class SecurityConfig implements WebMvcConfigurer {
 // 후기 작성한 글만 필요 로그인만 책정보 책리스트 전체공개
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http,MemberService memberService) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable) //crossSite 방지
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .oauth2Login(oauth2Login -> oauth2Login.successHandler(oAuth2MemberSuccessHandler(memberService)))
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authorizeHttpRequests(req -> req
                         .requestMatchers(new AntPathRequestMatcher("/api/member/**", "PATCH")).hasRole("USER")
@@ -119,5 +119,10 @@ public class SecurityConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new JwtParseInterceptor(jwtUtils,redisDao))
                 .addPathPatterns("/**");
+    }
+
+    @Bean
+    public AuthenticationSuccessHandler oAuth2MemberSuccessHandler(MemberService memberService) {
+        return new OAuth2MemberSuccessHandler(jwtTokenizer,authorityUtils,memberService,redisDao);
     }
 }

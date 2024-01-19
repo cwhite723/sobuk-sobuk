@@ -34,6 +34,16 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: Mf4G/SEgs2p7MebxTCfBQPoj8zlCF1zwwKRQz71ZE/f1CFLkd/C+Estp8KpBe4eCAZV7cp1tNGC6tNwOsw/0JYFcnjZ+O6EzQh9UHxtZYkN0fzLHefocog==
+            clientSecret: DHZu3QVV6xEdCadCJSPFllibywT5Hk/WBy1/cKP87Km+d62V8rlIImpnWFViRBR2
+            scope:
+              - email
+              - profile
 
 logging.level:
   org.hibernate.SQL: debug
