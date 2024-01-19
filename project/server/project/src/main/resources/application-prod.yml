@@ -3,6 +3,10 @@ jasypt:
     password: ${JASYPT_PASSWORD}
 
 spring:
+  data:
+    redis:
+      repositories:
+        enabled: false
   datasource:
     url: ENC(9VRBkrGl1RQbgzUzQ5FOFEU316UcFdIu8NXC3l0YXpbC5EBc9mrsvSb90lk4niXrs41axSurGAZqe8wGfLzcIYEX/yanhnezItn+gjdUvXP87dU1GZaXxH59ROaIkIoX/3kEbFUO+/+PdrUy2jkUboXHyqkIL5JX8for/o75wCA=)
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -30,8 +34,6 @@ spring:
     port: 6379
     host: 127.0.0.1
     password: ENC(b0vQOQXNwKy4EYHCZdqmOQ==)
-    repositories:
-      enabled: false
   servlet:
     multipart:
       max-file-size: 10MB
