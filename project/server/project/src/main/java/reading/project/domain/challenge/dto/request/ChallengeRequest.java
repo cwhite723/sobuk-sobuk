@@ -1,5 +1,6 @@
 package reading.project.domain.challenge.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +16,9 @@ import static lombok.AccessLevel.*;
 public class ChallengeRequest {
     private String content;
     private int recruitCount;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDate startDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDate endDate;
 
     public Challenge toEntity(Book book) {
@@ -24,6 +27,8 @@ public class ChallengeRequest {
                 .recruitCount(recruitCount)
                 .startDate(startDate)
                 .endDate(endDate)
+                .recruitStartDate(LocalDate.now())
+                .recruitEndDate(endDate.minusDays(1))
                 .book(book)
                 .build();
     }

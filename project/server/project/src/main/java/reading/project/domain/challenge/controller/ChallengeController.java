@@ -18,7 +18,7 @@ public class ChallengeController {
     private final ChallengeService challengeService;
 
     @PostMapping("/{book-id}")
-    @ResponseStatus(OK)
+    @ResponseStatus(CREATED)
     public ApplicationResponse<Long> createChallenge(@PathVariable("book-id") Long bookId, @Valid @RequestBody ChallengeRequest request) {
         Long loginId = JwtParseInterceptor.getAuthenticatedUserId();
         Long challengeId = challengeService.createChallenge(bookId, loginId, request);
@@ -26,4 +26,21 @@ public class ChallengeController {
         return ApplicationResponse.ok(challengeId);
     }
 
+    @PatchMapping("/{challenge-id}")
+    @ResponseStatus(OK)
+    public ApplicationResponse<Long> updateChallenge(@PathVariable("challenge-id") Long challengeId, @Valid @RequestBody ChallengeRequest request) {
+        Long loginId = JwtParseInterceptor.getAuthenticatedUserId();
+        challengeService.updateChallenge(challengeId, loginId, request);
+
+        return ApplicationResponse.ok(challengeId);
+    }
+
+    @DeleteMapping("/{challenge-id}")
+    @ResponseStatus(OK)
+    public ApplicationResponse<Void> deleteChallenge(@PathVariable("challenge-id") Long challengeId) {
+        Long loginId = JwtParseInterceptor.getAuthenticatedUserId();
+        challengeService.deleteChallenge(challengeId, loginId);
+
+        return ApplicationResponse.noData();
+    }
 }
