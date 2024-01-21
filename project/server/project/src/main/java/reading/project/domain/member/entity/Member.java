@@ -74,6 +74,14 @@ public class Member {
         this.roles = roles;
     }
 
+    @Builder
+    public Member(String email, String name, String password) {
+        this.email = email;
+        this.userName = name;
+        this.nickname = name;
+        this.password = password;
+    }
+
     public void setRoles (List<String> roles) {
         this.roles = roles;
     }

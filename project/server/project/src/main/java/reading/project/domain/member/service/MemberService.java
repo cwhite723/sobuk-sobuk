@@ -7,6 +7,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import reading.project.domain.auth.jwt.JwtTokenizer;
 import reading.project.domain.auth.utils.HeaderUtil;
 import reading.project.domain.member.dto.*;
 import reading.project.domain.member.entity.Follow;
@@ -20,7 +21,10 @@ import reading.project.global.exception.ErrorCode;
 import reading.project.domain.member.entity.Member;
 import reading.project.domain.member.mapper.MemberMapper;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Transactional
@@ -32,7 +36,7 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final JwtParseInterceptor jwtParseInterceptor;
     private final RedisDao redisDao;
-
+    private final JwtTokenizer tokenizer;
     private final FollowRepository followRepository;
 
     public void createMember(MemberDto.Post requestBody) {
@@ -45,6 +49,16 @@ public class MemberService {
         member.setRoles(roles);
 
         this.memberRepository.save(member);
+    }
+    public Member createMember(Member member) {
+        verifyExistUserName(member.getUserName());
+        verifyExistsNickname(member.getNickname());
+        member.changePassword(passwordEncoder.encode(member.getPassword()));
+        //역할 부여 필요
+        List<String> roles = authorityUtils.createRoles(member.getUserName());
+        member.setRoles(roles);
+
+        return this.memberRepository.save(member);
     }
 
     public MemberDto.Response updateMember(MemberDto.Patch requestBody) {
@@ -65,6 +79,10 @@ public class MemberService {
 
     public Member findExistsMember(long memberId) {
         return this.memberRepository.findById(memberId)
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+    }
+    public Member findExistsMember(String userName) {
+        return this.memberRepository.findByUserName(userName)
                 .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
     }
 
@@ -223,5 +241,27 @@ public class MemberService {
         int size = pageable.getPageSize();
 
         return new SliceResponse<>(lists, hashNext, size);
+    }
+
+    public String reissue(String refreshToken) {
+        String username = tokenizer.getSubjectFromRefreshToken(refreshToken);
+        if(redisDao.getValues(username).equals(refreshToken)){
+            Member member = findExistsMember(username);
+            Map<String, Object> claims = new HashMap<>();
+            claims.put("Id",member.getId());
+            claims.put("username", member.getUserName());
+            claims.put("roles", member.getRoles());
+
+            String subject = member.getUserName();
+            Date expiration = tokenizer.getTokenExpiration(tokenizer.getAccessTokenExpirationMinutes());
+
+            String base64EncodedSecretKey = tokenizer.encodeBase64SecretKey(tokenizer.getSecretKey());
+
+            String accessToken = tokenizer.generateAccessToken(claims, subject, expiration, base64EncodedSecretKey);
+
+            return accessToken;
+        } else {
+            return null;
+        }
     }
 }

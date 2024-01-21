@@ -98,13 +98,16 @@ public class JwtTokenizer {
         return key;
     }
 
-    public boolean validateToken (String jws, String base64EncodedSecretKey) {
-        String accessToken = jws.replace("Bearer","");
-        Map<String,Object> claims = getClaims(accessToken,base64EncodedSecretKey).getBody();
-        if(!((Claims) claims).getExpiration().before(new Date())){
-            return true;
-        }else {
-            return false;
+    public String getSubjectFromRefreshToken(String refreshToken) {
+        try {
+            String base64EncodedSecretKey = encodeBase64SecretKey(secretKey);
+            Jws<Claims> parsedToken = getClaims(refreshToken,base64EncodedSecretKey);
+            Claims body = parsedToken.getBody();
+            String subject = body.getSubject();
+            return subject;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }

@@ -22,6 +22,14 @@ import static org.springframework.http.HttpStatus.*;
 public class MemberController {
     private final MemberService memberService;
 
+    @PatchMapping("/refresh")
+    public ApplicationResponse<Void> renewAceessToken(HttpServletRequest request, HttpServletResponse response) {
+        String refreshToken = request.getHeader("refresh");
+        String accessToken = memberService.reissue(refreshToken);
+        response.setHeader("Authorization","Bearer" + accessToken);
+        return ApplicationResponse.noData();
+    }
+
     @PostMapping("/log-out")
     @ResponseStatus(OK)
     public ApplicationResponse<Void> logOutMember(HttpServletRequest request) {
