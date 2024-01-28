@@ -18,6 +18,18 @@ interface FormValue {
 }
 
 const LogInPage = () => {
+  const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+  const redirectUri = import.meta.env.VITE_GOOGLE_REDIRECT_URI;
+
+  const url =
+    "https://accounts.google.com/o/oauth2/v2/auth" +
+    "?client_id=" +
+    clientId +
+    "&redirect_uri=" +
+    redirectUri +
+    "&response_type=token" +
+    "&scope=email profile";
+
   const { setMember, setToken } = useMemberStore();
   const memberToken = getStoredToken();
 
@@ -69,7 +81,7 @@ const LogInPage = () => {
 
   // 구글 로그인 버튼 함수
   const handleGoogleLogIn = () => {
-    console.log("google login");
+    window.open(url, "_blank", "noopener, noreferrer");
   };
 
   useEffect(() => {
