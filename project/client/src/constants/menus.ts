@@ -2,7 +2,7 @@ export const pages = [
   { name: "홈", link: "../main" },
   { name: "도서 탐색", link: "../search" },
   { name: "피드", link: "../feed" },
-  { name: "독서 모임", link: "../group" },
+  { name: "챌린지", link: "../challenge" },
   { name: "내 서재", link: `../my` },
 ];
 
@@ -24,4 +24,9 @@ export const feedOptionMenus: TabMenuType[] = [
   { label: "최신순", value: "DATE" },
   { label: "댓글순", value: "COMMENT" },
   { label: "추천순", value: "LIKE" },
+];
+
+export const challengeTabMenus: TabMenuType[] = [
+  { label: "전체", value: "ALL" },
+  { label: "모집중", value: "RECRUITING" },
 ];

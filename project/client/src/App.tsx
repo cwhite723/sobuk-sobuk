@@ -6,7 +6,9 @@ import FeedPage from "components/pages/FeedPage";
 import PostPage from "components/pages/PostPage";
 import WritePage from "components/pages/WritePage";
 import MemberPage from "components/pages/MemberPage";
-import GroupPage from "components/pages/GroupPage";
+import ChallengePage from "components/pages/ChallengePage";
+import CreatePage from "components/pages/CreatePage";
+import ChallengeDetailPage from "components/pages/ChallengeDetailPage";
 import ErrorPage from "components/pages/ErrorPage";
 import MainLayout from "components/layouts/MainLayout";
 import SubLayout from "components/layouts/SubLayout";
@@ -51,6 +53,11 @@ function App() {
             <Route path="my" element={<MemberPage />} />
             <Route path="my-setting" element={<SettingPage />} />
             <Route path="member/:memberid" element={<MemberPage />} />
+            <Route path="create" element={<CreatePage />} />
+            <Route
+              path="challenge/:challengeid"
+              element={<ChallengeDetailPage />}
+            />
           </Route>
         </Route>
 
@@ -59,7 +66,7 @@ function App() {
           <Route path="/" element={<Navigate replace to="search" />} />
           <Route path="search" element={<SearchPage />} />
           <Route path="feed" element={<FeedPage />} />
-          <Route path="group" element={<GroupPage />} />
+          <Route path="challenge" element={<ChallengePage />} />
           <Route path="*" element={<ErrorPage />} />
         </Route>
       </Routes>

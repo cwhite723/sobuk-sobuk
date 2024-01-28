@@ -1,4 +1,5 @@
 import { Typography } from "@mui/material";
+import { TypographyProps } from "@mui/material";
 
 interface PropsType {
   text: string;
@@ -7,10 +8,21 @@ interface PropsType {
   error?: boolean;
 }
 
+interface MuiProps {
+  typographyProps?: TypographyProps;
+}
+
 // 공통 타이포그라피
-const CustomTypography = ({ text, variant, bold, error }: PropsType) => {
+const CustomTypography = ({
+  text,
+  variant,
+  bold,
+  error,
+  typographyProps,
+}: PropsType & MuiProps) => {
   return (
     <Typography
+      {...typographyProps}
       variant={variant}
       sx={{
         fontWeight: bold ? 800 : 400,
