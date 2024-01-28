@@ -53,7 +53,6 @@ function App() {
             <Route path="my" element={<MemberPage />} />
             <Route path="my-setting" element={<SettingPage />} />
             <Route path="member/:memberid" element={<MemberPage />} />
-            <Route path="create" element={<CreatePage />} />
             <Route
               path="challenge/:challengeid"
               element={<ChallengeDetailPage />}
@@ -67,6 +66,7 @@ function App() {
           <Route path="search" element={<SearchPage />} />
           <Route path="feed" element={<FeedPage />} />
           <Route path="challenge" element={<ChallengePage />} />
+          <Route path="create" element={<CreatePage />} />
           <Route path="*" element={<ErrorPage />} />
         </Route>
       </Routes>
