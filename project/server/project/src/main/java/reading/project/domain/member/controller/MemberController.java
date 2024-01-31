@@ -150,4 +150,12 @@ public class MemberController {
         SliceResponse<InfoPageBookmarkList> response = memberService.bookmarkList(cursorId,pageable);
         return ApplicationResponse.ok(response);
     }
+
+    // https 대상 그룹 200 상태 검사를 위한 api
+    @GetMapping("/healthy")
+    @ResponseStatus(OK)
+    public ApplicationResponse statusCode () {
+
+        return ApplicationResponse.ok("healthy");
+    }
 }
