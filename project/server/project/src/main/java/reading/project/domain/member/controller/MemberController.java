@@ -155,7 +155,6 @@ public class MemberController {
     @GetMapping("/healthy")
     @ResponseStatus(OK)
     public ApplicationResponse statusCode () {
-
-        return ApplicationResponse.ok("healthy");
+        return ApplicationResponse.noData();
     }
 }
