@@ -53,6 +53,7 @@ public class ReadingPlan extends BaseEntity {
     @Column(name = "challenge_id")
     private Integer challengeId;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "read_status")
     private Status status;
 

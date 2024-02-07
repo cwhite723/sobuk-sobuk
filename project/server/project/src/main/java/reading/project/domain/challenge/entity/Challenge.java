@@ -44,7 +44,10 @@ public class Challenge extends BaseEntity {
     private LocalDate endDate;
 
     @Column(name = "success_rate")
-    private double successRate;
+    private Double successRate;
+
+    @Column(name = "host_id")
+    private Long hostId;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "book_id", nullable = false)
@@ -52,13 +55,14 @@ public class Challenge extends BaseEntity {
     private Book book;
 
     @Builder
-    public Challenge(String content, int recruitCount, LocalDate startDate, LocalDate endDate, Book book) {
+    public Challenge(String content, int recruitCount, LocalDate startDate, LocalDate endDate, LocalDate recruitStartDate, LocalDate recruitEndDate, Long hostId, Book book) {
         this.content = content;
         this.recruitCount = recruitCount;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.recruitStartDate = LocalDate.from(this.getCreatedAt());
-        this.recruitEndDate = endDate.minusDays(1);
+        this.recruitStartDate = recruitStartDate;
+        this.recruitEndDate = recruitEndDate;
+        this.hostId = hostId;
         this.book = book;
     }
 
@@ -67,7 +71,6 @@ public class Challenge extends BaseEntity {
         this.recruitCount = recruitCount;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.recruitStartDate = LocalDate.from(this.getCreatedAt());
         this.recruitEndDate = endDate.minusDays(1);
     }
 }
