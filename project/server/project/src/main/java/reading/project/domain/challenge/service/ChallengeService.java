@@ -6,15 +6,18 @@ import org.springframework.transaction.annotation.Transactional;
 import reading.project.domain.book.entity.Book;
 import reading.project.domain.book.service.BookService;
 import reading.project.domain.challenge.dto.request.ChallengeRequest;
+import reading.project.domain.challenge.dto.response.ChallengeDetailResponse;
 import reading.project.domain.challenge.entity.Challenge;
 import reading.project.domain.challenge.entity.ChallengeMember;
 import reading.project.domain.challenge.repository.ChallengeMemberRepository;
 import reading.project.domain.challenge.repository.ChallengeRepository;
+import reading.project.domain.challenge.dto.response.ChallengeMemberInfo;
 import reading.project.domain.member.entity.Member;
 import reading.project.domain.member.service.MemberService;
 import reading.project.global.exception.CustomException;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static reading.project.global.exception.ErrorCode.*;
 
@@ -33,7 +36,7 @@ public class ChallengeService {
         Book book = bookService.findBookById(bookId);
         Member member = memberService.findExistsMember(loginId);
 
-        Challenge challenge = request.toEntity(book);
+        Challenge challenge = request.toEntity(loginId, book);
         challengeRepository.save(challenge);
         challengeMemberRepository.save(ChallengeMember.of(true, false, challenge, member));
 
@@ -44,7 +47,7 @@ public class ChallengeService {
     public void updateChallenge(Long challengeId, Long loginId, ChallengeRequest request) {
         Challenge challenge = findChallengeById(challengeId);
         Member member = memberService.findExistsMember(loginId);
-        isHost(challengeId, loginId);
+        checkHost(challengeId, loginId);
 
         challenge.update(request.getContent(), request.getRecruitCount(), request.getStartDate(), request.getEndDate());
     }
@@ -53,7 +56,9 @@ public class ChallengeService {
     public void deleteChallenge(Long challengeId, Long loginId) {
         Challenge challenge = findChallengeById(challengeId);
         Member member = memberService.findExistsMember(loginId);
-        isHost(challengeId, loginId);
+
+        // 호스트만 삭제 가능
+        checkHost(challengeId, loginId);
 
         // 이미 시작한 챌린지에 참여자가 있을 경우 삭제 불가
         if (challenge.getStartDate().isBefore(LocalDate.now()) && getParticipantCount(challengeId) > MIN_PARTICIPANT_COUNT) {
@@ -61,6 +66,19 @@ public class ChallengeService {
         }
 
         challengeRepository.delete(challenge);
+    }
+
+    public ChallengeDetailResponse getChallenge(Long challengeId, Long loginId) {
+        Challenge challenge = findChallengeById(challengeId);
+        Member member = memberService.findExistsMember(loginId);
+
+        return challengeRepository.getChallenge(challengeId, loginId);
+    }
+
+    public List<ChallengeMemberInfo> getParticipants(Long challengeId) {
+        Challenge challenge = findChallengeById(challengeId);
+
+        return challengeMemberRepository.getParticipants(challengeId);
     }
 
     public Challenge findChallengeById(Long challengeId) {
@@ -74,10 +92,12 @@ public class ChallengeService {
 
         return challengeMember.getId();
     }
-    private void isHost(Long challengeId, Long memberId) {
-        Long id = findByChallengeIdAndMemberId(challengeId, memberId);
-        ChallengeMember challengeMember = challengeMemberRepository.findByIdAndHostTrue(id)
-                .orElseThrow(() -> new CustomException(NOT_CHALLENGE_HOST));
+    private void checkHost(Long challengeId, Long memberId) {
+        Challenge challenge = findChallengeById(challengeId);
+
+        if (!challenge.getHostId().equals(memberId)) {
+            throw new CustomException(NOT_CHALLENGE_HOST);
+        }
     }
 
     private Long getParticipantCount(Long challengeId) {

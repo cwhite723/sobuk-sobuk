@@ -21,7 +21,7 @@ public class ChallengeRequest {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private LocalDate endDate;
 
-    public Challenge toEntity(Book book) {
+    public Challenge toEntity(Long hostId, Book book) {
         return Challenge.builder()
                 .content(content)
                 .recruitCount(recruitCount)
@@ -29,6 +29,7 @@ public class ChallengeRequest {
                 .endDate(endDate)
                 .recruitStartDate(LocalDate.now())
                 .recruitEndDate(endDate.minusDays(1))
+                .hostId(hostId)
                 .book(book)
                 .build();
     }
