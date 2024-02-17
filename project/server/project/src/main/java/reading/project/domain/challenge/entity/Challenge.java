@@ -9,7 +9,10 @@ import reading.project.domain.book.entity.Book;
 import reading.project.global.base.BaseEntity;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
+import static jakarta.persistence.CascadeType.PERSIST;
 import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
@@ -53,6 +56,10 @@ public class Challenge extends BaseEntity {
     @JoinColumn(name = "book_id", nullable = false)
     @OnDelete(action = CASCADE)
     private Book book;
+
+    @OnDelete(action = CASCADE)
+    @OneToMany(mappedBy = "challenge", cascade = PERSIST)
+    private List<ChallengeMember> challengeMembers = new ArrayList<>();
 
     @Builder
     public Challenge(String content, int recruitCount, LocalDate startDate, LocalDate endDate, LocalDate recruitStartDate, LocalDate recruitEndDate, Long hostId, Book book) {
