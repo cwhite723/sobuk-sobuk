@@ -74,7 +74,6 @@ public class ChallengeService {
 
     public ChallengeDetailResponse getChallenge(Long challengeId, Long loginId) {
         Challenge challenge = findChallengeById(challengeId);
-        Member member = memberService.findExistsMember(loginId);
 
         return challengeRepository.getChallenge(challengeId, loginId);
     }
