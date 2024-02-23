@@ -81,7 +81,13 @@ const ChallengePage = () => {
                 alignItems: "center",
               }}
             >
-              <CustomTypography text="챌린지 도서명" variant="h6" bold={true} />
+              <CustomLink to="../challenge/1">
+                <CustomTypography
+                  text="챌린지 도서명"
+                  variant="h6"
+                  bold={true}
+                />
+              </CustomLink>
               <SmallButton
                 buttonText="참여하기"
                 outline={false}

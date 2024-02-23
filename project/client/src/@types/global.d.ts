@@ -11,7 +11,7 @@ declare global {
     | "LIB"
     | "POST"
     | "SETTING"
-    | "RECRUITING";
+    | "JOINING";
 
   interface TabMenuType {
     label: string;

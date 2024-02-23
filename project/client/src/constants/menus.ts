@@ -28,5 +28,5 @@ export const feedOptionMenus: TabMenuType[] = [
 
 export const challengeTabMenus: TabMenuType[] = [
   { label: "전체", value: "ALL" },
-  { label: "모집중", value: "RECRUITING" },
+  { label: "참여중", value: "JOINING" },
 ];
