@@ -2,7 +2,6 @@ package reading.project.domain.challenge.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,12 +9,12 @@ import reading.project.domain.book.entity.Book;
 import reading.project.domain.book.service.BookService;
 import reading.project.domain.challenge.dto.request.ChallengeRequest;
 import reading.project.domain.challenge.dto.response.ChallengeDetailResponse;
+import reading.project.domain.challenge.dto.response.ChallengeMemberInfo;
 import reading.project.domain.challenge.dto.response.ChallengeResponseForMain;
 import reading.project.domain.challenge.entity.Challenge;
 import reading.project.domain.challenge.entity.ChallengeMember;
 import reading.project.domain.challenge.repository.ChallengeMemberRepository;
 import reading.project.domain.challenge.repository.ChallengeRepository;
-import reading.project.domain.challenge.dto.response.ChallengeMemberInfo;
 import reading.project.domain.member.entity.Member;
 import reading.project.domain.member.service.MemberService;
 import reading.project.global.exception.CustomException;
@@ -78,6 +77,21 @@ public class ChallengeService {
         return challengeRepository.getChallenge(challengeId, loginId);
     }
 
+    public Page<ChallengeResponseForMain> getAllChallenges(Pageable pageable) {
+        Page<ChallengeResponseForMain> challenges = challengeRepository.findAllChallenges(pageable);
+
+        return challenges;
+    }
+
+    @Transactional
+    public void participateChallenge(Long loginId, Long challengeId) {
+        Member member = memberService.findExistsMember(loginId);
+        Challenge challenge = findChallengeById(challengeId);
+
+        ChallengeMember challengeMember = ChallengeMember.of(false, false, challenge, member);
+        challengeMemberRepository.save(challengeMember);
+    }
+
     public List<ChallengeMemberInfo> getParticipants(Long challengeId) {
         Challenge challenge = findChallengeById(challengeId);
 
@@ -95,6 +109,7 @@ public class ChallengeService {
 
         return challengeMember.getId();
     }
+
     private void checkHost(Long challengeId, Long memberId) {
         Challenge challenge = findChallengeById(challengeId);
 
@@ -105,11 +120,5 @@ public class ChallengeService {
 
     private Long getParticipantCount(Long challengeId) {
         return challengeMemberRepository.countByChallengeId(challengeId);
-    }
-
-    public Page<ChallengeResponseForMain> getAllChallenges(Pageable pageable) {
-        Page<ChallengeResponseForMain> challenges = challengeRepository.findAllChallenges(pageable);
-
-        return challenges;
     }
 }

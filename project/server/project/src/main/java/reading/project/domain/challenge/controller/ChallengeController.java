@@ -12,6 +12,8 @@ import reading.project.domain.challenge.dto.response.GetChallengeResponse;
 import reading.project.domain.challenge.service.ChallengeService;
 import reading.project.domain.challenge.dto.response.ChallengeMemberInfo;
 import reading.project.domain.member.service.MemberService;
+import reading.project.domain.readingplan.dto.request.ReadingPlanRequest;
+import reading.project.domain.readingplan.service.ReadingPlanService;
 import reading.project.global.page.CommonPageRequest;
 import reading.project.global.response.ApplicationResponse;
 
@@ -25,6 +27,7 @@ import static org.springframework.http.HttpStatus.*;
 public class ChallengeController {
     private final ChallengeService challengeService;
     private final MemberService memberService;
+    private final ReadingPlanService readingPlanService;
 
     @PostMapping("/{book-id}")
     @ResponseStatus(CREATED)
@@ -69,5 +72,14 @@ public class ChallengeController {
         Page<ChallengeResponseForMain> challenges = challengeService.getAllChallenges(pageRequest.of());
 
         return ApplicationResponse.ok(challenges);
+    }
+
+    @PostMapping("/{challenge-id}/participate")
+    @ResponseStatus(CREATED)
+    public ApplicationResponse<Long> participateChallenge(@PathVariable("challenge-id") Long challengeId) {
+        Long loginId = JwtParseInterceptor.getAuthenticatedUserId();
+        challengeService.participateChallenge(loginId, challengeId);
+
+        return ApplicationResponse.ok(challengeId);
     }
 }
