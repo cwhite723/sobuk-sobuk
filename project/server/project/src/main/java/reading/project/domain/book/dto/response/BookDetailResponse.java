@@ -15,9 +15,12 @@ public class BookDetailResponse {
     private LocalDate publicationDate;
     private LocalDateTime createdAt;
     private boolean isUserInput;
+    private String imageUrl;
+    private Long genreId;
+    private String genreName;
 
     @QueryProjection
-    public BookDetailResponse(Long bookId, String title, String publisher, String author, LocalDate publicationDate, LocalDateTime createdAt, boolean isUserInput) {
+    public BookDetailResponse(Long bookId, String title, String publisher, String author, LocalDate publicationDate, LocalDateTime createdAt, boolean isUserInput, String imageUrl, Long genreId, String genreName) {
         this.bookId = bookId;
         this.title = title;
         this.publisher = publisher;
@@ -25,5 +28,8 @@ public class BookDetailResponse {
         this.publicationDate = publicationDate;
         this.createdAt = createdAt;
         this.isUserInput = isUserInput;
+        this.imageUrl = imageUrl;
+        this.genreId = genreId;
+        this.genreName = genreName;
     }
 }

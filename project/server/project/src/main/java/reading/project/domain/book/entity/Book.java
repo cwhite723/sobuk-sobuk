@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
+import reading.project.domain.challenge.entity.Challenge;
 import reading.project.domain.post.entity.Post;
 import reading.project.domain.readingplan.entity.ReadingPlan;
 import reading.project.global.base.BaseEntity;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static jakarta.persistence.CascadeType.*;
+import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.*;
 import static lombok.AccessLevel.*;
 import static org.hibernate.annotations.OnDeleteAction.CASCADE;
@@ -44,6 +46,9 @@ public class Book extends BaseEntity {
     @Column(name = "is_user_input")
     private boolean isUserInput;
 
+    @Column(name = "image_url")
+    private String imageUrl;
+
     @OnDelete(action = CASCADE)
     @OneToMany(mappedBy = "book", cascade = PERSIST)
     private List<Post> posts = new ArrayList<>();
@@ -56,20 +61,32 @@ public class Book extends BaseEntity {
     @OneToMany(mappedBy = "book", cascade = PERSIST)
     private List<Bookmark> bookmarks = new ArrayList<>();
 
+    @OnDelete(action = CASCADE)
+    @OneToMany(mappedBy = "book", cascade = PERSIST)
+    private List<Challenge> challenges = new ArrayList<>();
+
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "genre_id", nullable = false)
+    @OnDelete(action = CASCADE)
+    private Genre genre;
+
     @Builder
-    public Book(String title, String publisher, String author, LocalDate publicationDate, boolean isUserInput) {
+    public Book(String title, String publisher, String author, LocalDate publicationDate, boolean isUserInput, String imageUrl, Genre genre) {
         this.title = title;
         this.publisher = publisher;
         this.author = author;
         this.publicationDate = publicationDate;
         this.isUserInput = isUserInput;
+        this.imageUrl = imageUrl;
+        this.genre = genre;
     }
 
-    public void update(String title, String publisher, String author, LocalDate publicationDate, boolean isUserInput) {
+    public void update(String title, String publisher, String author, LocalDate publicationDate, boolean isUserInput, Genre genre) {
         this.title = title;
         this.publisher = publisher;
         this.author = author;
         this.publicationDate = publicationDate;
         this.isUserInput = isUserInput;
+        this.genre = genre;
     }
 }

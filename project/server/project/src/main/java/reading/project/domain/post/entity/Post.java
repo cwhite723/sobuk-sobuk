@@ -14,8 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static jakarta.persistence.CascadeType.PERSIST;
-import static jakarta.persistence.FetchType.*;
-import static jakarta.persistence.GenerationType.IDENTITY;
+import static jakarta.persistence.FetchType.LAZY;
 import static lombok.AccessLevel.PROTECTED;
 import static org.hibernate.annotations.OnDeleteAction.CASCADE;
 
@@ -33,6 +32,9 @@ public class Post extends BaseEntity {
 
     @Column(name = "content")
     private String content;
+
+    @Column(name = "image_url")
+    private String imageUrl;
 
     @MapsId
     @OneToOne(fetch = LAZY)
@@ -55,9 +57,10 @@ public class Post extends BaseEntity {
     private List<Like> likes = new ArrayList<>();
 
     @Builder
-    public Post(String title, String content, ReadingPlan readingPlan, Member member, Book book) {
+    public Post(String title, String content, String imageUrl, ReadingPlan readingPlan, Member member, Book book) {
         this.title = title;
         this.content = content;
+        this.imageUrl = imageUrl;
         this.readingPlan = readingPlan;
         this.member = member;
         this.book = book;

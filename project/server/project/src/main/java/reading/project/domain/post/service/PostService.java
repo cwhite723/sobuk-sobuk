@@ -2,13 +2,13 @@ package reading.project.domain.post.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import reading.project.domain.member.entity.Member;
+import reading.project.domain.member.service.MemberService;
 import reading.project.domain.post.dto.request.PostRequest;
 import reading.project.domain.post.dto.request.SortType;
-import reading.project.domain.post.dto.response.GetPostDetailResponse;
 import reading.project.domain.post.dto.response.PostDetailResponse;
 import reading.project.domain.post.dto.response.PostResponse;
 import reading.project.domain.post.entity.Like;
@@ -17,13 +17,13 @@ import reading.project.domain.post.repository.LikeRepository;
 import reading.project.domain.post.repository.PostRepository;
 import reading.project.domain.readingplan.entity.ReadingPlan;
 import reading.project.domain.readingplan.service.ReadingPlanService;
+import reading.project.global.cloud.ImageService;
 import reading.project.global.exception.CustomException;
-import reading.project.domain.member.entity.Member;
-import reading.project.domain.member.service.MemberService;
 
 import java.util.Optional;
 
-import static reading.project.domain.readingplan.entity.ReadingPlan.Status.*;
+import static reading.project.domain.readingplan.entity.ReadingPlan.Status.COMPLETED;
+import static reading.project.domain.readingplan.entity.ReadingPlan.Status.NOT_CREATED_POST;
 import static reading.project.global.exception.ErrorCode.NOT_CREATOR;
 import static reading.project.global.exception.ErrorCode.NOT_FOUND_POST;
 
@@ -44,8 +44,9 @@ public class PostService {
 
         Post post = request.toEntity(plan, member);
         plan.changeStatus(COMPLETED);
+        postRepository.save(post);
 
-        return postRepository.save(post).getId();
+        return post.getId();
     }
 
     @Transactional
@@ -74,6 +75,11 @@ public class PostService {
     public Page<PostResponse> getPosts(Long loginId, Pageable pageable, SortType sortType) {
 
         return postRepository.getPosts(loginId, pageable, sortType);
+    }
+
+    public Page<PostResponse> getFollowingPosts(Long loginId, Pageable pageable, SortType sortType) {
+
+        return postRepository.getFollowingPosts(loginId, pageable, sortType);
     }
 
     @Transactional

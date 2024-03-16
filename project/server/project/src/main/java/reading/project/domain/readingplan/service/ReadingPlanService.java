@@ -5,14 +5,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reading.project.domain.book.entity.Book;
 import reading.project.domain.book.service.BookService;
+import reading.project.domain.member.entity.Member;
+import reading.project.domain.member.service.MemberService;
 import reading.project.domain.readingplan.dto.request.ReadingPlanRequest;
 import reading.project.domain.readingplan.dto.response.ReadingPlanResponse;
 import reading.project.domain.readingplan.entity.ReadingPlan;
 import reading.project.domain.readingplan.entity.ReadingPlan.Status;
 import reading.project.domain.readingplan.repository.ReadingPlanRepository;
 import reading.project.global.exception.CustomException;
-import reading.project.domain.member.entity.Member;
-import reading.project.domain.member.service.MemberService;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -46,7 +46,7 @@ public class ReadingPlanService {
         ReadingPlan readingPlan = findReadingPlanById(planId);
         validateCreator(loginId, readingPlan.getMember().getId());
 
-        readingPlan.update(request.getStartDate(), request.getEndDate(), request.getTotalPage(), request.getReadPageNumber());
+        readingPlan.update(request.getStartDate(), request.getEndDate(), request.getTotalPage(), request.getReadPageNumber(), request.getChallengeId());
         changeStatus(readingPlan);
     }
 

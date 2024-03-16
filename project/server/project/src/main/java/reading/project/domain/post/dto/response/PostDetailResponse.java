@@ -23,10 +23,12 @@ public class PostDetailResponse {
     private Long bookId;
     private String bookTitle;
     private String bookAuthor;
+    private String genreName;
     private LocalDate startDate;
     private LocalDate endDate;
     private String postTitle;
     private String content;
+    private String imageUrl;
     private int countComments;
     private int countLikes;
     private LocalDateTime createdAt;
@@ -35,7 +37,7 @@ public class PostDetailResponse {
     private boolean myLike;
 
     @QueryProjection
-    public PostDetailResponse(Long memberId, String userName, String nickname, Long bookId, String bookTitle, String bookAuthor, LocalDate startDate, LocalDate endDate, String postTitle, String content, int countComments, int countLikes, LocalDateTime createdAt, LocalDateTime updatedAt, boolean myPost, boolean myLike) {
+    public PostDetailResponse(Long memberId, String userName, String nickname, Long bookId, String bookTitle, String bookAuthor, String genreName, LocalDate startDate, LocalDate endDate, String postTitle, String content, String imageUrl, int countComments, int countLikes, LocalDateTime createdAt, LocalDateTime updatedAt, boolean myPost, boolean myLike) {
         this.memberId = memberId;
         this.userName = userName;
         this.nickname = nickname;
@@ -43,10 +45,12 @@ public class PostDetailResponse {
         this.bookId = bookId;
         this.bookTitle = bookTitle;
         this.bookAuthor = bookAuthor;
+        this.genreName = genreName;
         this.startDate = startDate;
         this.endDate = endDate;
         this.postTitle = postTitle;
         this.content = content;
+        this.imageUrl = imageUrl;
         this.countComments = countComments;
         this.countLikes = countLikes;
         this.createdAt = createdAt;
