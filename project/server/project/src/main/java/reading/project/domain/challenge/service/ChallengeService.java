@@ -22,6 +22,7 @@ import reading.project.global.exception.ErrorCode;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static reading.project.global.exception.ErrorCode.*;
 
@@ -78,8 +79,8 @@ public class ChallengeService {
         return challengeRepository.getChallenge(challengeId, loginId);
     }
 
-    public Page<ChallengeResponseForMain> getAllChallenges(Pageable pageable) {
-        Page<ChallengeResponseForMain> challenges = challengeRepository.findAllChallenges(pageable);
+    public Page<ChallengeResponseForMain> getAllChallenges(Long loginId, Pageable pageable) {
+        Page<ChallengeResponseForMain> challenges = challengeRepository.findAllChallenges(loginId, pageable);
 
         return challenges;
     }
@@ -88,8 +89,8 @@ public class ChallengeService {
     public void participateChallenge(Long loginId, Long challengeId) {
         Member member = memberService.findExistsMember(loginId);
         Challenge challenge = findChallengeById(challengeId);
+        checkParticipate(challengeId, loginId);
 
-        if (challenge.getHostId() == loginId) throw new CustomException(ALREADY_PARTICIPATING);
         ChallengeMember challengeMember = ChallengeMember.of(false, false, challenge, member);
         challengeMemberRepository.save(challengeMember);
     }
@@ -112,11 +113,9 @@ public class ChallengeService {
                 .orElseThrow(() -> new CustomException(CHALLENGE_NOT_FOUND));
     }
 
-    public Long findByChallengeIdAndMemberId(Long challengeId, Long memberId) {
-        ChallengeMember challengeMember = challengeMemberRepository.findByChallengeIdAndMemberId(challengeId, memberId)
-                .orElseThrow(() -> new CustomException(NOT_PARTICIPANT));
-
-        return challengeMember.getId();
+    public void checkParticipate(Long challengeId, Long memberId) {
+        Optional<ChallengeMember> challengeMember = challengeMemberRepository.findByChallengeIdAndMemberId(challengeId, memberId);
+        if (challengeMember.isPresent()) throw new CustomException(ALREADY_PARTICIPATING);
     }
 
     private void checkHost(Long challengeId, Long memberId) {

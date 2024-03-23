@@ -69,7 +69,8 @@ public class ChallengeController {
     @GetMapping
     @ResponseStatus(OK)
     public ApplicationResponse<Page<ChallengeResponseForMain>> getAllChallenges(CommonPageRequest pageRequest) {
-        Page<ChallengeResponseForMain> challenges = challengeService.getAllChallenges(pageRequest.of());
+        Long loginId = JwtParseInterceptor.getAuthenticatedUserId();
+        Page<ChallengeResponseForMain> challenges = challengeService.getAllChallenges(loginId, pageRequest.of());
 
         return ApplicationResponse.ok(challenges);
     }
