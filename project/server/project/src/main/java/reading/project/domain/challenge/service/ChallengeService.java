@@ -18,9 +18,11 @@ import reading.project.domain.challenge.repository.ChallengeRepository;
 import reading.project.domain.member.entity.Member;
 import reading.project.domain.member.service.MemberService;
 import reading.project.global.exception.CustomException;
+import reading.project.global.exception.ErrorCode;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static reading.project.global.exception.ErrorCode.*;
 
@@ -77,8 +79,8 @@ public class ChallengeService {
         return challengeRepository.getChallenge(challengeId, loginId);
     }
 
-    public Page<ChallengeResponseForMain> getAllChallenges(Pageable pageable) {
-        Page<ChallengeResponseForMain> challenges = challengeRepository.findAllChallenges(pageable);
+    public Page<ChallengeResponseForMain> getAllChallenges(Long loginId, Pageable pageable) {
+        Page<ChallengeResponseForMain> challenges = challengeRepository.findAllChallenges(loginId, pageable);
 
         return challenges;
     }
@@ -87,6 +89,7 @@ public class ChallengeService {
     public void participateChallenge(Long loginId, Long challengeId) {
         Member member = memberService.findExistsMember(loginId);
         Challenge challenge = findChallengeById(challengeId);
+        checkParticipate(challengeId, loginId);
 
         ChallengeMember challengeMember = ChallengeMember.of(false, false, challenge, member);
         challengeMemberRepository.save(challengeMember);
@@ -98,16 +101,21 @@ public class ChallengeService {
         return challengeMemberRepository.getParticipants(challengeId);
     }
 
+    public Page<ChallengeResponseForMain> getMyChallenges(Long loginId, Pageable pageable) {
+        Member member = memberService.findExistsMember(loginId);
+        Page<ChallengeResponseForMain> challenges = challengeRepository.findMyChallenges(loginId, pageable);
+
+        return challenges;
+    }
+
     public Challenge findChallengeById(Long challengeId) {
         return challengeRepository.findById(challengeId)
                 .orElseThrow(() -> new CustomException(CHALLENGE_NOT_FOUND));
     }
 
-    public Long findByChallengeIdAndMemberId(Long challengeId, Long memberId) {
-        ChallengeMember challengeMember = challengeMemberRepository.findByChallengeIdAndMemberId(challengeId, memberId)
-                .orElseThrow(() -> new CustomException(NOT_PARTICIPANT));
-
-        return challengeMember.getId();
+    public void checkParticipate(Long challengeId, Long memberId) {
+        Optional<ChallengeMember> challengeMember = challengeMemberRepository.findByChallengeIdAndMemberId(challengeId, memberId);
+        if (challengeMember.isPresent()) throw new CustomException(ALREADY_PARTICIPATING);
     }
 
     private void checkHost(Long challengeId, Long memberId) {

@@ -1,11 +1,6 @@
 package reading.project.domain.challenge.repository.implementation;
 
-import com.querydsl.core.types.Expression;
-import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.jpa.JPAExpressions;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -16,6 +11,7 @@ import reading.project.domain.challenge.dto.response.ChallengeResponseForMain;
 import reading.project.domain.challenge.dto.response.QChallengeDetailResponse;
 import reading.project.domain.challenge.dto.response.QChallengeResponseForMain;
 import reading.project.domain.challenge.repository.ChallengeRepositoryCustom;
+import reading.project.domain.member.entity.Member;
 
 import java.util.List;
 
@@ -24,7 +20,7 @@ import static reading.project.domain.book.entity.QGenre.genre;
 import static reading.project.domain.challenge.entity.QChallenge.challenge;
 import static reading.project.domain.challenge.entity.QChallengeMember.challengeMember;
 import static reading.project.domain.member.entity.QMember.member;
-import static reading.project.domain.post.entity.QPost.post;
+import static reading.project.domain.post.entity.QComment.comment;
 
 @RequiredArgsConstructor
 public class ChallengeRepositoryImpl implements ChallengeRepositoryCustom {
@@ -60,25 +56,70 @@ public class ChallengeRepositoryImpl implements ChallengeRepositoryCustom {
     }
 
     @Override
-    public Page<ChallengeResponseForMain> findAllChallenges(Pageable pageable) {
+    public Page<ChallengeResponseForMain> findAllChallenges(Long loginId, Pageable pageable) {
         List<ChallengeResponseForMain> challengeList = queryFactory
                 .select(new QChallengeResponseForMain(
                         book.id,
                         book.title,
                         book.imageUrl,
                         genre.name,
+                        challenge.id,
                         challenge.startDate,
                         challenge.endDate,
                         challenge.successRate,
                         member.nickname,
-                        challenge.challengeMembers.size()
+                        challenge.challengeMembers.size(),
+                        challenge.recruitCount,
+                        JPAExpressions
+                                .selectFrom(challengeMember)
+                                .where(challengeMember.member.id.eq(loginId))
+                                .exists()
                 ))
                 .from(challenge)
                 .innerJoin(challenge.book, book)
                 .innerJoin(book.genre, genre)
                 .innerJoin(member).on(challenge.hostId.eq(member.id))
+                .innerJoin(challenge.challengeMembers, challengeMember)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
+                .distinct().fetch();
+
+        int count = queryFactory
+                .selectFrom(challenge)
+                .fetch()
+                .size();
+
+        return new PageImpl<>(challengeList, pageable, count);
+    }
+
+    @Override
+    public Page<ChallengeResponseForMain> findMyChallenges(Long loginId, Pageable pageable) {
+        List<ChallengeResponseForMain> challengeList = queryFactory
+                .select(new QChallengeResponseForMain(
+                        book.id,
+                        book.title,
+                        book.imageUrl,
+                        genre.name,
+                        challenge.id,
+                        challenge.startDate,
+                        challenge.endDate,
+                        challenge.successRate,
+                        member.nickname,
+                        challenge.challengeMembers.size(),
+                        challenge.recruitCount,
+                        JPAExpressions
+                                .selectFrom(challengeMember)
+                                .where(challengeMember.member.id.eq(loginId))
+                                .exists()
+                ))
+                .from(challenge)
+                .innerJoin(challenge.book, book)
+                .innerJoin(book.genre, genre)
+                .innerJoin(member).on(challenge.hostId.eq(member.id))
+                .innerJoin(challenge.challengeMembers, challengeMember).on(challengeMember.member.id.eq(loginId))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .distinct()
                 .fetch();
 
         int count = queryFactory
