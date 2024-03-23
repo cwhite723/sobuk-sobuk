@@ -38,6 +38,7 @@ public enum ErrorCode {
     NOT_CHALLENGE_HOST(CONFLICT, "호스트가 아닙니다."),
     NOT_PARTICIPANT(CONFLICT, "해당 챌린지에 참여 중인 회원이 아닙니다."),
     PARTICIPANT_EXISTS(CONFLICT, "진행 중인 챌린지에 참여자가 있을 때는 삭제할 수 없습니다."),
+    ALREADY_PARTICIPATING(CONFLICT, "이미 참여 중인 챌린지입니다."),
 
     // 500
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 오류입니다. 관리자에게 문의하세요."),

@@ -18,6 +18,7 @@ import reading.project.domain.challenge.repository.ChallengeRepository;
 import reading.project.domain.member.entity.Member;
 import reading.project.domain.member.service.MemberService;
 import reading.project.global.exception.CustomException;
+import reading.project.global.exception.ErrorCode;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -88,6 +89,7 @@ public class ChallengeService {
         Member member = memberService.findExistsMember(loginId);
         Challenge challenge = findChallengeById(challengeId);
 
+        if (challenge.getHostId() == loginId) throw new CustomException(ALREADY_PARTICIPATING);
         ChallengeMember challengeMember = ChallengeMember.of(false, false, challenge, member);
         challengeMemberRepository.save(challengeMember);
     }
@@ -96,6 +98,13 @@ public class ChallengeService {
         Challenge challenge = findChallengeById(challengeId);
 
         return challengeMemberRepository.getParticipants(challengeId);
+    }
+
+    public Page<ChallengeResponseForMain> getMyChallenges(Long loginId, Pageable pageable) {
+        Member member = memberService.findExistsMember(loginId);
+        Page<ChallengeResponseForMain> challenges = challengeRepository.findMyChallenges(loginId, pageable);
+
+        return challenges;
     }
 
     public Challenge findChallengeById(Long challengeId) {

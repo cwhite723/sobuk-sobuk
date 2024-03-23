@@ -8,4 +8,5 @@ import reading.project.domain.challenge.dto.response.ChallengeResponseForMain;
 public interface ChallengeRepositoryCustom {
     public ChallengeDetailResponse getChallenge(Long challengeId, Long loginId);
     Page<ChallengeResponseForMain> findAllChallenges(Pageable pageable);
+    Page<ChallengeResponseForMain> findMyChallenges(Long loginId, Pageable pageable);
 }

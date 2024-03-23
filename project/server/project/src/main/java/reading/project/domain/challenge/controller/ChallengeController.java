@@ -82,4 +82,13 @@ public class ChallengeController {
 
         return ApplicationResponse.ok(challengeId);
     }
+
+    @GetMapping("/my-challenge")
+    @ResponseStatus(OK)
+    public ApplicationResponse<Page<ChallengeResponseForMain>> getMyChallenges(CommonPageRequest pageRequest) {
+        Long loginId = JwtParseInterceptor.getAuthenticatedUserId();
+        Page<ChallengeResponseForMain> challenges = challengeService.getMyChallenges(loginId, pageRequest.of());
+
+        return ApplicationResponse.ok(challenges);
+    }
 }
