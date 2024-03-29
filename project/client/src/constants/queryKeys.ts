@@ -41,4 +41,14 @@ export const queryKeys = {
     ["getPost", { postId, token }] as QueryKey,
   POSTS_BY_POST_PARAMS: (params: PostParams, token: string | null) =>
     ["getAllPosts", { params, token }] as QueryKey,
+
+  // CHALLENGE_QUERY_KEYS
+  CHALLENGE_BY_CHALLENGE_ID: (
+    challengeId: number | null,
+    token: string | null,
+  ) => ["getChallenge", { challengeId, token }] as QueryKey,
+  CHALLENGES_BY_CHALLENGE_PARAMS: (params: ChallengeParams) =>
+    ["getAllChallenges", { params }] as QueryKey,
+  CHALLENGES_BY_MEMBER: (params: ChallengeParams, token: string | null) =>
+    ["getMyChallenges", { params, token }] as QueryKey,
 };

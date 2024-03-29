@@ -10,25 +10,13 @@ declare global {
     | "INTRO"
     | "LIB"
     | "POST"
-    | "SETTING";
-
-  // type DataFilterType = "DATE" | "COMMENT" | "LIKE" | "ALL" | "FOLLOWING";
-  // type UserTabType = "INTRO" | "LIB" | "POST" | "SETTING";
+    | "SETTING"
+    | "JOINING";
 
   interface TabMenuType {
     label: string;
     value: TabMenuTypeValues;
   }
-
-  // interface TabMenuType {
-  //   label: string;
-  //   value: DataFilterType;
-  // }
-
-  // interface UserTabMenuType {
-  //   label: string;
-  //   value: UserTabType;
-  // }
 
   type DialogType = "read" | "progress" | "submit";
 
@@ -342,5 +330,65 @@ declare global {
   interface KakaoBookResponse {
     meta: KakaoMeta;
     documents: KakaoDocument[];
+  }
+
+  // ------ Challenge API 관련 데이터 타입
+  interface ChallengeData {
+    content: string;
+    recruitCount: number;
+    startDate: string;
+    endDate: string;
+  }
+
+  interface ChallengeInfo {
+    challengeId: number;
+    bookId: number;
+    bookTitle: string;
+    bookImage: string | null;
+    genre: string;
+    startDate: string;
+    endDate: string;
+    content: string;
+    successRate: number;
+    hostNickname: string;
+    countParticipant: number;
+    host: boolean;
+    participant: boolean;
+  }
+
+  interface ChallengeParams {
+    page: number;
+    size: number;
+  }
+
+  interface ChallengeMemberInfo {
+    id: number;
+    nickname: string;
+    introduction: string;
+    host: boolean;
+    success: boolean;
+  }
+
+  // ------ Challenges API Response 데이터 타입
+  interface ChallengeIdResponse {
+    // 챌린지 생성시 응답
+    data: number;
+  }
+
+  interface ChallengeResponse {
+    // 챌린지 단건 조회
+    data: {
+      challengeDetailResponse: ChallengeInfo;
+      challengeMemberInfoList: ChallengeMemberInfo[];
+    };
+  }
+
+  interface ChallengesResponse {
+    // 챌린지 전체 조회
+    data: {
+      content: ChallengeInfo[];
+      totalPages: number;
+      totalElements: number;
+    };
   }
 }
