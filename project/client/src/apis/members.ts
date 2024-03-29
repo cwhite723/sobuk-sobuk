@@ -54,7 +54,7 @@ export const postLogOut = async (accessToken: string | null) => {
  * @param data
  * @returns
  */
-export const postIdCheck = async (data: { userName: string }) => {
+export const postUserNameCheck = async (data: { userName: string }) => {
   try {
     return await Api.post("/members/id-check", data);
   } catch (error) {

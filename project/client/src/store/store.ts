@@ -1,24 +1,46 @@
-import { configureStore } from "@reduxjs/toolkit";
-import authReducer from "./auth";
-import { persistReducer, persistStore } from "redux-persist";
-import session from "redux-persist/lib/storage/session";
+import { create } from "zustand";
+import { immer } from "zustand/middleware/immer";
+import { createJSONStorage, persist } from "zustand/middleware";
 
-// session storage에 저장하기 위한 persist 설정
-const persistConfig = {
-  key: "auth",
-  storage: session,
+const STORAGE_KEY = "member";
+
+interface MemberState {
+  member: MemberInfo | null;
+  token: string | null;
+}
+
+interface MemberAction {
+  setMember: (member: MemberInfo) => void;
+  setToken: (token: string) => void;
+  clearAll: () => void;
+}
+
+const initialState: MemberState = {
+  member: null,
+  token: null,
 };
 
-const persistedReducer = persistReducer(persistConfig, authReducer);
+const useMemberStore = create(
+  immer(
+    persist<MemberState & MemberAction>(
+      (set) => ({
+        ...initialState,
+        setMember: (member: MemberInfo) => {
+          set({ member });
+        },
+        setToken: (token: string) => {
+          set({ token });
+        },
+        clearAll: () => {
+          set(initialState);
+        },
+      }),
+      {
+        name: STORAGE_KEY,
+        storage: createJSONStorage(() => sessionStorage),
+      },
+    ),
+  ),
+);
 
-const store = configureStore({
-  reducer: {
-    auth: persistedReducer,
-  },
-});
-
-export type RootState = ReturnType<typeof store.getState>;
-
-export const persistor = persistStore(store);
-
-export default store;
+export default useMemberStore;

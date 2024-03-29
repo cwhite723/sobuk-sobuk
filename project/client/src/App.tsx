@@ -1,20 +1,23 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import MainPage from "pages/MainPage";
-import LoginPage from "pages/LoginPage";
-import JoinPage from "pages/JoinPage";
-import FeedPage from "pages/FeedPage";
-import PostPage from "pages/PostPage";
-import WritePage from "pages/WritePage";
-import UserPage from "pages/UserPage";
-import GroupPage from "pages/GroupPage";
-import ErrorPage from "pages/ErrorPage";
+import PlanPage from "components/pages/PlanPage";
+import LogInPage from "components/pages/LogInPage";
+import SignUpPage from "components/pages/SignUpPage";
+import FeedPage from "components/pages/FeedPage";
+import PostPage from "components/pages/PostPage";
+import WritePage from "components/pages/WritePage";
+import MemberPage from "components/pages/MemberPage";
+import ChallengePage from "components/pages/ChallengePage";
+import CreatePage from "components/pages/CreatePage";
+import ChallengeDetailPage from "components/pages/ChallengeDetailPage";
+import ErrorPage from "components/pages/ErrorPage";
 import MainLayout from "components/layouts/MainLayout";
 import SubLayout from "components/layouts/SubLayout";
-import PrivateRoute from "pages/auth/PrivateRoute";
-import NotPrivateRoute from "pages/auth/NotPrivateRoute";
-import SearchPage from "pages/SearchPage";
+import PrivateRoute from "components/pages/auth/PrivateRoute";
+import NotPrivateRoute from "components/pages/auth/NotPrivateRoute";
+import SearchPage from "components/pages/SearchPage";
 import { QueryClient, QueryClientProvider } from "react-query";
-import EditPage from "pages/EditPage";
+import EditPage from "components/pages/EditPage";
+import SettingPage from "components/pages/SettingPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -35,20 +38,26 @@ function App() {
         {/* 비로그인으로만 접근 가능 */}
         <Route element={<NotPrivateRoute />}>
           <Route element={<SubLayout />}>
-            <Route path="login" element={<LoginPage />} />
-            <Route path="join" element={<JoinPage />} />
+            <Route path="log-in" element={<LogInPage />} />
+            <Route path="sign-up" element={<SignUpPage />} />
           </Route>
         </Route>
 
         {/* 로그인해야 접근 가능 */}
         <Route element={<PrivateRoute />}>
           <Route element={<MainLayout />}>
-            <Route path="main" element={<MainPage />} />
+            <Route path="main" element={<PlanPage />} />
             <Route path="post/:postid" element={<PostPage />} />
             <Route path="write" element={<WritePage />} />
             <Route path="edit/:postid" element={<EditPage />} />
-            <Route path="my" element={<UserPage />} />
-            <Route path="user/:userid" element={<UserPage />} />
+            <Route path="my" element={<MemberPage />} />
+            <Route path="my-setting" element={<SettingPage />} />
+            <Route path="member/:memberid" element={<MemberPage />} />
+            <Route path="create" element={<CreatePage />} />
+            <Route
+              path="challenge/:challengeid"
+              element={<ChallengeDetailPage />}
+            />
           </Route>
         </Route>
 
@@ -57,7 +66,7 @@ function App() {
           <Route path="/" element={<Navigate replace to="search" />} />
           <Route path="search" element={<SearchPage />} />
           <Route path="feed" element={<FeedPage />} />
-          <Route path="group" element={<GroupPage />} />
+          <Route path="challenge" element={<ChallengePage />} />
           <Route path="*" element={<ErrorPage />} />
         </Route>
       </Routes>
