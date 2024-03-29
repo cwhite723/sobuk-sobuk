@@ -126,10 +126,10 @@ const PostPage = () => {
           }}
         >
           {/* 댓글 item */}
-          {postInfo.data.commentResponses.map((commnetItem) => (
+          {postInfo.data.commentResponses.map((commentItem) => (
             <CommentItem
-              key={commnetItem.commentId}
-              commentItem={commnetItem}
+              key={commentItem.commentId}
+              commentItem={commentItem}
             />
           ))}
         </Box>

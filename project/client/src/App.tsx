@@ -53,6 +53,11 @@ function App() {
             <Route path="my" element={<MemberPage />} />
             <Route path="my-setting" element={<SettingPage />} />
             <Route path="member/:memberid" element={<MemberPage />} />
+            <Route path="create" element={<CreatePage />} />
+            <Route
+              path="challenge/:challengeid"
+              element={<ChallengeDetailPage />}
+            />
           </Route>
         </Route>
 
@@ -62,12 +67,6 @@ function App() {
           <Route path="search" element={<SearchPage />} />
           <Route path="feed" element={<FeedPage />} />
           <Route path="challenge" element={<ChallengePage />} />
-          {/* ui끝나면 옮겨야 함 */}
-          <Route path="create" element={<CreatePage />} />
-          <Route
-            path="challenge/:challengeid"
-            element={<ChallengeDetailPage />}
-          />
           <Route path="*" element={<ErrorPage />} />
         </Route>
       </Routes>

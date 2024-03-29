@@ -1,19 +1,33 @@
 import { Box, Pagination } from "@mui/material";
 import Grid from "@mui/system/Unstable_Grid";
-import BookImage from "components/atoms/BookImage";
+import { getAllChallenges } from "apis/challenges";
 import CustomLink from "components/atoms/CustomLink";
 import CustomTypography from "components/atoms/CustomTypography";
-import SmallButton from "components/atoms/SmallButton";
 import TabMenu from "components/blocks/TabMenu";
+import ChallengeCard from "components/blocks/challenge/ChallengeCard";
 import { challengeTabMenus } from "constants/menus";
-import { useState } from "react";
+import {
+  useChallengesQuery,
+  useMyChallengesQuery,
+} from "hooks/queries/useChallengeQueries";
+import { useEffect, useState } from "react";
+import { getStoredToken } from "utils/get";
 
 const ChallengePage = () => {
+  const memberToken = getStoredToken();
+
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState<number | null>(10);
+  const [challenges, setChallenges] = useState<ChallengeInfo[]>();
 
   // 현재 선택된 정렬 옵션 탭 메뉴
   const [nowOptionTab, setNowOptionTab] = useState(challengeTabMenus[0]);
+
+  // 데이터 요청에 필요한 params
+  const [params, setParams] = useState<ChallengeParams>({
+    page: page,
+    size: 4,
+  });
 
   // 선택된 정렬 옵션 탭 메뉴 변경 함수
   const handleOptionTabFocus = (newTab: TabMenuType) => {
@@ -29,9 +43,44 @@ const ChallengePage = () => {
     setPage(value);
   };
 
-  const handleClickEvent = () => {
-    console.log("참여하기");
-  };
+  // react-query - get challenges
+  const { data: challengesData, isSuccess: isChallengesSuccess } =
+    useChallengesQuery(params, {
+      enabled: !!params,
+    });
+
+  // react-query - get my challenges
+  const { data: myChallengesData, isSuccess: isMyChallengesSuccess } =
+    useMyChallengesQuery(params, memberToken, {
+      enabled: !!params,
+    });
+
+  // 페이지네이션
+  useEffect(() => {
+    setParams((prevParams) => ({
+      ...prevParams,
+      page: page,
+    }));
+    setChallenges([]);
+  }, [page]);
+
+  useEffect(() => {
+    if (isChallengesSuccess && challengesData && nowOptionTab.value === "ALL") {
+      setChallenges(challengesData.data.content);
+      setTotalPages(challengesData.data.totalPages);
+    }
+  }, [isChallengesSuccess, challengesData, nowOptionTab]);
+
+  useEffect(() => {
+    if (
+      isMyChallengesSuccess &&
+      myChallengesData &&
+      nowOptionTab.value === "JOINING"
+    ) {
+      setChallenges(myChallengesData.data.content);
+      setTotalPages(myChallengesData.data.totalPages);
+    }
+  }, [isMyChallengesSuccess, myChallengesData, nowOptionTab]);
 
   return (
     <Box
@@ -56,93 +105,14 @@ const ChallengePage = () => {
       {/* 챌린지 container 영역 */}
       <Grid container spacing={4} columns={{ xs: 1, md: 10 }}>
         {/* 챌린지 item */}
-        <Grid xs="auto" md={5} sx={{ width: "100%" }}>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "left",
-              backgroundColor: "primary.main",
-              borderRadius: 5,
-              boxShadow: "0px 0px 5px rgba(0,0,0,0.5)",
-              p: 3,
-            }}
-          >
-            <Box
-              sx={{ width: "100%", display: "flex", justifyContent: "center" }}
-            >
-              <BookImage src={null} width={130} height={180} />
-            </Box>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <CustomLink to="../challenge/1">
-                <CustomTypography
-                  text="챌린지 도서명"
-                  variant="h6"
-                  bold={true}
-                />
-              </CustomLink>
-              <SmallButton
-                buttonText="참여하기"
-                outline={false}
-                handleClickEvent={handleClickEvent}
-              />
-            </Box>
-
-            <Box sx={{ display: "flex", mt: 2 }}>
-              <CustomTypography
-                text="인원"
-                variant="body2"
-                bold={true}
-                typographyProps={{ mr: 1 }}
-              />
-              <CustomTypography
-                text="10/30"
-                variant="body2"
-                bold={false}
-                typographyProps={{ mr: 2 }}
-              />
-              <CustomTypography
-                text="달성률"
-                variant="body2"
-                bold={true}
-                typographyProps={{ mr: 1 }}
-              />
-              <CustomTypography
-                text="50%"
-                variant="body2"
-                bold={false}
-                typographyProps={{ mr: 2 }}
-              />
-              <CustomTypography
-                text="시작일"
-                variant="body2"
-                bold={true}
-                typographyProps={{ mr: 1 }}
-              />
-              <CustomTypography
-                text="2024.01.28"
-                variant="body2"
-                bold={false}
-                typographyProps={{ mr: 2 }}
-              />
-            </Box>
-
-            <CustomTypography
-              text="#장르 #태그"
-              variant="body2"
-              bold={true}
-              typographyProps={{ mt: 2 }}
-            />
-          </Box>
-        </Grid>
         {/* 기본 전체 데이터 */}
+        {challenges &&
+          challenges.map((challengeItem) => (
+            <ChallengeCard
+              key={challengeItem.bookId}
+              challengeItem={challengeItem}
+            />
+          ))}
       </Grid>
 
       <Box

@@ -3,20 +3,25 @@ import BigButton from "components/atoms/BigButton";
 import CustomTextField from "components/atoms/CustomTextField";
 import CustomTypography from "components/atoms/CustomTypography";
 import SearchBar from "components/blocks/SearchBar";
+import { useChallengeCreate } from "hooks/mutates/useChallengeMutation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { getStoredToken } from "utils/get";
 
 interface FormValue {
-  book: string;
   startDate: string;
   endDate: string;
-  persons: number;
-  introduction: string;
+  recruitCount: number;
+  content: string;
 }
 
 const CreatePage = () => {
+  // 검색 기능 구현 필요
   const navigate = useNavigate();
+
+  // redux에 저장된 토큰 가져오기
+  const memberToken = getStoredToken();
 
   const [keyword, setKeyword] = useState("");
 
@@ -31,17 +36,29 @@ const CreatePage = () => {
     watch,
   } = useForm<FormValue>({
     defaultValues: {
-      book: "",
       startDate: "",
       endDate: "",
-      persons: 0,
-      introduction: "",
+      recruitCount: 0,
+      content: "",
     },
     mode: "onChange",
   });
 
-  const handleCreate = () => {
-    console.log("챌린지 생성");
+  const { mutate: challengeCreateMutate } = useChallengeCreate();
+
+  const handleCreate = (data: FormValue) => {
+    challengeCreateMutate(
+      {
+        bookId: 1,
+        data,
+        accessToken: memberToken,
+      },
+      {
+        onSuccess: () => {
+          navigate("../challenge");
+        },
+      },
+    );
   };
 
   return (
@@ -61,16 +78,6 @@ const CreatePage = () => {
         <SearchBar setSearchQuery={setKeyword} />
 
         <CustomTextField
-          name="book"
-          control={control}
-          textFieldProps={{
-            type: "text",
-            id: "challenge-book",
-            label: "도서 제목",
-            placeholder: "도서를 검색하세요",
-          }}
-        />
-        <CustomTextField
           name="startDate"
           control={control}
           textFieldProps={{
@@ -89,7 +96,7 @@ const CreatePage = () => {
           }}
         />
         <CustomTextField
-          name="persons"
+          name="recruitCount"
           control={control}
           textFieldProps={{
             type: "number",
@@ -99,7 +106,7 @@ const CreatePage = () => {
           }}
         />
         <CustomTextField
-          name="introduction"
+          name="content"
           control={control}
           textFieldProps={{
             type: "text",
