@@ -8,11 +8,11 @@
 ![React](https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=000000)
 ![MUI](https://img.shields.io/badge/mui-007FFF?style=for-the-badge&logo=mui&logoColor=ffffff)
 
-![CRA](https://img.shields.io/badge/CRA-09D3AC?style=for-the-badge&logo=create-react-app&logoColor=ffffff)
+![VITE](https://img.shields.io/badge/VITE-646CFF?style=for-the-badge&logo=vite&logoColor=ffffff)
 ![React-Query](https://img.shields.io/badge/reactquery-FF4154?style=for-the-badge&logo=react&logoColor=ffffff)
 ![React-Router](https://img.shields.io/badge/reactrouter-CA4245?style=for-the-badge&logo=reactrouter&logoColor=000000)
 ![React-hook-form](https://img.shields.io/badge/reacthookform-EC5990?style=for-the-badge&logo=reacthookform&logoColor=fff)
-![Redux](https://img.shields.io/badge/redux-764ABC?style=for-the-badge&logo=redux&logoColor=fff)
+![Zustand](https://img.shields.io/badge/zustand-764ABC?style=for-the-badge&logo=zustand&logoColor=fff)
 
 ---
 
@@ -33,13 +33,11 @@
 
 ## 📚소북소북을 둘러보세요!
 
-`서비스 주소1` : [http://sobuk-sobuk-app-2023.s3-website.ap-northeast-2.amazonaws.com](http://sobuk-sobuk-app-2023.s3-website.ap-northeast-2.amazonaws.com "소북소북")
-
-`서비스 주소2` : [https://d1evsu2bilsn4.cloudfront.net](https://d1evsu2bilsn4.cloudfront.net "소북소북")
+`서비스 주소` : 서비스 종료😥
 
 `프로젝트 저장소` : [https://github.com/cwhite723/sobuksobuk](https://github.com/cwhite723/sobuksobuk)
 
-`기간` : 2023.10.03 ~ 진행 중
+`기간` : 2023.10.03 ~ 2024.03
 
 ## 📚함께한 사람들을 소개합니다!
 
@@ -90,8 +88,15 @@
   - 목표 기간에 따라 오늘 읽어야 하는 페이지 제공
 
 - **독서 기록**
+
   - 등록 / 수정 / 삭제
   - 완독한 도서의 후기를 공유하고 댓글과 좋아요 기능 제공
+
+- **챌린지**
+
+  - 생성 / 수정 / 삭제
+  - 함께 목표 도서를 읽는 기능 제공
+  - 챌린지를 생성하거나 생성된 챌린지에 참여하여 정해진 기간 동안 독서
 
 ## 📚핵심 기능들의 동작 모습을 간단하게 보여드려요!
 
@@ -111,22 +116,9 @@
 | --------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
 | ![post작성](https://github.com/cwhite723/sobuksobuk/assets/61897795/c3725f82-985c-4512-b264-2da75469a087) | ![like-comment-follow](https://github.com/cwhite723/sobuksobuk/assets/61897795/e375f3af-9b6f-4f06-b52e-c58c80d8cb86) |
 
-## 📚소북소북2.0에서 추가될 기능들입니다!
-
-- 독서 모임
-- 팔로우한 유저의 독서 기록만 모아보기
-- admin 계정 or 페이지
-- 오늘의 독서 여부 체크
-
----
-
-- 수정될 버그들
-  - UX 개선(follow, like, 폼 사용성 개선)
-  - 같은 도서에 대한 독서 기록 작성 예외처리
-  - 중복된 도서 등록 예외처리
-  - 타 멤버 프로필 접속 시 정보 수정 메뉴 감추기
-  - 독서 기록 수정 시 기존 작성 내용 가져오기(+UI 개선)
-  - 독서 정보 표출 시 목표 페이지 안내 명확하게 개선
+| 챌린지 생성                                                                                                 | 챌린지 수정 및 삭제                                                                                             | 챌린지 참여                                                                                                 |
+| ----------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| ![챌린지생성](https://github.com/cwhite723/sobuksobuk/assets/61897795/c925ee78-2622-42e6-b847-392f2aef88bc) | ![챌린지수정삭제](https://github.com/cwhite723/sobuksobuk/assets/61897795/b9e8227e-5b52-4063-b76f-af6ae7a4e330) | ![챌린지참여](https://github.com/cwhite723/sobuksobuk/assets/61897795/0259de7a-f2d2-4304-ac0d-50449ef5906f) |
 
 ## 📝DOCS
 
