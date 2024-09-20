@@ -1,8 +1,0 @@
-VITE_KAKAO_API_KEY="a64f484964974936688256b6a4522bde"
-
-VITE_GOOGLE_CLIENT_ID="722672640755-l0p6fnp8q1c77bttu5p1q57k6v1624ji.apps.googleusercontent.com"
-VITE_GOOGLE_REDIRECT_URI="http://sobuk-sobuk-app-2023.s3-website.ap-northeast-2.amazonaws.com/login/oauth2/code/google"
-
-# VITE_GOOGLE_CLIENT_ID="792652080287-2jh0dotdqo756a7n106u1o0q12us25v8.apps.googleusercontent.com"
-# VITE_GOOGLE_REDIRECT_URI="https://d1evsu2bilsn4.cloudfront.net/google-log-in"
-
