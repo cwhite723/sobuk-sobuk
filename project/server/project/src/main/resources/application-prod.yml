@@ -1,0 +1,65 @@
+jasypt:
+  encryptor:
+    password: ${JASYPT_PASSWORD}
+
+spring:
+  datasource:
+    url: ENC(9VRBkrGl1RQbgzUzQ5FOFEU316UcFdIu8NXC3l0YXpbC5EBc9mrsvSb90lk4niXrs41axSurGAZqe8wGfLzcIYEX/yanhnezItn+gjdUvXP87dU1GZaXxH59ROaIkIoX/3kEbFUO+/+PdrUy2jkUboXHyqkIL5JX8for/o75wCA=)
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ENC(Z/oPy9lunlEgt0l3VCQ2FQ==)
+    password: ENC(U/QkEYTVzdyUzWXa168FJDvYzoIWyWWM)
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL57Dialect
+        format_sql: true
+    open-in-view: true
+    profiles:
+      include: create
+    main:
+      allow-bean-definition-overriding: true
+  redis:
+    lettuce:
+      pool:
+        max-active: 10
+        max-idle: 10
+        min-idle: 2
+    port: 6379
+    host: 127.0.0.1
+    password: ENC(b0vQOQXNwKy4EYHCZdqmOQ==)
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: Mf4G/SEgs2p7MebxTCfBQPoj8zlCF1zwwKRQz71ZE/f1CFLkd/C+Estp8KpBe4eCAZV7cp1tNGC6tNwOsw/0JYFcnjZ+O6EzQh9UHxtZYkN0fzLHefocog==
+            clientSecret: DHZu3QVV6xEdCadCJSPFllibywT5Hk/WBy1/cKP87Km+d62V8rlIImpnWFViRBR2
+            scope:
+              - email
+              - profile
+
+logging.level:
+  org.hibernate.SQL: debug
+
+jwt:
+  key: ENC(3N7gG4NqPpaxoHsi8n4G3QNMxp/TSYynRnaTaSb/eeapstTBIVDwoE9+FzmVzx6DdSrBvpKx7yespVqM+nd6oZCBnJGuUd+4)
+  access-token-expiration-minutes: 30
+  refresh-token-expiration-minutes: 420
+
+cloud:
+  aws:
+    credentials:
+      access-key: ENC(ctUaGsiLozPv3FjPBjOuYIayiH0KeQCsakOZpUG4z2E=)
+      secret-key: ENC(sdQsTeFjujoBxixQr/QN4/uL0JVy5kf0izQUyjq/9FKLsvLNyEcDDAAmr5iz0dGWhkons2VedsY=)
+    region:
+      static: ap-northeast-2
+    s3:
+      bucket: mainproject.bucket
+    stack:
+      auto: false
